@@ -1,24 +1,14 @@
 package com.bjxrgz.startup;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
-
-import android.annotation.SuppressLint;
 import android.app.Application;
-import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.res.Configuration;
-import android.graphics.Bitmap.Config;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Environment;
-import android.telephony.TelephonyManager;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 
-import com.bjxrgz.utils.DateUtil;
-
+/**
+ * Created by fd.meng on 2014/03/30
+ *
+ * 继承 application
+ *
+ */
 public class MyApp extends Application {
 	
 	public static Application app = null;
@@ -38,7 +28,6 @@ public class MyApp extends Application {
 	public static final String DATE_TIME_DISPLAY_FORMAT = "yyyy-MM-dd HH:mm";
 	
 	/******************** api *************************/
-	
 	public static String API_HOST = "http://www.xxx.com/";
 	public static String API_XXX = API_HOST + "xxx";
 
@@ -85,99 +74,23 @@ public class MyApp extends Application {
 	*/
 
 	/**
-	 * 获取版本号
-	 * @return 当前应用的版本号
-	 */
-	public static String getVersion() {
-		String version = "";
-		try {
-			PackageInfo info = app.getPackageManager().getPackageInfo(app.getPackageName(), 0);
-			version = info.versionName;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return version;
-	}
-
+	 *
+	 * 获取日志文件
+	 *
+	 * @return 日志文件
+     */
 	public static String getLogFile() {
 		return APP_SDCARD_NAME + "log/startup_log.txt";
 	}
 
+	/**
+	 *
+	 * 获取资源路径
+	 *
+	 * @return 资源文件路径
+     */
 	public static String getResourcePath() {
 		return APP_SDCARD_NAME + "recource/%s/%d/";
 	}
 
-	public static String generateGUID(Context context, int objectId) {
-		String guid = "";
-		TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-		guid = tm.getDeviceId() + "_" + DateUtil.getStrFromDateTime(Calendar.getInstance(), "yyyyMMddHHmmss") + "_" + String.valueOf(objectId);
-		return guid;
-	}
-
-	public static boolean isTablet(Context context) {
-		boolean xlarge = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
-		boolean large = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
-		return (xlarge || large);
-	}
-
-	/**
-	 * 检查当前网络是否可用
-	 *
-	 * @return
-	 */
-	public static boolean isNetworkAvailable() {
-		// 获取手机所有连接管理对象（包括对wi-fi,net等连接的管理）
-		ConnectivityManager connectivityManager = (ConnectivityManager) app.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-		if (connectivityManager == null)
-		{
-			return false;
-		}
-		else
-		{
-			// 获取NetworkInfo对象
-			NetworkInfo[] networkInfo = connectivityManager.getAllNetworkInfo();
-
-			if (networkInfo != null && networkInfo.length > 0)
-			{
-				for (int i = 0; i < networkInfo.length; i++)
-				{
-					// 判断当前网络状态是否为连接状态
-					if (networkInfo[i].getState() == NetworkInfo.State.CONNECTED)
-					{
-						return true;
-					}
-				}
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 *
-	 * 隐藏软键盘
-	 */
-	public static void hideSoftInputMode(Context context, View windowToken) {
-		InputMethodManager imm = ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE));
-		imm.hideSoftInputFromWindow(windowToken.getWindowToken(), 0);
-	}
-
-	/**
-	 *
-	 * 弹出软键盘
-	 */
-	public static void showSoftInputMode(Context context, View windowToken) {
-		InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.showSoftInput(windowToken, InputMethodManager.SHOW_FORCED);
-	}
-
-	/**
-	 * 验证密码 6-16位，数字和字母组合
-	 * @return 匹配成功
-	 */
-	public static boolean verifyPassword(String password){
-		String reg = "^(?=.*?[a-zA-Z])(?=.*?[0-9])[a-zA-Z0-9]{6,16}$";
-		return password.matches(reg);
-	}
 }

@@ -13,6 +13,12 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/**
+ * Created by fd.meng on 2014/03/30
+ *
+ * 自定义的对话框
+ *
+ */
 public class CustomDialog extends Dialog {
 
 	public CustomDialog(Context context) {

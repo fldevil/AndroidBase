@@ -6,8 +6,22 @@ import android.content.DialogInterface;
 import com.bjxrgz.startup.R;
 import com.bjxrgz.utils.CustomDialog.Builder;
 
+/**
+ * Created by fd.meng on 2014/03/30
+ *
+ * 提示窗口
+ *
+ */
 public class AlertDialogUtil {
 
+	/**
+	 * 提示窗口
+	 *
+	 * @param context
+	 * @param title 标题, 如果不想显示标题,传 null
+	 * @param message
+	 * @param buttonMessage 如果传 null 或者 "" 则显示为: "确定" 或者 "OK"
+     */
 	public static void alert(Context context, String title, String message, String buttonMessage){
 		if(title == null){
 			title = context.getString(R.string.prompt);

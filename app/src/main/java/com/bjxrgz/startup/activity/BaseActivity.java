@@ -1,20 +1,20 @@
 package com.bjxrgz.startup.activity;
 
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.bjxrgz.startup.R;
 
 /**
  * Created by fd.meng on 2016/05/26
  *
- * 主 Activity
+ * 基类
  *
  */
-public class MainActivity extends BaseActivity {
+public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
     }
 }

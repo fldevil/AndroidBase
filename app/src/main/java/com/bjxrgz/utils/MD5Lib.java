@@ -2,9 +2,20 @@ package com.bjxrgz.utils;
 
 import java.security.MessageDigest;
 
+/**
+ * Created by fd.meng on 2014/03/30
+ *
+ * md5 加密
+ *
+ */
 public class MD5Lib {
 
-    public static String convert(String s)
+	/**
+	 * 加密
+	 * @param
+	 * @return  加密后的字符串
+     */
+    public static String md5(String s)
     { 
 		char hexChars[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'}; 
 		try 

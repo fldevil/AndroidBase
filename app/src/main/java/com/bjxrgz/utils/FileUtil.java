@@ -24,9 +24,21 @@ import com.bjxrgz.startup.MyApp;
 
 import android.util.Log;
 
-
+/**
+ * Created by fd.meng on 2014/03/30
+ *
+ * 文件处理类
+ *
+ */
 public class FileUtil {
 
+	/**
+	 * 记录日志
+	 *
+	 * @param printLog
+	 * @param content
+	 * @param isEncrypt
+     */
 	public static void writeLogFile(boolean printLog, String content, boolean isEncrypt) {
 		if (content == null || content.trim().equals("")) {
 			return;
@@ -37,6 +49,13 @@ public class FileUtil {
 		}
 	}
 
+	/**
+	 * 写文件
+	 *
+	 * @param name
+	 * @param content
+	 * @param isEncrypt
+     */
 	private static void writeFile(String name, String content, boolean isEncrypt) {
 
 		OutputStreamWriter osw = null;
@@ -72,6 +91,11 @@ public class FileUtil {
 		}
 	}
 
+	/**
+	 * 写日志
+	 * @param printLog
+	 * @param e
+     */
 	public static void writeLogFile(boolean printLog, Exception e) {
 		if (printLog) {
 			try {
@@ -85,6 +109,12 @@ public class FileUtil {
 		}
 	}
 
+	/**
+	 * 读 文本文件
+	 * @param fileName
+	 * @return
+	 * @throws Exception
+     */
 	public static String readTxtFile(File fileName) throws Exception {
 		String result = "";
 		FileReader fileReader = null;
@@ -150,6 +180,12 @@ public class FileUtil {
 		return "";
 	}
 
+	/**
+	 * 解压
+	 *
+	 * @param zipFile
+	 * @param outPath
+     */
 	public static void unZip(String zipFile, String outPath) {
 		InputStream is;
 		ZipInputStream zis;
@@ -211,6 +247,11 @@ public class FileUtil {
 		}
 	}
 
+	/**
+	 * 删除文件
+	 * @param fileName
+	 * @return
+     */
 	public static boolean delFile(String fileName) {
 		File file = new File(fileName);
 		if (file.isFile()) {

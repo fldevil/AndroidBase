@@ -7,6 +7,12 @@ import java.util.Date;
 import android.content.Context;
 import android.text.format.DateFormat;
 
+/**
+ * Created by fd.meng on 2007/03/30
+ *
+ * 日期处理类
+ *
+ */
 public class DateUtil {
 	public static final String defaultDateFormatStr = "yyyy-MM-dd";
 	public static final String defaultTimeFormatStr = "HH:mm";

@@ -4,8 +4,21 @@ import com.bjxrgz.startup.MyApp;
 
 import android.util.Log;
 
+/**
+ * Created by fd.meng on 2014/03/30
+ *
+ * 日志处理
+ *
+ */
 public class LogUtil {
-	
+
+	/**
+	 * 记录文本日志
+	 *
+	 * @param tag
+	 * @param level
+	 * @param message
+     */
 	public static void log(String tag, int level, String message){
 		if(message == null){
 			message = "";
@@ -44,7 +57,15 @@ public class LogUtil {
 		       break;
 		} 
 	}
-	
+
+	/**
+	 * 记录Exception 日志
+	 *
+	 * @param tag
+	 * @param level
+	 * @param message
+     * @param exc
+     */
 	public static void log(String tag, int level, String message, Exception exc){
 		if(message == null){
 			message = "";

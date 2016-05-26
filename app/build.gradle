@@ -46,4 +46,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'org.xutils:xutils:3.3.34'
     compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.google.code.gson:gson:2.4'
 }

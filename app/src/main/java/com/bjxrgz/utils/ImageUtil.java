@@ -9,8 +9,22 @@ import android.text.Layout.Alignment;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 
+/**
+ * Created by fd.meng on 2014/03/30
+ *
+ * 图像处理类
+ *
+ */
 public class ImageUtil {
 
+    /**
+     * 添加水印
+     *
+     * @param src
+     * @param watermark
+     * @param title
+     * @return
+     */
 	public static Bitmap watermarkBitmap(Bitmap src, Bitmap watermark,String title) {
         if (src == null) {
             return null;

@@ -2,6 +2,12 @@ package com.bjxrgz.utils;
 
 import java.io.UnsupportedEncodingException;
 
+/**
+ * Created by fd.meng on 2014/03/30
+ *
+ * Base 64 的加密,解密
+ *
+ */
 public class Base64
 {
     private static char[] base64EncodeChars = new char[]{
