@@ -5,6 +5,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by fd.meng on 2014/03/30
@@ -51,5 +53,25 @@ public class StringUtil {
 	public static boolean verifyPassword(String password){
 		String reg = "^(?=.*?[a-zA-Z])(?=.*?[0-9])[a-zA-Z0-9]{6,16}$";
 		return password.matches(reg);
+	}
+
+	private static Pattern numericPattern = Pattern.compile("^[1-9]\\d*$");
+
+	/**
+	 * 判断是否数字表示
+	 *
+	 * @param src
+	 *            源字符串
+	 * @return 是否数字的标志
+	 */
+	public static boolean isNumber(String src) {
+		boolean return_value = false;
+		if (src != null && src.length() > 0) {
+			Matcher m = numericPattern.matcher(src);
+			if (m.find()) {
+				return_value = true;
+			}
+		}
+		return return_value;
 	}
 }

@@ -7,4 +7,5 @@
     <string name="confirm">确定</string>
     <string name="cancel">取消</string>
     <string name="wait">等待...</string>
+    <string name="no_network_title">网络不能访问</string>
 </resources>
