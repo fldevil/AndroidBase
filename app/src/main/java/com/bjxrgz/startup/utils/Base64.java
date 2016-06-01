@@ -1,15 +1,13 @@
-package com.bjxrgz.utils;
+package com.bjxrgz.startup.utils;
 
 import java.io.UnsupportedEncodingException;
 
 /**
  * Created by fd.meng on 2014/03/30
- *
+ * <p/>
  * Base 64 的加密,解密
- *
  */
-public class Base64
-{
+public class Base64 {
     private static char[] base64EncodeChars = new char[]{
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
             'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
@@ -30,9 +28,8 @@ public class Base64
             -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
             41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1};
 
-   
-    public static String encode(byte[] data) 
-    {
+
+    public static String encode(byte[] data) {
         StringBuffer sb = new StringBuffer();
         int len = data.length;
         int i = 0;
@@ -62,28 +59,27 @@ public class Base64
         return sb.toString();
     }
 
-   
-    public static byte[] decode(String str) throws UnsupportedEncodingException 
-    {
+
+    public static byte[] decode(String str) throws UnsupportedEncodingException {
         StringBuffer sb = new StringBuffer();
         byte[] data = str.getBytes("utf-8");
         int len = data.length;
         int i = 0;
         int b1, b2, b3, b4;
         while (i < len) {
-           
+
             do {
                 b1 = base64DecodeChars[data[i++]];
             } while (i < len && b1 == -1);
             if (b1 == -1) break;
-           
+
             do {
                 b2 = base64DecodeChars
                         [data[i++]];
             } while (i < len && b2 == -1);
             if (b2 == -1) break;
             sb.append((char) ((b1 << 2) | ((b2 & 0x30) >>> 4)));
-           
+
             do {
                 b3 = data[i++];
                 if (b3 == 61) return sb.toString().getBytes("utf-8");
@@ -91,7 +87,7 @@ public class Base64
             } while (i < len && b3 == -1);
             if (b3 == -1) break;
             sb.append((char) (((b2 & 0x0f) << 4) | ((b3 & 0x3c) >>> 2)));
-           
+
             do {
                 b4 = data[i++];
                 if (b4 == 61) return sb.toString().getBytes("utf-8");
