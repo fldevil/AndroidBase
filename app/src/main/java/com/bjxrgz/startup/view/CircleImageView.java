@@ -17,7 +17,6 @@ import android.widget.ImageView;
 
 import com.bjxrgz.startup.R;
 
-
 /**
  * author cipherGG
  * Created by Administrator on 2016/6/1.

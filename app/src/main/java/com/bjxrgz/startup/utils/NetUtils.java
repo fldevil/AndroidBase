@@ -9,7 +9,7 @@ import android.net.NetworkInfo;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.zysk.energy.R;
+import com.bjxrgz.startup.R;
 
 /**
  * Created by fd.meng on 2014/03/30

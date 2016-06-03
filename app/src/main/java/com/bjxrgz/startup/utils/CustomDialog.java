@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.zysk.energy.R;
+import com.bjxrgz.startup.R;
 
 /**
  * Created by fd.meng on 2014/03/30

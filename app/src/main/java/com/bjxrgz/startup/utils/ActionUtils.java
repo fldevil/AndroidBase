@@ -11,7 +11,7 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.zysk.energy.R;
+import com.bjxrgz.startup.R;
 
 import java.io.File;
 

@@ -8,7 +8,7 @@ import android.text.format.Formatter;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.zysk.energy.base.MyApp;
+import com.bjxrgz.startup.base.MyApp;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

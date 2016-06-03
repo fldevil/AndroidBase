@@ -72,7 +72,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
 
     /**
      * ***********************************以下是生命周期***********************************
-     * <p>
+     * <p/>
      * 实例化控件，加载监听器
      */
     @Override
@@ -114,7 +114,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     /**
      * setContentView()或者addContentView()方法执行完毕时就会调用该方法,不是onCreate
      * 可以在这里initData,但不能initListener,view只是加载出来，还没有实例化
-     * <p>
+     * <p/>
      * 尤其是换肤的时候，setTheme之后需要从新setContentView以下，
      * 所以控件需要重新实例化和加载监听器，这样可以直接调用create方法，
      * 如果里面有initData就不行了,但是每次换肤之后还是会执行onContentChanged
@@ -274,7 +274,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
 
     /**
      * ***********************************以上是生命周期***********************************
-     * <p>
+     * <p/>
      * 有attach的fragment时，当fragment也Resume时被回调
      * 最好在这里执行已经存在的fragment的translate操作
      */
@@ -322,7 +322,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        AdapterView.AdapterContextMenuInfo info =
+                (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         LogUtils.log(Log.DEBUG, getCls(), "onContextItemSelected--->position == " + info.position);
         return super.onContextItemSelected(item);
     }
