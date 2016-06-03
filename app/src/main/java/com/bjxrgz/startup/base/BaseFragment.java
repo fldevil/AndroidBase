@@ -23,6 +23,11 @@ import com.bjxrgz.startup.utils.LogUtils;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * Created by JiangZhiGuo on 2016/06/01
+ * <p>
+ * describe Fragment的基类,主要用于log日志和初始化工作
+ */
 public abstract class BaseFragment extends Fragment {
 
     protected Bundle fromActivity;// 接受数据的Bundle

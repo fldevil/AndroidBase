@@ -27,6 +27,9 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * application
+ */
 public class MyApp extends Application {
 
     // 当前实例

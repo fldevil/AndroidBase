@@ -9,6 +9,11 @@ import com.bjxrgz.startup.base.BaseActivity;
 
 import org.xutils.view.annotation.ContentView;
 
+/**
+ * Created by JiangZhiGuo on 2016/06/01
+ * <p>
+ * describe 广告界面
+ */
 @ContentView(R.layout.activity_advert)
 public class AdvertActivity extends BaseActivity<AdvertActivity> {
 

@@ -2,6 +2,11 @@ package com.bjxrgz.startup.base;
 
 import android.os.Bundle;
 
+/**
+ * Created by JiangZhiGuo on 2016/06/01
+ * <p>
+ * describe Interface的基类,主要用于Activity和fragment的通信
+ */
 public interface BaseInterface {
 
     /**
