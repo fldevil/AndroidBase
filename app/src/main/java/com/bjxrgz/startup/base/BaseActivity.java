@@ -89,14 +89,13 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         // 写死竖屏
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        // 布局动画, 要在initTheme前面
+        // 布局动画
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
             window.setEnterTransition(new Fade());
             window.setExitTransition(new Fade());
         }
-        // SkinUtils.initTheme(this);// 换肤操作
         pb = DialogUtils.createProgress(this, null, "请稍候.....", false, false, null);
         super.onCreate(savedInstanceState);
         mActivity = this; // 实例

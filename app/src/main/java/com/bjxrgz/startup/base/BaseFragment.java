@@ -31,7 +31,7 @@ import java.lang.reflect.Method;
 public abstract class BaseFragment extends Fragment {
 
     protected Bundle fromActivity;// 接受数据的Bundle
-    private String cls = "BaseFragmentView";// 子类的类名
+    private String cls = "BaseFragment";// 子类的类名
     private BaseInterface.BaseActivityView mListener;// 这个监听器是向activity传数据的
 
     /**
