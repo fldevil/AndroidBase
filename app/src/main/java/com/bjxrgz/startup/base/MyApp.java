@@ -18,7 +18,9 @@ import android.widget.Toast;
 import com.bjxrgz.startup.utils.LogUtils;
 
 import org.json.JSONObject;
+import org.xutils.BuildConfig;
 import org.xutils.ex.HttpException;
+import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -77,7 +79,10 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
-
+        x.Ext.init(this);// xUtils 初始化
+        if (PRINT_LOG) {
+            x.Ext.setDebug(BuildConfig.DEBUG); // xUtils log
+        }
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             APP_SDCARD_NAME = Environment.getExternalStorageDirectory() + "/new_energy/";
         } else {

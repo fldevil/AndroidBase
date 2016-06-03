@@ -23,6 +23,9 @@ import android.widget.AdapterView;
 import com.bjxrgz.startup.utils.DialogUtils;
 import com.bjxrgz.startup.utils.LogUtils;
 import com.bjxrgz.startup.utils.NetUtils;
+import com.umeng.message.PushAgent;
+
+import org.xutils.x;
 
 import java.lang.reflect.ParameterizedType;
 
@@ -97,7 +100,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
         pb = DialogUtils.createProgress(this, null, "请稍候.....", false, false, null);
         super.onCreate(savedInstanceState);
         mActivity = this; // 实例
-
+        x.view().inject(this);// xUtils在activity的初始化
+        PushAgent.getInstance(this).onAppStart();//umeng push init
         create(savedInstanceState); // 抽象方法
     }
 

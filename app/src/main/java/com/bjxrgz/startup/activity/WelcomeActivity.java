@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.bjxrgz.startup.R;
 import com.bjxrgz.startup.base.BaseActivity;
+import com.umeng.message.PushAgent;
 
 import org.xutils.view.annotation.ContentView;
 /**
@@ -16,6 +17,10 @@ public class WelcomeActivity extends BaseActivity<WelcomeActivity> {
 
     @Override
     protected void create(Bundle savedInstanceState) {
+        // 开启推送服务
+        // String device_token = UmengRegistrar.getRegistrationId(this);
+        PushAgent mPushAgent = PushAgent.getInstance(this);
+        mPushAgent.enable();
 
     }
 

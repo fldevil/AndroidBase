@@ -66,4 +66,8 @@ dependencies {
     compile 'org.xutils:xutils:3.3.34'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.google.code.gson:gson:2.4'
+    // umeng push
+    compile project(':PushSDK')
+    compile 'com.squareup.okio:okio:1.6.0'
+    compile 'com.squareup.wire:wire-runtime:2.1.2'
 }
