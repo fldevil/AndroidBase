@@ -15,6 +15,10 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
+    // 以下两句防止图片导入报错
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
+
     defaultConfig {
         applicationId "com.bjxrgz.startup"
         minSdkVersion 15
