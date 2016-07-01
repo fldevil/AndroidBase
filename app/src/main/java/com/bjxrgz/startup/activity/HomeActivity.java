@@ -11,7 +11,7 @@ import org.xutils.view.annotation.ContentView;
 
 /**
  * Created by JiangZhiGuo on 2016/06/01
- * <p>
+ * <p/>
  * describe 主界面
  */
 @ContentView(R.layout.activity_home)
@@ -26,6 +26,18 @@ public class HomeActivity extends BaseActivity<HomeActivity> {
     @Override
     protected void create(Bundle savedInstanceState) {
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // MobclickAgent.onResume(this); // 友盟统计
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // MobclickAgent.onPause(this); // 友盟统计
     }
 
     @Override

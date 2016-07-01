@@ -13,6 +13,14 @@ import java.util.regex.Pattern;
 public class StringUtils {
 
     /**
+     * 判断字符串是否为空
+     */
+    public static boolean isNullOrEmpty(String str) {
+
+        return str == null || str.isEmpty();
+    }
+
+    /**
      * 验证密码 6-16位，数字和字母组合
      */
     public static boolean verifyPassword(String password) {
@@ -42,17 +50,17 @@ public class StringUtils {
         return m.matches();
     }
 
-//    /**
-//     * 判断是否为手机号 11位
-//     */
-//    public static boolean isMobileNumber(String src) {
-//        if (!TextUtils.isEmpty(src))
-//            return false;
-//        Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
-//        Pattern p2 = Pattern.compile("^1[3|4|5|8]\\d{9}$");
-//        Pattern p3 = Pattern.compile("^(13[0-9]|14[0-9]|15[0-9]|18[0-9])\\d{8}$");
-//        Matcher m = p3.matcher(src);
-//        return m.matches();
-//    }
+    /**
+     * 判断是否为手机号 11位
+     */
+    public static boolean isMobileNumber(String src) {
+        if (!TextUtils.isEmpty(src))
+            return false;
+        Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
+        Pattern p2 = Pattern.compile("^1[3|4|5|8]\\d{9}$");
+        Pattern p3 = Pattern.compile("^(13[0-9]|14[0-9]|15[0-9]|18[0-9])\\d{8}$");
+        Matcher m = p3.matcher(src);
+        return m.matches();
+    }
 
 }

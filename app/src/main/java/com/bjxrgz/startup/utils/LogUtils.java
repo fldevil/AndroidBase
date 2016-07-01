@@ -6,7 +6,7 @@ import com.bjxrgz.startup.base.MyApp;
 
 /**
  * Created by fd.meng on 2014/03/30
- * <p>
+ * <p/>
  * 日志处理
  */
 public class LogUtils {
@@ -21,12 +21,12 @@ public class LogUtils {
         if (MyApp.PRINT_LOG) {
             switch (level) {
                 case Log.DEBUG:
-                    if (Log.isLoggable(MyApp.LOG_TAG, Log.DEBUG)) {
+                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
                         Log.d(tag, message);
                     }
                     break;
                 case Log.INFO:
-                    if (Log.isLoggable(MyApp.LOG_TAG, Log.INFO)) {
+                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
                         Log.i(tag, message);
                     }
                     break;
@@ -36,12 +36,12 @@ public class LogUtils {
                     }
                     break;
                 case Log.VERBOSE:
-                    if (Log.isLoggable(MyApp.LOG_TAG, Log.VERBOSE)) {
+                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
                         Log.v(tag, message);
                     }
                     break;
                 case Log.WARN:
-                    if (Log.isLoggable(MyApp.LOG_TAG, Log.WARN)) {
+                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
                         Log.w(tag, message);
                     }
                     break;
@@ -64,12 +64,12 @@ public class LogUtils {
             }
             switch (level) {
                 case Log.DEBUG:
-                    if (Log.isLoggable(MyApp.LOG_TAG, Log.DEBUG)) {
+                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
                         Log.d(tag, message, exc);
                     }
                     break;
                 case Log.INFO:
-                    if (Log.isLoggable(MyApp.LOG_TAG, Log.INFO)) {
+                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
                         Log.i(tag, message, exc);
                     }
                     break;
@@ -79,12 +79,12 @@ public class LogUtils {
                     }
                     break;
                 case Log.VERBOSE:
-                    if (Log.isLoggable(MyApp.LOG_TAG, Log.VERBOSE)) {
+                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
                         Log.v(tag, message, exc);
                     }
                     break;
                 case Log.WARN:
-                    if (Log.isLoggable(MyApp.LOG_TAG, Log.WARN)) {
+                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
                         Log.w(tag, message, exc);
                     }
                     break;

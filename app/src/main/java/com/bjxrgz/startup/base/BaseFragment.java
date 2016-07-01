@@ -87,8 +87,6 @@ public abstract class BaseFragment extends Fragment {
 
     protected abstract void viewCreate(View view, @Nullable Bundle savedInstanceState);
 
-    protected abstract void activityCreated(Bundle savedInstanceState);
-
     protected abstract void detach();
 
     /**
@@ -179,8 +177,6 @@ public abstract class BaseFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         LogUtils.log(Log.DEBUG, cls, "----->onActivityCreated");
         super.onActivityCreated(savedInstanceState);
-
-        activityCreated(savedInstanceState);
     }
 
     /**

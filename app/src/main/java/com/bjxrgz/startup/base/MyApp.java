@@ -29,9 +29,6 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * application
- */
 public class MyApp extends Application {
 
     // 当前实例
@@ -50,7 +47,7 @@ public class MyApp extends Application {
     public static final String LOG_TAG = "new_energy";
     // log开关
     public static final boolean PRINT_LOG = true;
-    // sd卡目录
+    // sd卡目录中app的资源目录
     public static String APP_SDCARD_NAME = "";
     //设备id
     public static String DEVICE_ID = "345ujhgfds";
@@ -62,18 +59,6 @@ public class MyApp extends Application {
     public static final String SYSTEM_VERSION = android.os.Build.VERSION.RELEASE;
     //
     public static final String APPLICAITON_EXIT_ACTION = "com.package.ACTION_LOGOUT";
-
-    /********************
-     * api
-     *************************/
-    public static String API_HOST = "http://www.xxx.com/";
-    public static String API_XXX = API_HOST + "xxx";
-
-    /********************
-     * login info
-     *************************/
-    public static final String LOGIN_INFO = "startup_login_info";
-    public static final String LOGIN_INFO_USER_NAME = "startup_login_user_name";
 
     @Override
     public void onCreate() {
@@ -165,32 +150,6 @@ public class MyApp extends Application {
         return APP_SDCARD_NAME + "resource/%s/%d/";
     }
 
-    /*
-    public static void SaveUser(User user) {
-        SharedPreferences preferences = instance
-                .getSharedPreferences(Constants.USER, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-
-        editor.commit();
-    }
-
-    public static User GetLoginInfo() {
-		User user = new User();
-		SharedPreferences SessionPref = app.getSharedPreferences(MyApp.LOGIN_INFO, 0);
-		user.setuName(SessionPref.getString(MyApp.LOGIN_INFO_USER_NAME, ""));
-		user.setCardId(SessionPref.getString(MyApp.USER_INFO_USER_CARD, ""));
-		return user;
-	}
-
-	public static void RemoveInfo() {
-		SharedPreferences RemoveSessionPref = app.getSharedPreferences(MyApp.LOGIN_INFO, 0);
-		SharedPreferences.Editor RemoveSessionEdit = RemoveSessionPref.edit();
-		RemoveSessionEdit.remove(MyApp.LOGIN_INFO_USER_NAME);
-		RemoveSessionEdit.remove(MyApp.USER_INFO_USER_CARD);
-		RemoveSessionEdit.commit();
-	}
-	*/
-
     /**
      * 检测用户账户是否在该设备上有效
      */
@@ -202,19 +161,20 @@ public class MyApp extends Application {
             } else if (ex.getClass().equals(org.xutils.ex.HttpException.class)) {
                 JSONObject object = new JSONObject(((HttpException) ex).getResult());
                 String message = (String) object.get("message"); // 错误信息
+
                 org.xutils.ex.HttpException hre = ((org.xutils.ex.HttpException) ex);
                 int code = hre.getCode(); // 返回码
 
                 if (code == 401 || code == 409 || code == 410) { // 跳转登录界面
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-//                     removeInfo();
+
 //                    if (context instanceof LoginActivity) {
 //                        return;
 //                    }
-//                    Intent intent = new Intent(context, SignUpActivity.class);
+//                    Intent intent = new Intent(context, LoginActivity.class);
 //                    context.startActivity(intent);
                 } else if (code == 500) {
-                    Toast.makeText(context, "系统错误", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "服务器异常", Toast.LENGTH_SHORT).show();
                 } else { // 弹出提示
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                 }
@@ -222,7 +182,7 @@ public class MyApp extends Application {
                 Toast.makeText(context, "连接超时", Toast.LENGTH_SHORT).show();
 
             } else {
-                // Toast.makeText(context, "数据异常", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(context, "异常:" + ex.getClass(), Toast.LENGTH_SHORT).show();
                 LogUtils.log(Log.ERROR, LOG_TAG, ex.toString(), null);
             }
         } catch (Exception e) {

@@ -1,5 +1,6 @@
 package com.bjxrgz.startup.utils;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -7,35 +8,34 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.bjxrgz.startup.R;
 
 import java.util.Calendar;
 
 /**
  * Created by fd.meng on 2014/03/30
- * <p/>
+ * <p>
  * DialogUtils: 获取对话框 alert，progress，单选，多选，日期
  */
 public class DialogUtils {
 
     /**
-     * 弹出对话框
+     * 自定义对话框
      */
-    public static void show(Dialog dialog) {
-        if (dialog != null && !dialog.isShowing()) {
-            dialog.show();
-        }
-    }
+    public static Dialog createCustom(Activity activity, View view) {
+        final Dialog dialog = new Dialog(activity, R.style.mystyle);
 
-    /**
-     * 撤销对话框
-     */
-    public static void dismiss(Dialog dialog) {
-        if (dialog != null && dialog.isShowing()) {
-            dialog.dismiss();
-        }
+        WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
+        DisplayMetrics d = activity.getResources().getDisplayMetrics(); // 获取屏幕宽、高用
+        lp.width = (int) (d.widthPixels * 0.8); // 高度设置为屏幕的0.6
+
+        dialog.setContentView(view, lp);
+        return dialog;
     }
 
     /**

@@ -2,11 +2,15 @@
 <manifest package="com.bjxrgz.startup"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- 用于访问网络，网络定位需要上网 -->
+    <!-- 访问网络 -->
     <uses-permission android:name="android.permission.INTERNET"/>
-    <!-- 用于读取手机当前的状态 -->
+    <!-- 访问网络状态 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!-- 访问WIFI状态 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <!-- 读取手机状态 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <!-- 写入扩展存储，向扩展卡写入数据，用于写入缓存定位数据 -->
+    <!-- 向扩展卡写入数据 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
@@ -17,17 +21,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!-- umeng data -->
-        <meta-data
-            android:name="UMENG_APPKEY"
-            android:value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"/>
-        <meta-data
-            android:name="UMENG_MESSAGE_SECRET"
-            android:value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"/>
-        <meta-data
-            android:name="UMENG_CHANNEL"
-            android:value="Channel ID"/>
-
         <!-- 启动页 -->
         <activity android:name=".activity.WelcomeActivity">
             <intent-filter>
@@ -37,11 +30,27 @@
             </intent-filter>
         </activity>
         <!-- 广告页 -->
-        <activity android:name=".activity.AdvertActivity">
-        </activity>
+        <activity android:name=".activity.AdvertActivity"/>
         <!-- 主页面 -->
         <activity android:name=".activity.HomeActivity">
+            <!--<intent-filter>-->
+            <!--<action android:name="android.intent.action.MAIN"/>-->
+
+            <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--</intent-filter>-->
         </activity>
+
+        <!-- 项目依赖 -->
+        <!-- 友盟 -->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"/>
+        <meta-data
+            android:name="UMENG_MESSAGE_SECRET"
+            android:value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"/>
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="Channel ID"/>
 
     </application>
 

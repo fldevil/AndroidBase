@@ -1,13 +1,41 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="AppBaseTheme">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <!--<item name="colorPrimary">@color/colorPrimary</item>-->
+        <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+        <!--<item name="colorAccent">@color/colorAccent</item>-->
     </style>
 
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- 应用亮色调，标题栏默认颜色 -->
+        <item name="colorPrimary">@color/color_primary</item>
+        <!-- 应用暗色调，状态栏默认颜色 -->
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <!-- 控件选中颜色 -->
+        <item name="colorAccent">@color/color_accent</item>
+        <!-- 控件按压颜色 -->
+        <item name="colorControlHighlight">@color/color_control_highlight</item>
+        <!-- 按钮颜色 -->
+        <item name="colorButtonNormal">@color/button_color</item>
+        <!-- 字体颜色 -->
+        <item name="android:textColor">@android:color/black</item>
+        <!-- 背景颜色 -->
+        <item name="android:windowBackground">@android:color/white</item>
+        <!-- 整体跳转动画 -->
+        <item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
+    </style>
+
+    <!-- activity跳转动画  也可在BaseActivity中初始化 -->
+    <style name="ActivityAnimation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_right_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/slide_left_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/slide_left_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/slide_right_out</item>
+    </style>
+
+    <!-- 自定义对话框样式 -->
     <style name="mystyle" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
@@ -15,6 +43,77 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@drawable/bg</item>
         <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    <!-- 文字bar -->
+    <style name="tvBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <!--<item name="android:drawableRight">@mipmap/ico_xiangqing_normal</item>-->
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:textSize">@dimen/font_normal</item>
+        <item name="android:textColor">@color/font_black</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <!--<item name="android:focusable">false</item>-->
+    </style>
+
+    <!-- 横线 -->
+    <style name="mLine">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+        <item name="android:background">#cccccc</item>
+    </style>
+
+    <!-- 竖线 -->
+    <style name="mLine2">
+        <item name="android:layout_width">1px</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">#cccccc</item>
+    </style>
+
+    <!-- EditText样式 -->
+    <style name="MyEditText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@null</item>
+        <item name="android:textColor">@color/font_black</item>
+        <item name="android:textColorHint">#cccccc</item>
+        <item name="android:textSize">@dimen/font_normal</item>
+    </style>
+
+    <!-- 黑色12sp -->
+    <style name="FontBlackSmall">
+        <item name="android:textColor">@color/font_black</item>
+        <item name="android:textSize">@dimen/font_small</item>
+    </style>
+    <!-- 黑色14sp -->
+    <style name="FontBlackNormal">
+        <item name="android:textColor">@color/font_black</item>
+        <item name="android:textSize">@dimen/font_normal</item>
+    </style>
+    <!-- 黑色16sp -->
+    <style name="FontBlackBig">
+        <item name="android:textColor">@color/font_black</item>
+        <item name="android:textSize">@dimen/font_big</item>
+    </style>
+
+    <!-- 白色12sp -->
+    <style name="FontWhiteSmall">
+        <item name="android:textColor">@color/font_white</item>
+        <item name="android:textSize">@dimen/font_small</item>
+    </style>
+    <!-- 白色14sp -->
+    <style name="FontWhiteNormal">
+        <item name="android:textColor">@color/font_white</item>
+        <item name="android:textSize">@dimen/font_normal</item>
+    </style>
+    <!-- 白色16sp -->
+    <style name="FontWhiteBig">
+        <item name="android:textColor">@color/font_white</item>
+        <item name="android:textSize">@dimen/font_big</item>
     </style>
 
 </resources>

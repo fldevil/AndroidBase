@@ -2,6 +2,7 @@ package com.bjxrgz.startup.utils;
 
 import android.graphics.Bitmap;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -103,23 +104,50 @@ public class StreamUtils {
         return false;
     }
 
-    public static boolean getFile(Bitmap bmp, File target) {
-        FileOutputStream fos = null;
+    public static boolean getFilePNG(Bitmap bmp, File target) {
+        BufferedOutputStream bos = null;
         try {
-            fos = new FileOutputStream(target);
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            fos.flush();
+            bos = new BufferedOutputStream(new FileOutputStream(target));
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, bos); //  100不压缩
+            bos.flush();
+            bos.close();
             return true;
 
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             try {
-                if (fos != null) {
-                    fos.flush();
+                if (bos != null) {
+                    bos.flush();
                 }
-                if (fos != null) {
-                    fos.close();
+                if (bos != null) {
+                    bos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    public static boolean getFileJPEG(Bitmap bmp, File target) {
+        BufferedOutputStream bos = null;
+        try {
+            bos = new BufferedOutputStream(new FileOutputStream(target));
+            bmp.compress(Bitmap.CompressFormat.JPEG, 50, bos); //  50压缩
+            bos.flush();
+            bos.close();
+            return true;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (bos != null) {
+                    bos.flush();
+                }
+                if (bos != null) {
+                    bos.close();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
