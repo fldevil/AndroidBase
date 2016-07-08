@@ -24,7 +24,7 @@
         <!-- 背景颜色 -->
         <item name="android:windowBackground">@android:color/white</item>
         <!-- 整体跳转动画 -->
-        <item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
+        <!--<item name="android:windowAnimationStyle">@style/ActivityAnimation</item>-->
     </style>
 
     <!-- activity跳转动画  也可在BaseActivity中初始化 -->
