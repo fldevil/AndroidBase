@@ -7,6 +7,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.transition.AutoTransition;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -22,6 +24,8 @@ import android.view.animation.Animation;
 import com.bjxrgz.startup.utils.DialogUtils;
 import com.bjxrgz.startup.utils.LogUtils;
 
+import org.xutils.x;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -32,6 +36,8 @@ import java.lang.reflect.Method;
  */
 public abstract class BaseFragment extends Fragment {
 
+    public FragmentActivity mActivity;
+    public FragmentManager mFragmentManager;
     protected Bundle mBundle;// 接受数据的Bundle
     private String cls = "BaseFragment";// 子类的类名
     private BaseInterface.BaseActivityView mListener;// 这个监听器是向activity传数据的
@@ -117,6 +123,10 @@ public abstract class BaseFragment extends Fragment {
         } else {
             LogUtils.log(Log.DEBUG, cls, "no implement Activity2FragmentListener");
         }
+        if (context instanceof FragmentActivity) {
+            mActivity = (FragmentActivity) context;
+            mFragmentManager = mActivity.getSupportFragmentManager();
+        }
         // 过渡动画效果
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             this.setEnterTransition(new AutoTransition());
@@ -154,9 +164,12 @@ public abstract class BaseFragment extends Fragment {
         View view = getView();
         if (view == null) {
             LogUtils.log(Log.DEBUG, cls, "----->onCreateView == null");
-            return createView(inflater, container, savedInstanceState);
+            View view1 = createView(inflater, container, savedInstanceState);
+            x.view().inject(this, view1); // xUtils在fragment的初始化
+            return view1;
         } else {
             LogUtils.log(Log.DEBUG, cls, "----->onCreateView == exist");
+            x.view().inject(this, view); // xUtils在fragment的初始化
             return view;
         }
     }
