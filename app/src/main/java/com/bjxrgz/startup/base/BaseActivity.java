@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.Fade;
 import android.util.Log;
@@ -36,6 +37,7 @@ import java.lang.reflect.ParameterizedType;
  */
 public abstract class BaseActivity<T> extends AppCompatActivity {
 
+    protected FragmentManager mFragmentManager;
     private BaseInterface.BaseFragmentView mListener;// 这个监听器是向fragment传数据的
     protected Bundle mBundle = new Bundle();// 接受到的fragment的数据
     protected Activity mActivity;
@@ -101,6 +103,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
         mActivity = this; // 实例
         x.view().inject(this);// xUtils在activity的初始化
         PushAgent.getInstance(this).onAppStart();//umeng push init
+        mFragmentManager = getSupportFragmentManager(); // fragment管理者
         create(savedInstanceState); // 抽象方法
     }
 
