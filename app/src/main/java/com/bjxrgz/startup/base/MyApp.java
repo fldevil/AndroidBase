@@ -15,6 +15,7 @@ import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.bjxrgz.startup.manager.UserManager;
 import com.bjxrgz.startup.utils.LogUtils;
 
 import org.json.JSONObject;
@@ -54,9 +55,13 @@ public class MyApp extends Application {
     // umeng device token
     public static String DEVICE_TOKEN = "dsfaghhghfdfh";
     //设备类型
-    public static final String DEVICE = "android";
+    public static final String DEVICE = "Android";
     //操作系统
     public static final String SYSTEM_VERSION = android.os.Build.VERSION.RELEASE;
+    //APP版本名
+    public static String APP_VERSION_NAME = "1.0";
+    //APP版本名
+    public static int APP_VERSION_CODE = 1;
     //
     public static final String APPLICAITON_EXIT_ACTION = "com.package.ACTION_LOGOUT";
 
@@ -64,7 +69,9 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
-        x.Ext.init(this);// xUtils 初始化
+        x.Ext.init(this); // xUtils 初始化
+        UserManager.init(this); // User管理类初始化
+
         if (PRINT_LOG) {
             x.Ext.setDebug(BuildConfig.DEBUG); // xUtils log
         }

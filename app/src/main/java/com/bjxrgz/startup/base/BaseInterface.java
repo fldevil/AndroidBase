@@ -27,5 +27,16 @@ public interface BaseInterface {
         Bundle toActivity(Bundle bundle);
     }
 
+    /**
+     * APIManager里的接口定义
+     */
+    interface Callback<T> {
+
+        void onSuccess(T result);
+
+        void onFinished();
+
+    }
+
 }
 

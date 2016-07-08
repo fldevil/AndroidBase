@@ -37,7 +37,7 @@ import java.lang.reflect.ParameterizedType;
 public abstract class BaseActivity<T> extends AppCompatActivity {
 
     private BaseInterface.BaseFragmentView mListener;// 这个监听器是向fragment传数据的
-    protected Bundle fromFragment = new Bundle();// 接受到的fragment的数据
+    protected Bundle mBundle = new Bundle();// 接受到的fragment的数据
     protected Activity mActivity;
     protected ProgressDialog pb;
 
@@ -70,7 +70,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     public void goFragment(Bundle bundle) {
         if (mListener != null) {
-            fromFragment = mListener.toFragment(bundle);
+            mBundle = mListener.toFragment(bundle);
         }
     }
 
@@ -346,6 +346,14 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     }
 
     /**
+     * context启动activity
+     */
+    public static void startActivity(Context context, Intent intent) {
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+    /**
      * activity启动activity
      */
     public static void startActivity(Activity activity, Intent intent, boolean anim) {
@@ -372,14 +380,6 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
             // if (anim) // 4.4跳转效果
             // parentActivity.overridePendingTransition(kitkatAnimIn, kitkatAnimOut);
         }
-    }
-
-    /**
-     * context启动activity
-     */
-    public static void startActivity(Context context, Intent intent) {
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
     }
 
     /**

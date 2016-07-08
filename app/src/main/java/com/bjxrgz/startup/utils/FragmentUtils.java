@@ -87,6 +87,19 @@ public class FragmentUtils {
     }
 
     /**
+     * 使用另一个Fragment替换当前的，实际上就是remove()然后add()的合体
+     */
+    public static void replace(FragmentManager manager, Fragment fragment, int replaceId) {
+        // fragment事务，被忘了commit
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(replaceId, fragment);
+        // commit方法一定要在Activity.onSaveInstance()之前调用
+        transaction.commit();
+        // 异步执行？
+        // manager.executePendingTransactions();
+    }
+
+    /**
      * 可以保存状态哦, 先add/replace/show再hide
      * 只执行onPrepareOptionsMenu
      */

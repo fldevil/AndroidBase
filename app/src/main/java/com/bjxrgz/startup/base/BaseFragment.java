@@ -1,5 +1,6 @@
 package com.bjxrgz.startup.base;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 
+import com.bjxrgz.startup.utils.DialogUtils;
 import com.bjxrgz.startup.utils.LogUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -30,9 +32,10 @@ import java.lang.reflect.Method;
  */
 public abstract class BaseFragment extends Fragment {
 
-    protected Bundle fromActivity;// 接受数据的Bundle
+    protected Bundle mBundle;// 接受数据的Bundle
     private String cls = "BaseFragment";// 子类的类名
     private BaseInterface.BaseActivityView mListener;// 这个监听器是向activity传数据的
+    protected ProgressDialog pb;
 
     /**
      * 两种方法获取当前fragment的实例
@@ -78,7 +81,7 @@ public abstract class BaseFragment extends Fragment {
      */
     public void goActivity(Bundle bundle) {
         if (mListener != null) {
-            fromActivity = mListener.toActivity(bundle);
+            mBundle = mListener.toActivity(bundle);
         }
     }
 
@@ -91,7 +94,7 @@ public abstract class BaseFragment extends Fragment {
 
     /**
      * **********************************以下是生命周期*******************************
-     * <p/>
+     * <p>
      * 在xml中定义的，onInflate方法第一个被调用,否则直接下一步
      */
     @Override
@@ -132,10 +135,11 @@ public abstract class BaseFragment extends Fragment {
         super.onCreate(savedInstanceState);
         LogUtils.log(Log.DEBUG, cls, "----->onCreate");
         setHasOptionsMenu(true);// Fragment与ActionBar和MenuItem集成
+        pb = DialogUtils.createProgress(getContext(), null, "请稍候.....", false, false, null);
 
         if (getArguments() != null) {
-            fromActivity = getArguments();
-            cls = fromActivity.getString("cls");
+            mBundle = getArguments();
+            cls = mBundle.getString("cls");
         }
     }
 
@@ -281,7 +285,7 @@ public abstract class BaseFragment extends Fragment {
 
     /**
      * **************************************以上是生命周期**************************************
-     * <p/>
+     * <p>
      * 捕获是否hide的状态，可以做更新操作
      */
     @Override

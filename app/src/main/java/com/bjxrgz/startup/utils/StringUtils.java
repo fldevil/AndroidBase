@@ -14,10 +14,15 @@ public class StringUtils {
 
     /**
      * 判断字符串是否为空
+     *
+     * @param str 字符串
+     * @return 为空返回true  不为空返回false
      */
     public static boolean isNullOrEmpty(String str) {
-
-        return str == null || str.isEmpty();
+        if (str == null || str.isEmpty()) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -32,7 +37,7 @@ public class StringUtils {
      * 判断是否为数字
      */
     public static boolean isNumber(String src) {
-        if (!TextUtils.isEmpty(src))
+        if (TextUtils.isEmpty(src))
             return false;
         Pattern pattern = Pattern.compile("^[1-9]\\d*$");
         Matcher m = pattern.matcher(src);
@@ -43,7 +48,7 @@ public class StringUtils {
      * 判断是否为邮箱
      */
     public static boolean isEmail(String src) {
-        if (!TextUtils.isEmpty(src))
+        if (TextUtils.isEmpty(src))
             return false;
         Pattern p = Pattern.compile("\\w+@\\w+(\\.\\w+)+");
         Matcher m = p.matcher(src);
@@ -54,7 +59,7 @@ public class StringUtils {
      * 判断是否为手机号 11位
      */
     public static boolean isMobileNumber(String src) {
-        if (!TextUtils.isEmpty(src))
+        if (TextUtils.isEmpty(src))
             return false;
         Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
         Pattern p2 = Pattern.compile("^1[3|4|5|8]\\d{9}$");
