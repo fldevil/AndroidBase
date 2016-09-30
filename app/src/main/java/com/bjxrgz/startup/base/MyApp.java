@@ -14,6 +14,7 @@ import android.util.Log;
 import com.bjxrgz.startup.manager.PushManager;
 import com.bjxrgz.startup.manager.UserManager;
 import com.bjxrgz.startup.manager.XUtilsManager;
+import com.bjxrgz.startup.utils.DeviceUtils;
 import com.bjxrgz.startup.utils.LogUtils;
 
 import java.util.LinkedList;
@@ -23,12 +24,11 @@ import java.util.concurrent.Executors;
 
 public class MyApp extends Application {
 
-
     public static final boolean IS_RELEASE = false; // 是否正式版本
 
-    public static final String LOG_TAG = "app名称"; // LogTag
-
     public static final boolean IS_LOG = true; // log开关
+
+    public static final String LOG_TAG = "app名称"; // LogTag
 
     public static MyApp instance;  // 当前实例
 
@@ -44,7 +44,7 @@ public class MyApp extends Application {
 
     public static String DEVICE_ID; // 设备id
 
-    public static String DEVICE_TOKEN;  // umeng device token
+    public static String DEVICE_TOKEN;  // 友盟 device token
 
     public static final String PLATFORM = "Android"; // 设备类型
 
@@ -60,6 +60,10 @@ public class MyApp extends Application {
         PushManager.initAPP(this); // 推送初始化
         XUtilsManager.initApp(this, MyApp.IS_LOG); // xUtils 初始化
         UserManager.initApp(this); // 初始化preference
+
+        APP_VERSION_NAME = DeviceUtils.getVersionName(this);
+        APP_VERSION_CODE = DeviceUtils.getVersionCode(this);
+        DEVICE_ID = DeviceUtils.getDeviceId(this);
 
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             STORE_DIR = Environment.getExternalStorageDirectory() + "/" + LOG_TAG + "/";
