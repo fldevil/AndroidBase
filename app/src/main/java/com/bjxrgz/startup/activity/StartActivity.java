@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.bjxrgz.startup.R;
 import com.bjxrgz.startup.base.BaseActivity;
 import com.bjxrgz.startup.base.MyApp;
+import com.bjxrgz.startup.manager.PushManager;
 
 import org.xutils.view.annotation.ContentView;
 
@@ -18,6 +19,8 @@ public class StartActivity extends BaseActivity<StartActivity> {
 
     @Override
     protected void create(Bundle savedInstanceState) {
+        PushManager.setPush(true);
+
         goHome();
     }
 
