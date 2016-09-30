@@ -1,5 +1,7 @@
 package com.bjxrgz.startup.utils;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -12,6 +14,8 @@ import android.view.WindowManager;
 import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.Toast;
+
+import java.util.Calendar;
 
 /**
  * Created by fd.meng on 2014/03/30
@@ -53,7 +57,7 @@ public class WidgetUtils {
     /**
      * 创建适配的PopupWindow，不要多次创建
      */
-    public static PopupWindow creatPopWindow(View popView) {
+    public static PopupWindow createPopWindow(View popView) {
         PopupWindow popupWindow = new PopupWindow(popView,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT);
@@ -70,11 +74,15 @@ public class WidgetUtils {
     /**
      * 创建指定宽高的PopupWindow，不要多次创建
      */
-    public static PopupWindow creatPopWindow(View popView, int width, int height) {
+    public static PopupWindow createPopWindow(View popView, int width, int height) {
         PopupWindow popupWindow = new PopupWindow(popView, width, height);
         //还必须设置一个背景图，这里是透明背景
         popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         popupWindow.setOutsideTouchable(true);//点击其他地方消失
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            popupWindow.setEnterTransition(new AutoTransition());
+            popupWindow.setExitTransition(new AutoTransition());
+        }
         return popupWindow;
     }
 
@@ -88,7 +96,7 @@ public class WidgetUtils {
     }
 
     /**
-     * 显示popupWindow ,会依附在anchor的上面
+     * 显示popupWindow ,会依附在anchor的下方(有动画)
      */
     public static void showPopWindow(PopupWindow popupWindow, View anchor) {
         if (popupWindow != null && !popupWindow.isShowing()) {
@@ -125,4 +133,30 @@ public class WidgetUtils {
         return menu;
     }
 
+    /**
+     * 创建系统日期选择对话框
+     */
+    public static void systemDatePickerShow(Context context, Calendar calendar,
+                                            DatePickerDialog.OnDateSetListener onDateSetListener){
+        new DatePickerDialog(context,onDateSetListener,calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    /**
+     * 创建系统时间选择对话框 24小时
+     */
+    public static void systemTimePickerShow24(Context context, Calendar calendar,
+                                              TimePickerDialog.OnTimeSetListener onTimeSetListener){
+        new TimePickerDialog(context,onTimeSetListener,calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE),true).show();
+    }
+
+    /**
+     * 创建系统时间选择对话框 12小时
+     */
+    public static void systemTimePickerShow12(Context context, Calendar calendar,
+                                              TimePickerDialog.OnTimeSetListener onTimeSetListener){
+        new TimePickerDialog(context,onTimeSetListener,calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE),false).show();
+    }
 }

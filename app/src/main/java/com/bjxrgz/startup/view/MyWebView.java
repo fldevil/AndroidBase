@@ -9,36 +9,40 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.bjxrgz.startup.utils.FileUtils;
+
 /**
  * 通用WebView
  */
 public class MyWebView extends WebView {
 
     // 缓存目录
-    private String cacheDir = getContext().getFilesDir().getAbsolutePath() + "web_cache";
+    private String cacheDir;
 
     public MyWebView(Context context) {
         super(context);
-        init();
+        init(context);
     }
 
     public MyWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(context);
     }
 
     public MyWebView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(context);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public MyWebView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init();
+        init(context);
     }
 
-    private void init() {
+    private void init(Context context) {
+        cacheDir = FileUtils.getExternalCacheDir(context).getAbsolutePath() + "web_cache";
+
         // 还可以(can)goBack / (can)goForward
 
         // 设置监听
@@ -60,8 +64,7 @@ public class MyWebView extends WebView {
             }
         });
 
-
-        //使用isInEditMode解决可视化编辑器无法识别自定义控件的问题
+        // 使用isInEditMode解决可视化编辑器无法识别自定义控件的问题
         if (isInEditMode()) {
             return;
         }
@@ -72,19 +75,19 @@ public class MyWebView extends WebView {
         WebSettings settings = getSettings();
         settings.setDefaultTextEncodingName("UTF-8");
         settings.setJavaScriptEnabled(true);// 支持JavaScript
-        settings.setJavaScriptCanOpenWindowsAutomatically(true); //支持通过JS打开新窗口
-        settings.supportMultipleWindows();  //多窗口
+        settings.setJavaScriptCanOpenWindowsAutomatically(true); // 支持通过JS打开新窗口
+        settings.supportMultipleWindows();  // 多窗口
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN); //支持内容重新布局
-        settings.setAllowFileAccess(true);  //设置可以访问文件
-        settings.setNeedInitialFocus(true); //当webView调用requestFocus时为webView设置节点
-        settings.setDomStorageEnabled(true);//开启DOM storage API功能
-        settings.setDatabaseEnabled(true); //开启database storage 功能
+        settings.setAllowFileAccess(true);  // 设置可以访问文件
+        settings.setNeedInitialFocus(true); // 当webView调用requestFocus时为webView设置节点
+        settings.setDomStorageEnabled(true);// 开启DOM storage API功能
+        settings.setDatabaseEnabled(true); // 开启database storage 功能
         // 缩放设置
-        settings.setBuiltInZoomControls(true); // 支持缩放
-        settings.setSupportZoom(true);         //支持缩放
+//        settings.setBuiltInZoomControls(true); // 支持缩放
+//        settings.setSupportZoom(true);         // 支持缩放
         settings.setLoadWithOverviewMode(true);// 缩放至屏幕的大小
         // 图片加载设置
-        settings.setUseWideViewPort(true); //将图片调整到适合webView的大小
+        settings.setUseWideViewPort(true); // 将图片调整到适合webView的大小
         settings.setLoadsImagesAutomatically(true);// 支持自动加载图片
         settings.setBlockNetworkImage(false);
         // 缓存设置

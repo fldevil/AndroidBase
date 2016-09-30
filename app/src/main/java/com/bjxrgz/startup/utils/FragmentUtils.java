@@ -50,8 +50,26 @@ public class FragmentUtils {
         transaction.add(addID, fragment, tag);
         if (stack)
             transaction.addToBackStack(null);
-        // commit方法一定要在Activity.onSaveInstance()之前调用
-        transaction.commit();
+        // commit方法一定要在onSaveInstance()之前调用，或者以下方法，或者handler.post
+        transaction.commitAllowingStateLoss();
+        // 异步执行,立即执行commit()提供的transaction。
+//        manager.executePendingTransactions();
+    }
+
+    /**
+     * 添加，会遮挡主后面的
+     */
+    public static void add(FragmentManager manager, Fragment fragment, int addID) {
+        if (fragment.isAdded()) {
+            return;
+        }
+        // fragment事务，被忘了commit
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.add(addID, fragment);
+        // commit方法一定要在onSaveInstance()之前调用，或者以下方法，或者handler.post
+        transaction.commitAllowingStateLoss();
+        // 异步执行,立即执行commit()提供的transaction。
+//        manager.executePendingTransactions();
     }
 
     /**
@@ -66,8 +84,10 @@ public class FragmentUtils {
         transaction.remove(fragment);
         if (stack)
             transaction.addToBackStack(null);
-        // commit方法一定要在Activity.onSaveInstance()之前调用
-        transaction.commit();
+        // commit方法一定要在onSaveInstance()之前调用，或者以下方法，或者handler.post
+        transaction.commitAllowingStateLoss();
+        // 异步执行,立即执行commit()提供的transaction。
+//        manager.executePendingTransactions();
     }
 
     /**
@@ -78,12 +98,13 @@ public class FragmentUtils {
         // fragment事务，被忘了commit
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(replaceId, fragment, tag);
-        if (stack)
+        if (stack) {
             transaction.addToBackStack(null);
-        // commit方法一定要在Activity.onSaveInstance()之前调用
-        transaction.commit();
-        // 异步执行？
-        // manager.executePendingTransactions();
+        }
+        // commit方法一定要在onSaveInstance()之前调用，或者以下方法，或者handler.post
+        transaction.commitAllowingStateLoss();
+        // 异步执行,立即执行commit()提供的transaction。
+//        manager.executePendingTransactions();
     }
 
     /**
@@ -93,10 +114,10 @@ public class FragmentUtils {
         // fragment事务，被忘了commit
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(replaceId, fragment);
-        // commit方法一定要在Activity.onSaveInstance()之前调用
-        transaction.commit();
-        // 异步执行？
-        // manager.executePendingTransactions();
+        // commit方法一定要在onSaveInstance()之前调用，或者以下方法，或者handler.post
+        transaction.commitAllowingStateLoss();
+        // 异步执行,立即执行commit()提供的transaction。
+//         manager.executePendingTransactions();
     }
 
     /**
@@ -112,8 +133,10 @@ public class FragmentUtils {
         transaction.hide(fragment);
         if (stack)
             transaction.addToBackStack(null);
-        // commit方法一定要在Activity.onSaveInstance()之前调用
-        transaction.commit();
+        // commit方法一定要在onSaveInstance()之前调用，或者以下方法，或者handler.post
+        transaction.commitAllowingStateLoss();
+        // 异步执行,立即执行commit()提供的transaction。
+//        manager.executePendingTransactions();
     }
 
     /**
@@ -129,8 +152,10 @@ public class FragmentUtils {
         transaction.show(fragment);
         if (stack)
             transaction.addToBackStack(null);
-        // commit方法一定要在Activity.onSaveInstance()之前调用
-        transaction.commit();
+        // commit方法一定要在onSaveInstance()之前调用，或者以下方法，或者handler.post
+        transaction.commitAllowingStateLoss();
+        // 异步执行,立即执行commit()提供的transaction。
+//        manager.executePendingTransactions();
     }
 
 }

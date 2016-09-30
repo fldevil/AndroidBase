@@ -27,13 +27,17 @@ public class DialogUtils {
     /**
      * 自定义对话框
      */
-    public static Dialog createCustom(Activity activity, View view) {
-        final Dialog dialog = new Dialog(activity, R.style.mystyle);
+    public static Dialog createCustom(Activity activity, View view, float height, float width) {
+        final Dialog dialog = new Dialog(activity, R.style.mCustomDialog);
 
         WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
         DisplayMetrics d = activity.getResources().getDisplayMetrics(); // 获取屏幕宽、高用
-        lp.width = (int) (d.widthPixels * 0.8); // 高度设置为屏幕的0.6
-
+        if (height != 0) {
+            lp.height = (int) (d.heightPixels * height); // 高度设置为屏幕的0.x
+        }
+        if (width != 0) {
+            lp.width = (int) (d.widthPixels * width); // 高度设置为屏幕的0.x
+        }
         dialog.setContentView(view, lp);
         return dialog;
     }
@@ -61,18 +65,24 @@ public class DialogUtils {
     /**
      * 警告对话框
      */
-    public static AlertDialog createAlert(Context context, String title,
-                                          String message, View view, String positive,
-                                          final DialogInterface.OnClickListener listener) {
+    public static AlertDialog createAlert(Context context, String title, String message,
+                                          String positive, String negative,
+                                          final DialogInterface.OnClickListener positiveListener,
+                                          final DialogInterface.OnClickListener negativeListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        if (TextUtils.isEmpty(title)) {
+            title = context.getString(R.string.prompt);
+        }
         builder.setTitle(title);
         builder.setMessage(message);
-        builder.setView(view);
         if (TextUtils.isEmpty(positive)) {
-            positive = "确定";
+            positive = context.getString(R.string.confirm);
         }
-        builder.setPositiveButton(positive, listener);
-        builder.setNegativeButton("取消", null);
+        if (TextUtils.isEmpty(negative)) {
+            negative = context.getString(R.string.cancel);
+        }
+        builder.setPositiveButton(positive, positiveListener);
+        builder.setNegativeButton(negative, negativeListener);
         return builder.create();
     }
 
@@ -87,7 +97,7 @@ public class DialogUtils {
         builder.setTitle(title);
         builder.setSingleChoiceItems(items, checkedId, choiceListener);
         builder.setPositiveButton(positive, positiveListener);
-        builder.setNegativeButton("取消", null);
+        builder.setNegativeButton(R.string.cancel, null);
         return builder.create();
     }
 
@@ -101,11 +111,11 @@ public class DialogUtils {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title);
         if (TextUtils.isEmpty(positive)) {
-            positive = "确定";
+            positive = context.getString(R.string.confirm);
         }
         builder.setMultiChoiceItems(items, checkedState, choiceListener);
         builder.setPositiveButton(positive, positiveListener);
-        builder.setNegativeButton("取消", null);
+        builder.setNegativeButton(R.string.cancel, null);
         return builder.create();
     }
 

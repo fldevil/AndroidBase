@@ -3,13 +3,11 @@ package com.bjxrgz.startup.base;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.transition.AutoTransition;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -21,10 +19,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 
+import com.bjxrgz.startup.R;
+import com.bjxrgz.startup.manager.XUtilsManager;
+import com.bjxrgz.startup.utils.AnimUtils;
 import com.bjxrgz.startup.utils.DialogUtils;
 import com.bjxrgz.startup.utils.LogUtils;
-
-import org.xutils.x;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -37,11 +36,11 @@ import java.lang.reflect.Method;
 public abstract class BaseFragment extends Fragment {
 
     public FragmentActivity mActivity;
+    public BaseFragment mFragment;
     public FragmentManager mFragmentManager;
     protected Bundle mBundle;// 接受数据的Bundle
-    private String cls = "BaseFragment";// 子类的类名
-    private BaseInterface.BaseActivityView mListener;// 这个监听器是向activity传数据的
     protected ProgressDialog pb;
+    private String logTag = "BaseFragment";// 子类的类名
 
     /**
      * 两种方法获取当前fragment的实例
@@ -55,7 +54,7 @@ public abstract class BaseFragment extends Fragment {
             // 走的无参构造函数
             fragment = clz.newInstance();
             // 往Bundle里传值，这里是子类的类名
-            args.putString("cls", fragment.getClass().getSimpleName());
+            args.putString("logTag", fragment.getClass().getSimpleName());
             // 执行setArguments方法
             setArguments.invoke(fragment, args);
         } catch (InvocationTargetException e) {
@@ -73,30 +72,19 @@ public abstract class BaseFragment extends Fragment {
     /**
      * 2.子类重写类似方法 获取对象
      */
-    public static BaseFragment newBaseFragment() {
+    public static BaseFragment newFragment() {
         Bundle bundle = new Bundle();
         BaseFragment baseFragment = BaseFragment.newInstance(BaseFragment.class, bundle);
         // 设置bundle的内容...
-        bundle.putString("cls", "手动写当前类名字");
+        bundle.putString("logTag", "手动写当前类名字");
         baseFragment.setArguments(bundle);
         return baseFragment;
-    }
-
-    /**
-     * 将bundle传送给activity数据,在需要回传的地方调用(fragment类中调用)
-     */
-    public void goActivity(Bundle bundle) {
-        if (mListener != null) {
-            mBundle = mListener.toActivity(bundle);
-        }
     }
 
     protected abstract View createView(LayoutInflater inflater, ViewGroup container,
                                        Bundle savedInstanceState);
 
     protected abstract void viewCreate(View view, @Nullable Bundle savedInstanceState);
-
-    protected abstract void detach();
 
     /**
      * **********************************以下是生命周期*******************************
@@ -105,7 +93,7 @@ public abstract class BaseFragment extends Fragment {
      */
     @Override
     public void onInflate(Context context, AttributeSet attrs, Bundle savedInstanceState) {
-        LogUtils.log(Log.DEBUG, cls, "----->onInflate");
+        LogUtils.log(Log.DEBUG, logTag, "----->onInflate");
         super.onInflate(context, attrs, savedInstanceState);
 
     }
@@ -116,24 +104,14 @@ public abstract class BaseFragment extends Fragment {
      */
     @Override
     public void onAttach(Context context) {
-        LogUtils.log(Log.DEBUG, cls, "----->onAttach");
+        LogUtils.log(Log.DEBUG, logTag, "----->onAttach");
         super.onAttach(context);
-        if (context instanceof BaseInterface.BaseActivityView) {
-            mListener = (BaseInterface.BaseActivityView) context;
-        } else {
-            LogUtils.log(Log.DEBUG, cls, "no implement Activity2FragmentListener");
-        }
         if (context instanceof FragmentActivity) {
             mActivity = (FragmentActivity) context;
             mFragmentManager = mActivity.getSupportFragmentManager();
         }
-        // 过渡动画效果
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            this.setEnterTransition(new AutoTransition());
-            this.setExitTransition(new AutoTransition());
-            this.setReenterTransition(new AutoTransition());
-            this.setReturnTransition(new AutoTransition());
-        }
+        AnimUtils.initBaseFragment(this); // 过渡动画效果
+        mFragment = this;
     }
 
     /**
@@ -143,13 +121,13 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LogUtils.log(Log.DEBUG, cls, "----->onCreate");
+        LogUtils.log(Log.DEBUG, logTag, "----->onCreate");
         setHasOptionsMenu(true);// Fragment与ActionBar和MenuItem集成
-        pb = DialogUtils.createProgress(getContext(), null, "请稍候.....", false, false, null);
+        pb = DialogUtils.createProgress(getContext(), null, getString(R.string.wait), false, true, null);
 
-        if (getArguments() != null) {
+        if (getArguments() != null) { // 取出打印log
             mBundle = getArguments();
-            cls = mBundle.getString("cls");
+            logTag = mBundle.getString("logTag");
         }
     }
 
@@ -162,16 +140,12 @@ public abstract class BaseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = getView();
+        LogUtils.log(Log.DEBUG, logTag, "----->onCreateView(null)--->" + (view == null));
         if (view == null) {
-            LogUtils.log(Log.DEBUG, cls, "----->onCreateView == null");
-            View view1 = createView(inflater, container, savedInstanceState);
-            x.view().inject(this, view1); // xUtils在fragment的初始化
-            return view1;
-        } else {
-            LogUtils.log(Log.DEBUG, cls, "----->onCreateView == exist");
-            x.view().inject(this, view); // xUtils在fragment的初始化
-            return view;
+            view = createView(inflater, container, savedInstanceState);
         }
+        XUtilsManager.initBaseFragment(this, view);
+        return view;
     }
 
 
@@ -180,9 +154,8 @@ public abstract class BaseFragment extends Fragment {
      */
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        LogUtils.log(Log.DEBUG, cls, "----->onViewCreated");
+        LogUtils.log(Log.DEBUG, logTag, "----->onViewCreated");
         super.onViewCreated(view, savedInstanceState);
-
         viewCreate(view, savedInstanceState);
     }
 
@@ -192,7 +165,7 @@ public abstract class BaseFragment extends Fragment {
      */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        LogUtils.log(Log.DEBUG, cls, "----->onActivityCreated");
+        LogUtils.log(Log.DEBUG, logTag, "----->onActivityCreated");
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -201,7 +174,7 @@ public abstract class BaseFragment extends Fragment {
      */
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        LogUtils.log(Log.DEBUG, cls, "----->onViewStateRestored");
+        LogUtils.log(Log.DEBUG, logTag, "----->onViewStateRestored");
         super.onViewStateRestored(savedInstanceState);
     }
 
@@ -210,7 +183,7 @@ public abstract class BaseFragment extends Fragment {
      */
     @Override
     public void onStart() {
-        LogUtils.log(Log.DEBUG, cls, "----->onStart");
+        LogUtils.log(Log.DEBUG, logTag, "----->onStart");
         super.onStart();
     }
 
@@ -219,7 +192,7 @@ public abstract class BaseFragment extends Fragment {
      */
     @Override
     public void onResume() {
-        LogUtils.log(Log.DEBUG, cls, "----->onResume");
+        LogUtils.log(Log.DEBUG, logTag, "----->onResume");
         super.onResume();
     }
 
@@ -229,7 +202,7 @@ public abstract class BaseFragment extends Fragment {
      */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        LogUtils.log(Log.DEBUG, cls, "----->onCreateOptionsMenu");
+        LogUtils.log(Log.DEBUG, logTag, "----->onCreateOptionsMenu");
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -238,7 +211,7 @@ public abstract class BaseFragment extends Fragment {
      */
     @Override
     public void onPause() {
-        LogUtils.log(Log.DEBUG, cls, "----->onPause");
+        LogUtils.log(Log.DEBUG, logTag, "----->onPause");
         super.onPause();
     }
 
@@ -247,7 +220,7 @@ public abstract class BaseFragment extends Fragment {
      */
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        LogUtils.log(Log.DEBUG, cls, "----->onSaveInstanceState");
+        LogUtils.log(Log.DEBUG, logTag, "----->onSaveInstanceState");
     }
 
     /**
@@ -255,7 +228,7 @@ public abstract class BaseFragment extends Fragment {
      */
     @Override
     public void onStop() {
-        LogUtils.log(Log.DEBUG, cls, "----->onStop");
+        LogUtils.log(Log.DEBUG, logTag, "----->onStop");
         super.onStop();
     }
 
@@ -265,7 +238,7 @@ public abstract class BaseFragment extends Fragment {
      */
     @Override
     public void onDestroyView() {
-        LogUtils.log(Log.DEBUG, cls, "----->onDestroyView");
+        LogUtils.log(Log.DEBUG, logTag, "----->onDestroyView");
         // viewpager有四个fragment 当滑动到第四页的时候 第一页执行onDestroyView(),但没有执行onDestroy。
         // 他依然和activity关联。当在滑动到第一页的时候又执行了 onCreateView()。会出现重复加载view的局面
         // 这里的做法是个onCreateView配套的
@@ -281,7 +254,7 @@ public abstract class BaseFragment extends Fragment {
      */
     @Override
     public void onDestroy() {
-        LogUtils.log(Log.DEBUG, cls, "----->onDestroy");
+        LogUtils.log(Log.DEBUG, logTag, "----->onDestroy");
         super.onDestroy();
     }
 
@@ -290,10 +263,8 @@ public abstract class BaseFragment extends Fragment {
      */
     @Override
     public void onDetach() {
-        LogUtils.log(Log.DEBUG, cls, "----->onDetach");
+        LogUtils.log(Log.DEBUG, logTag, "----->onDetach");
         super.onDetach();
-
-        detach();
     }
 
     /**
@@ -303,7 +274,7 @@ public abstract class BaseFragment extends Fragment {
      */
     @Override
     public void onHiddenChanged(boolean hidden) {
-        LogUtils.log(Log.DEBUG, cls, "onHiddenChanged");
+        LogUtils.log(Log.DEBUG, logTag, "onHiddenChanged");
         super.onHiddenChanged(hidden);
     }
 
@@ -312,13 +283,13 @@ public abstract class BaseFragment extends Fragment {
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        LogUtils.log(Log.DEBUG, cls, "onActivityResult");
+        LogUtils.log(Log.DEBUG, logTag, "onActivityResult");
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
-        LogUtils.log(Log.DEBUG, cls, "onCreateAnimation");
+        LogUtils.log(Log.DEBUG, logTag, "onCreateAnimation");
         return super.onCreateAnimation(transit, enter, nextAnim);
     }
 
@@ -327,13 +298,13 @@ public abstract class BaseFragment extends Fragment {
      */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        LogUtils.log(Log.DEBUG, cls, "onCreateContextMenu");
+        LogUtils.log(Log.DEBUG, logTag, "onCreateContextMenu");
         super.onCreateContextMenu(menu, v, menuInfo);
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        LogUtils.log(Log.DEBUG, cls, "onContextItemSelected");
+        LogUtils.log(Log.DEBUG, logTag, "onContextItemSelected");
         return super.onContextItemSelected(item);
     }
 

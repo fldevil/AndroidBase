@@ -6,11 +6,14 @@ import android.animation.LayoutTransition;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.transition.AutoTransition;
 import android.transition.ChangeBounds;
 import android.transition.ChangeClipBounds;
 import android.transition.ChangeImageTransform;
@@ -27,6 +30,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -49,7 +53,7 @@ import java.util.List;
 
 /**
  * Created by fd.meng on 2014/03/30
- * <p/>
+ * <p>
  * AnimUtils: 动画处理类
  * 1.帧动画 AnimationDrawable ---> 是drawable的子类
  * 2.补间动画 Animation ---> 四大属性类
@@ -77,6 +81,27 @@ public class AnimUtils {
     public static final int TRANS_SLIDE = 2;    // 指定边缘进出
     public static final int TRANS_FADE = 3;     // 透明度渐变进出
 
+    public static void initBaseActivity(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = activity.getWindow();
+            window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+            window.setEnterTransition(new Fade());
+            window.setExitTransition(new Fade());
+        }
+    }
+
+    /**
+     * 只要进的动画就好，出的有时候执行不完全会bug
+     */
+    public static void initBaseFragment(Fragment fragment) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            fragment.setEnterTransition(new AutoTransition());
+//            fragment.setExitTransition(new AutoTransition());
+            fragment.setReenterTransition(new AutoTransition());
+//            fragment.setReturnTransition(new AutoTransition());
+        }
+    }
+
     /**
      * >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>帧动画<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
      *
@@ -101,7 +126,7 @@ public class AnimUtils {
 
     /**
      * >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>补间动画<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-     * <p/>
+     * <p>
      * 渐变动画
      */
     public static AlphaAnimation getAlpha(float from, float to) {
@@ -149,12 +174,11 @@ public class AnimUtils {
         for (Animation param : items) {
             set.addAnimation(param);
         }
-
         set.setStartOffset(offset); // 开始延迟时间
         set.setDuration(duration); // 持续时间
-        set.setRepeatCount(repeat); // 重复次数
+        set.setRepeatCount(repeat); // 重复次数 (默认0)
         set.setFillAfter(fill); // 是否保持在结束的位置
-        set.setRepeatMode(mode); // 重复模式？
+        set.setRepeatMode(mode); // 重复模式  (默认RESTART)
         set.setInterpolator(new DecelerateInterpolator());//此处为减速
 
         return set;
@@ -303,7 +327,7 @@ public class AnimUtils {
 
     /**
      * >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>切换动画<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-     * <p/>
+     * <p>
      * 除了可以xml里添加切换的view之外，还可以代码中动态添加
      */
     public static void addViewAnimatorChild(ViewAnimator animator, View child, int index,
@@ -321,7 +345,17 @@ public class AnimUtils {
         // 也可以AnimationUtils.load创建动画
         flipper.setInAnimation(AnimationUtils.makeInAnimation(context, true));
         flipper.setOutAnimation(AnimationUtils.makeOutAnimation(context, true));
-        flipper.setFlipInterval(delay);// 切换时间间隔
+
+//        flipper.setInAnimation(context, android.R.anim.fade_in);
+
+//        AlphaAnimation alphaIn = getAlpha(0, 1);
+//        alphaIn.setDuration(1000);
+//        flipper.setInAnimation(alphaIn);
+//        AlphaAnimation alphaOut = getAlpha(0.2F, 0);
+//        alphaOut.setDuration(500);
+//        flipper.setOutAnimation(alphaOut);
+
+        flipper.setFlipInterval(delay); // 切换时间间隔
         flipper.setAutoStart(auto); // 是否自动幻灯片
 
         return flipper;
@@ -373,7 +407,7 @@ public class AnimUtils {
 
     /**
      * >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>过渡动画<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-     * <p/>
+     * <p>
      * 用于切换的场景,就是布局
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)

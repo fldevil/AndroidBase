@@ -3,10 +3,7 @@ package com.bjxrgz.startup.utils;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Environment;
-import android.text.TextUtils;
-import android.text.format.Formatter;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.bjxrgz.startup.base.MyApp;
 
@@ -21,12 +18,8 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintStream;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -39,84 +32,145 @@ import java.util.zip.ZipInputStream;
 public class FileUtils {
 
     /**
-     * 格式化文件大小
+     * 访问Asset资源
      */
-    public static String getSize(Context context, long fileLength) {
-
-        return Formatter.formatFileSize(context, fileLength);
-    }
-
-    /**
-     * ************************************日志******************************
-     * <p>
-     * 记录日志
-     */
-    public static void writeLogFile(boolean printLog, String content, boolean isEncrypt) {
-        if (TextUtils.isEmpty(content)) {
-            return;
-        }
-        if (printLog) {
-            writeFile(MyApp.getLogPath(), content, isEncrypt);
-        }
-    }
-
-    /**
-     * 写日志文件
-     */
-    private static void writeFile(String name, String content, boolean isEncrypt) {
-
-        OutputStreamWriter osw = null;
+    public static InputStream openAsset(Context context, String fileName) {
+        AssetManager assets = context.getAssets();
         try {
-            File file = new File(name);
-            if (!file.exists()) {
-                if (!file.getParentFile().exists()) {
-                    file.getParentFile().mkdirs();
-                }
-                file.createNewFile();
-            } else if (file.length() > 1024 * 60) {// 60k
-                file.delete();
-                file.createNewFile();
-            }
-            osw = new OutputStreamWriter(new FileOutputStream(file, true));
-            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm:ss|SSS");
-            String time = "---" + (sdf.format(new Date()));
-            String logStr = content + time;
-            if (isEncrypt) {
-                logStr = Base64.encode(logStr.getBytes("utf-8"));
-            }
-            osw.write(logStr + "\n");
-        } catch (Exception ex) {
-            Log.e(MyApp.LOG_TAG, ((ex.getMessage() == null) ? "" : ex.getMessage()));
-        } finally {
-            if (osw != null) {
-                try {
-                    osw.close();
-                } catch (IOException e) {
-                    Log.e(MyApp.LOG_TAG, ((e.getMessage() == null) ? "" : e.getMessage()));
-                }
-            }
+            return assets.open(fileName);
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
     /**
-     * 写日志
+     * 关闭Asset资源
      */
-    public static void writeLogFile(boolean printLog, Exception e) {
-        if (printLog) {
+    public static void closeAsset(Context context) {
+        AssetManager assets = context.getAssets();
+
+        assets.close();
+    }
+
+    /**
+     * ************************************文件流******************************
+     * 打开内部文件输出流
+     */
+    public static FileOutputStream openFileOutput(Context context, String file) {
+        FileOutputStream outputStream = null;
+        try {
+            outputStream = context.openFileOutput(file, Context.MODE_PRIVATE);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return outputStream;
+    }
+
+    /**
+     * 打开内部文件输入流
+     */
+    public static FileInputStream openFileInput(Context context, String file) {
+        FileInputStream inputStream = null;
+        try {
+            inputStream = context.openFileInput(file);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return inputStream;
+    }
+
+    public static boolean getFile(InputStream is, File target) {
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(target);
+            byte[] buffer = new byte[1024];
+            int len;
+
+            while ((len = is.read(buffer)) != -1) {
+                fileOutputStream.write(buffer, 0, len);
+            }
+            fileOutputStream.flush();
+            return true;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
             try {
-                e.printStackTrace(new PrintStream(MyApp.getLogPath()));
-            } catch (FileNotFoundException e1) {
-                e1.printStackTrace();
-            } catch (Exception ex) {
-                Log.e(MyApp.LOG_TAG, ((ex.getMessage() == null) ? "" : ex.getMessage()));
+                if (fileOutputStream != null) {
+                    fileOutputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
+        return false;
+    }
+
+    public boolean getFile(byte[] content, File target) {
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(target);
+            fos.write(content);
+            return true;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        } finally {
+            try {
+                if (fos != null) {
+                    fos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    public static byte[] getBytes(File file) {
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(file);
+            return getBytes(fis);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fis != null) {
+                    fis.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public static byte[] getBytes(InputStream is) {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] bytes = new byte[1024];
+        int len;
+        try {
+            while ((len = is.read(bytes)) != -1) {
+                bos.write(bytes, 0, len);
+            }
+            return bos.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
      * 读 文本文件
      */
-    public static String readTxtFile(File fileName) throws Exception {
+    public static String readFile(File fileName) throws Exception {
         String result = "";
         FileReader fileReader = null;
         BufferedReader bufferedReader = null;
@@ -141,7 +195,7 @@ public class FileUtils {
                 fileReader.close();
             }
         }
-        //System.out.println("读取出来的文件内容是�?" + "\r\n" + result);
+        LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "读取出来的文件内容是--->\\r\\n" + result);
         return result;
     }
 
@@ -173,7 +227,8 @@ public class FileUtils {
             // long end = System.currentTimeMillis();
             // System.out.println("运行" + (end - begin)/1000 + "s");
         } catch (Exception e) {
-            Log.e(MyApp.LOG_TAG, "FileUtils->hashFile:" + e.toString());
+            e.printStackTrace();
+            LogUtils.log(Log.ERROR, MyApp.LOG_TAG, "FileUtils->hashFile:" + e.toString());
         }
         return "";
     }
@@ -234,65 +289,11 @@ public class FileUtils {
 
             zis.close();
         } catch (IOException e) {
+            e.printStackTrace();
+            LogUtils.log(Log.ERROR, MyApp.LOG_TAG, "FileUtils->unZip:" + e.toString());
             // Log.e(this.getClass().getSimpleName(), "IOException", e);
             // cancel(true);
-        } catch (Exception e) {
-            // Log.e(this.getClass().getSimpleName(), "Exception", e);
-            // cancel(true);
         }
-    }
-
-    /**
-     * ************************************系统文件流******************************
-     * <p>
-     * 访问Asset资源
-     */
-    public static InputStream openAsset(Context context, String fileName) {
-        AssetManager assets = context.getAssets();
-        try {
-            return assets.open(fileName);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * context 关闭Asset资源
-     */
-    public static void closeAsset(Context context) {
-        AssetManager assets = context.getAssets();
-
-        assets.close();
-    }
-
-    /**
-     * 打开内部文件输出流
-     */
-    public static FileOutputStream openFileOutput(Context context, String file) {
-        FileOutputStream outputStream = null;
-        try {
-            outputStream = context.openFileOutput(file, Context.MODE_PRIVATE);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return outputStream;
-    }
-
-    /**
-     * 打开内部文件输入流
-     */
-    public static FileInputStream openFileInput(Context context, String file) {
-        FileInputStream inputStream = null;
-        try {
-            inputStream = context.openFileInput(file);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return inputStream;
     }
 
     /**
@@ -323,7 +324,7 @@ public class FileUtils {
 
     public static int cleanExternalFilesDir(Context context) {
 
-        return deleteFile(getExternalFilesDir(context), context);
+        return deleteFile(getExternalFilesDir(context));
     }
 
     /**
@@ -336,7 +337,7 @@ public class FileUtils {
 
     public static int cleanExternalCacheDir(Context context) {
 
-        return deleteFile(getExternalCacheDir(context), context);
+        return deleteFile(getExternalCacheDir(context));
     }
 
     /**
@@ -364,7 +365,7 @@ public class FileUtils {
 
     public static int cleanFilesDir(Context context) {
 
-        return deleteFile(getFilesDir(context), context);
+        return deleteFile(getFilesDir(context));
     }
 
     /**
@@ -377,7 +378,7 @@ public class FileUtils {
 
     public static int cleanCacheDir(Context context) {
 
-        return deleteFile(getCacheDir(context), context);
+        return deleteFile(getCacheDir(context));
     }
 
     /**
@@ -390,7 +391,7 @@ public class FileUtils {
 
     public static int cleanSharePreferenceDir(Context context) {
 
-        return deleteFile(getSharePreferenceDir(context), context);
+        return deleteFile(getSharePreferenceDir(context));
     }
 
     /**
@@ -403,7 +404,7 @@ public class FileUtils {
 
     public static int cleanDataBasesDir(Context context) {
 
-        return deleteFile(getDataBasesDir(context), context);
+        return deleteFile(getDataBasesDir(context));
     }
 
     /**
@@ -427,7 +428,7 @@ public class FileUtils {
     public static String getIntermaxMemory(Context context) {
         long freeSpace = Runtime.getRuntime().maxMemory();
 
-        return getSize(context, freeSpace);
+        return StringUtils.getFileSize(context, freeSpace);
     }
 
 
@@ -437,7 +438,7 @@ public class FileUtils {
     public static String getMemoryMax(Context context) {
         long maxMemory = Runtime.getRuntime().maxMemory();
 
-        return getSize(context, maxMemory);
+        return StringUtils.getFileSize(context, maxMemory);
     }
 
     /**
@@ -446,7 +447,7 @@ public class FileUtils {
     public static String getMemoryTotal(Context context) {
         long totalMemory = Runtime.getRuntime().totalMemory();
 
-        return getSize(context, totalMemory);
+        return StringUtils.getFileSize(context, totalMemory);
     }
 
     /**
@@ -455,7 +456,7 @@ public class FileUtils {
     public static String getMemoryFree(Context context) {
         long freeSpace = Runtime.getRuntime().freeMemory();
 
-        return getSize(context, freeSpace);
+        return StringUtils.getFileSize(context, freeSpace);
     }
 
     /**
@@ -464,7 +465,7 @@ public class FileUtils {
     public static String getInterTotal(Context context) {
         long totalSpace = Environment.getDataDirectory().getTotalSpace();
 
-        return getSize(context, totalSpace);
+        return StringUtils.getFileSize(context, totalSpace);
     }
 
     /**
@@ -473,7 +474,7 @@ public class FileUtils {
     public static String getInterFree(Context context) {
         long freeSpace = Environment.getDataDirectory().getFreeSpace();
 
-        return getSize(context, freeSpace);
+        return StringUtils.getFileSize(context, freeSpace);
     }
 
     /**
@@ -482,7 +483,7 @@ public class FileUtils {
     public static String getInterUsable(Context context) {
         long usableSpace = Environment.getDataDirectory().getUsableSpace();
 
-        return getSize(context, usableSpace);
+        return StringUtils.getFileSize(context, usableSpace);
     }
 
     /**
@@ -493,7 +494,7 @@ public class FileUtils {
     public static String getExternalTotal(Context context) {
         long totalSpace = Environment.getExternalStorageDirectory().getTotalSpace();
 
-        return getSize(context, totalSpace);
+        return StringUtils.getFileSize(context, totalSpace);
     }
 
     /**
@@ -502,7 +503,7 @@ public class FileUtils {
     public static String getExternalFree(Context context) {
         long freeSpace = Environment.getExternalStorageDirectory().getFreeSpace();
 
-        return getSize(context, freeSpace);
+        return StringUtils.getFileSize(context, freeSpace);
     }
 
     /**
@@ -511,7 +512,7 @@ public class FileUtils {
     public static String getExternalUsable(Context context) {
         long usableSpace = Environment.getExternalStorageDirectory().getUsableSpace();
 
-        return getSize(context, usableSpace);
+        return StringUtils.getFileSize(context, usableSpace);
     }
 
     /**
@@ -519,16 +520,16 @@ public class FileUtils {
      * <p>
      * 创建文件或者文件夹
      */
-    public static boolean createFile(File file, Context context) {
+    public static boolean createFile(File file) {
         if (file.exists()) {
-            Toast.makeText(context, "文件已存在", Toast.LENGTH_SHORT).show();
+            LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "createFile--->文件已存在");
             return false;
         }
         if (file.mkdirs()) {
-            Toast.makeText(context, "文件创建成功", Toast.LENGTH_SHORT).show();
+            LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "createFile--->文件创建成功");
             return true;
         } else {
-            Toast.makeText(context, "文件创建失败", Toast.LENGTH_SHORT).show();
+            LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "createFile--->文件创建失败");
             return false;
         }
     }
@@ -536,10 +537,10 @@ public class FileUtils {
     /**
      * 删除文件或文件夹
      */
-    public static int deleteFile(File file, Context context) {
+    public static int deleteFile(File file) {
         int number = 0;
         if (file == null || !file.exists()) {
-            Toast.makeText(context, "文件不存在", Toast.LENGTH_SHORT).show();
+            LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "deleteFile--->文件不存在");
             return number;
         }
         if (file.isFile()) {
@@ -550,7 +551,7 @@ public class FileUtils {
                 number += 1;
             }
         } else if (file.isDirectory()) {
-            number += deleteD(file);
+            number += deleteDir(file);
         }
         return number;
     }
@@ -558,7 +559,7 @@ public class FileUtils {
     /**
      * 删除文件夹
      */
-    private static int deleteD(File file) {
+    private static int deleteDir(File file) {
         int number = 0;
         File[] files = file.listFiles();
 
@@ -569,7 +570,7 @@ public class FileUtils {
                         number += 1;
                     }
                 } else if (file1.isDirectory()) {
-                    number += deleteD(file1);
+                    number += deleteDir(file1);
                 }
             }
         }
@@ -580,14 +581,14 @@ public class FileUtils {
     /**
      * 复制文件或者文件夹
      */
-    public static int copyFile(File source, File target, Context context) {
+    public static int copyFile(File source, File target) {
         int number = 0;
         if (source.isFile()) {
-            if (copyF(source, target, context)) {
+            if (copyStream(source, target)) {
                 number = 1;
             }
         } else if (source.isDirectory()) {
-            number = copyD(source, target, context);
+            number = copyDir(source, target);
         }
         return number;
     }
@@ -595,9 +596,9 @@ public class FileUtils {
     /**
      * 复制文件夹
      */
-    private static int copyD(File source, File target, Context context) {
+    private static int copyDir(File source, File target) {
         int number = 0;
-        if (!beforeCopy(source, target, context)) {
+        if (!beforeCopy(source, target)) {
             return number;
         }
         File[] files = source.listFiles();
@@ -608,12 +609,12 @@ public class FileUtils {
             if (file.isFile()) {
                 File targetFile = new File(target.getAbsolutePath() + File.separator + file.getName());
 
-                if (copyF(file, targetFile, context)) {
+                if (copyStream(file, targetFile)) {
                     number += 1;
                 }
             } else if (file.isDirectory()) {
                 File targetDir = new File(target.getAbsolutePath() + File.separator + file.getName());
-                number += copyD(file, targetDir, context);
+                number += copyDir(file, targetDir);
             }
         }
         return number;
@@ -622,8 +623,8 @@ public class FileUtils {
     /**
      * 复制文件
      */
-    private static boolean copyF(File source, File target, Context context) {
-        if (!beforeCopy(source, target, context)) {
+    private static boolean copyStream(File source, File target) {
+        if (!beforeCopy(source, target)) {
             return false;
         }
         BufferedInputStream is = null;
@@ -660,25 +661,25 @@ public class FileUtils {
     /**
      * 复制前的准备工作
      */
-    private static boolean beforeCopy(File source, File target, Context context) {
+    private static boolean beforeCopy(File source, File target) {
         if (!source.exists()) {
-            Toast.makeText(context, "源文件不存在", Toast.LENGTH_SHORT).show();
+            LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "beforeCopy--->源文件不存在");
             return false;
         }
         if (!source.canRead()) {
-            Toast.makeText(context, "源文件不可读", Toast.LENGTH_SHORT).show();
+            LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "beforeCopy--->源文件不可读");
             return false;
         }
         if (target.exists()) {
-            Toast.makeText(context, "目标文件已存在", Toast.LENGTH_SHORT).show();
+            LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "beforeCopy--->目标文件已存在");
             return false;
         } else {
-            if (!createFile(target, context)) {
+            if (!createFile(target)) {
                 return false;
             }
         }
         if (!target.canWrite()) {
-            Toast.makeText(context, "目标文件不可写", Toast.LENGTH_SHORT).show();
+            LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "beforeCopy--->目标文件不可写");
             return false;
         }
         return true;

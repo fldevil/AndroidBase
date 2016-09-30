@@ -50,8 +50,6 @@ public class CustomDialog extends Dialog {
 
         /**
          * Set the Dialog message from resource
-         *
-         * @return
          */
         public Builder setMessage(int message) {
             this.message = (String) context.getText(message);
@@ -60,9 +58,6 @@ public class CustomDialog extends Dialog {
 
         /**
          * Set the Dialog title from resource
-         *
-         * @param title
-         * @return
          */
         public Builder setTitle(int title) {
             this.title = (String) context.getText(title);
@@ -71,9 +66,6 @@ public class CustomDialog extends Dialog {
 
         /**
          * Set the Dialog title from String
-         *
-         * @param title
-         * @return
          */
         public Builder setTitle(String title) {
             this.title = title;
@@ -82,9 +74,6 @@ public class CustomDialog extends Dialog {
 
         /**
          * 设置对话框界面
-         *
-         * @param v View
-         * @return
          */
         public Builder setContentView(View v) {
             this.contentView = v;
@@ -93,9 +82,6 @@ public class CustomDialog extends Dialog {
 
         /**
          * Set the positive button resource and it's listener
-         *
-         * @param confirm_btnText
-         * @return
          */
         public Builder setPositiveButton(int confirm_btnText,
                                          OnClickListener listener) {
@@ -107,9 +93,6 @@ public class CustomDialog extends Dialog {
 
         /**
          * Set the positive button and it's listener
-         *
-         * @param confirm_btnText
-         * @return
          */
         public Builder setPositiveButton(String confirm_btnText,
                                          OnClickListener listener) {
@@ -120,9 +103,6 @@ public class CustomDialog extends Dialog {
 
         /**
          * Set the negative button resource and it's listener
-         *
-         * @param cancel_btnText
-         * @return
          */
         public Builder setNegativeButton(int cancel_btnText,
                                          OnClickListener listener) {
@@ -134,9 +114,6 @@ public class CustomDialog extends Dialog {
 
         /**
          * Set the negative button and it's listener
-         *
-         * @param cancel_btnText
-         * @return
          */
         public Builder setNegativeButton(String cancel_btnText,
                                          OnClickListener listener) {
@@ -149,8 +126,8 @@ public class CustomDialog extends Dialog {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             // instantiate the dialog with the custom Theme
-            final CustomDialog dialog = new CustomDialog(context, R.style.mystyle);
-            View layout = inflater.inflate(R.layout.customdialog, null);
+            final CustomDialog dialog = new CustomDialog(context, R.style.mCustomDialog);
+            View layout = inflater.inflate(R.layout.dialog_custom, null);
             dialog.addContentView(layout, new LayoutParams(
                     LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             // set the dialog title

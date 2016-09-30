@@ -34,7 +34,7 @@ public class ViewUtils {
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void clipView(View view, ViewOutlineProvider provider) {
-        //  设置Outline , provider在外部自己实现
+        // 设置Outline , provider在外部自己实现
         view.setOutlineProvider(provider);
         // 剔除Outline以外的view ,可以起裁剪作用
         view.setClipToOutline(true);
@@ -46,8 +46,7 @@ public class ViewUtils {
      * activity中添加视图，会删除就视图,
      * 所有的视图都删除，换肤要注意了
      */
-    public static void setContentView(Activity activity,
-                                      View view, ViewGroup.LayoutParams params) {
+    public static void setContentView(Activity activity, View view, ViewGroup.LayoutParams params) {
         if (params == null)
             activity.setContentView(view);
         else

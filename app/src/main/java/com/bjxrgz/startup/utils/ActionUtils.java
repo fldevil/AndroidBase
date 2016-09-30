@@ -1,15 +1,16 @@
 package com.bjxrgz.startup.utils;
 
 import android.app.Activity;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.bjxrgz.startup.R;
 
@@ -28,17 +29,42 @@ public class ActionUtils {
      * 相册 , BitmapFactory.decodeStream(ResolverUtils.openInput(this, data.getData()));
      */
     public static void goPicture(Activity activity, int requestCode) {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent intent = new Intent();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+        } else {
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+        }
         intent.setType("image/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         activity.startActivityForResult(intent, requestCode);
     }
 
     /**
+     * 相册，Fragment启动
+     */
+    public static void goPicture(Fragment fragment, int requestCode) {
+        Intent intent = new Intent();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+        } else {
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+        }
+        intent.setType("image/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        fragment.startActivityForResult(intent, requestCode);
+    }
+
+    /**
      * 相册 , 自带裁剪
      */
     public static void goPictureCrop(Activity activity, int requestCode) {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent intent = new Intent();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+        } else {
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+        }
         intent.setType("image/*");
         intent.putExtra("crop", true);
         intent.putExtra("return-data", true);
@@ -47,10 +73,24 @@ public class ActionUtils {
 
     /**
      * 拍照 , (Bitmap) intent.getExtras().get("data");
+     * 不加保存路径的话，图片会被压缩保存
      */
-    public static void goCamera(Activity activity, int requestCode) {
+    public static void goCamera(Activity activity, int requestCode, File resultFile) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Uri uri = Uri.fromFile(resultFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         activity.startActivityForResult(intent, requestCode);
+    }
+
+    /**
+     * 拍照 , (Bitmap) intent.getExtras().get("data");
+     * 不加保存路径的话，图片会被压缩保存
+     */
+    public static void goCamera(Fragment fragment, int requestCode, File resultFile) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Uri uri = Uri.fromFile(resultFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        fragment.startActivityForResult(intent, requestCode);
     }
 
     /**
@@ -85,18 +125,13 @@ public class ActionUtils {
     /**
      * ************************************系统应用************************************
      * <p>
-     * 直接打电话
+     * 直接打电话 android.permission.CALL_PHONE
      */
     public static void goCall(Context context, String phoneNumber) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_CALL);
         intent.setData(Uri.parse("tel:" + phoneNumber));
-        try {
-            context.startActivity(intent);
-        } catch (SecurityException e) {
-            e.printStackTrace();
-            LogUtils.log(Log.DEBUG, "ActionUtils", "goCall--->权限拒绝");
-        }
+        context.startActivity(intent);
     }
 
     /**
@@ -105,15 +140,16 @@ public class ActionUtils {
     public static void goDial(Context context, String phoneNumber) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_DIAL);
-        if (!TextUtils.isEmpty(phoneNumber))
+        if (!TextUtils.isEmpty(phoneNumber)){
             intent.setData(Uri.parse("tel:" + phoneNumber));
+        }
         context.startActivity(intent);
     }
 
     /**
      * 短信发送界面, 不打开界面发送短信SmsManager.getDefault().sendTextMessage();
      */
-    public static void goSms(Context context, String phoneNumber, String content) {
+    public static void goSMS(Context context, String phoneNumber, String content) {
         Uri uri = Uri.parse("smsto:" + (TextUtils.isEmpty(phoneNumber) ? "" : phoneNumber));
         Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
         intent.putExtra("sms_body", TextUtils.isEmpty(content) ? "" : content);
@@ -137,12 +173,10 @@ public class ActionUtils {
             String[] tos = to.split("\\;|\\,");
             email.putExtra(Intent.EXTRA_EMAIL, tos);
         }
-
         // 设置邮件标题
         email.putExtra(Intent.EXTRA_SUBJECT, subject);
         // 设置邮件内容
         email.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(content));
-
         // 调用系统的邮件系统
         //mContext.startActivity(Intent.createChooser(email, "请先设定一个默认的Email地址"));
         mContext.startActivity(Intent.createChooser(email, mContext.getString(R.string.select_email_sender)));
@@ -151,7 +185,7 @@ public class ActionUtils {
     /**
      * ************************************其他************************************
      * <p>
-     * 分享
+     * 分享1
      */
     public static void goShare(Context context, String content) {
         Intent intent = new Intent();
@@ -162,7 +196,7 @@ public class ActionUtils {
     }
 
     /**
-     * 也是分享
+     * 分享2
      */
     private static void doShare(Context context, String title, String body, String url) {
         Intent intent = new Intent(Intent.ACTION_SEND);
@@ -179,7 +213,7 @@ public class ActionUtils {
     /**
      * 安装apk
      */
-    public void goInstall(Context context, File file) {
+    public static void goInstall(Context context, File file) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -204,8 +238,9 @@ public class ActionUtils {
      */
     public static void goExist(Context context) {
         Intent intent = new Intent(Intent.ACTION_MAIN);
-        //如果是服务里调用，必须加入new task标识
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (context instanceof Service) { // 如果是服务调用，必须加入new task标识
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
         intent.addCategory(Intent.CATEGORY_HOME);
         context.startActivity(intent);
     }

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.bjxrgz.startup.R;
+import com.bjxrgz.startup.base.MyApp;
 
 /**
  * Created by fd.meng on 2014/03/30
@@ -29,7 +30,7 @@ public class NetUtils {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            LogUtils.log(Log.DEBUG, "NetUtils", "ConnectReceiver--->onReceive");
+            LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "NetUtils(ConnectReceiver)--->onReceive");
             if (mListener == null)
                 return;
             if (isAvailable(context)) {

@@ -12,21 +12,21 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.transition.Fade;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 
+import com.bjxrgz.startup.R;
+import com.bjxrgz.startup.manager.XUtilsManager;
+import com.bjxrgz.startup.utils.AnimUtils;
 import com.bjxrgz.startup.utils.DialogUtils;
 import com.bjxrgz.startup.utils.LogUtils;
 import com.bjxrgz.startup.utils.NetUtils;
-import com.umeng.message.PushAgent;
-
-import org.xutils.x;
 
 import java.lang.reflect.ParameterizedType;
 
@@ -37,48 +37,27 @@ import java.lang.reflect.ParameterizedType;
  */
 public abstract class BaseActivity<T> extends AppCompatActivity {
 
+    protected static boolean anim = true; // 跳转动画
+
     protected FragmentManager mFragmentManager;
-    private BaseInterface.BaseFragmentView mListener;// 这个监听器是向fragment传数据的
-    protected Bundle mBundle = new Bundle();// 接受到的fragment的数据
     protected Activity mActivity;
     protected ProgressDialog pb;
+    protected String logTag = "BaseActivity";
 
     // 4.4版本下的跳转效果 5.0以上的在baseActivity里就设定好了
     private static final int kitkatAnimIn = android.R.anim.fade_in;
     private static final int kitkatAnimOut = android.R.anim.fade_out;
 
     /**
-     * 获取T的名称,不能用getLocalClassName代替
-     */
-    @SuppressWarnings("unchecked")
-    protected String getCls() {
-        Class<T> cls = (Class<T>) (((ParameterizedType) (this.getClass()
-                .getGenericSuperclass())).getActualTypeArguments()[0]);
-
-        return cls.getSimpleName();
-    }
-
-    /**
      * 子类重写类似方法 实现跳转
      */
-    public static void goBaseActivity(Activity activity) {
+    public static void goActivity(Activity activity) {
         Intent intent = new Intent();
         // intent.setClass
-        startActivity(activity, intent, true);
-    }
-
-    /**
-     * 将bundle传送给fragment数据,并接受回传bundle 在需要回传的地方调用(activity类中调用)
-     */
-    public void goFragment(Bundle bundle) {
-        if (mListener != null) {
-            mBundle = mListener.toFragment(bundle);
-        }
+        startActivity(activity, intent);
     }
 
     protected abstract void create(Bundle savedInstanceState);
-
-    protected abstract void destroy();
 
     /**
      * ***********************************以下是生命周期***********************************
@@ -87,23 +66,18 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // 无actionBar, 全屏是window.addFlags
-        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-        // 写死竖屏
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        // 布局动画
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-            window.setEnterTransition(new Fade());
-            window.setExitTransition(new Fade());
-        }
-        pb = DialogUtils.createProgress(this, null, "请稍候.....", false, false, null);
-        super.onCreate(savedInstanceState);
+        logTag = getCls();
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE); // 无actionBar, 全屏是addFlags
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);// 写死竖屏
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);// 键盘不会遮挡输入框
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN); // 不自动弹键盘
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN); // 总是隐藏键盘
+        AnimUtils.initBaseActivity(this); // 布局动画
+        super.onCreate(savedInstanceState); // 读取状态
+        pb = DialogUtils.createProgress(this, null, getString(R.string.wait), false, false, null);
         mActivity = this; // 实例
-        x.view().inject(this);// xUtils在activity的初始化
-        PushAgent.getInstance(this).onAppStart();//umeng push init
         mFragmentManager = getSupportFragmentManager(); // fragment管理者
+        XUtilsManager.initBaseActivity(this); // xUtils初始化
         create(savedInstanceState); // 抽象方法
     }
 
@@ -113,13 +87,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public void onAttachFragment(Fragment fragment) {
-        LogUtils.log(Log.DEBUG, getCls(), "--->onAttachFragment");
+        LogUtils.log(Log.DEBUG, logTag, "--->onAttachFragment");
         super.onAttachFragment(fragment);
-        if (fragment instanceof BaseInterface.BaseActivityView) {
-            mListener = (BaseInterface.BaseFragmentView) fragment;
-        } else {
-            LogUtils.log(Log.DEBUG, getCls(), "--->no implement Activity2FragmentListener");
-        }
     }
 
     /**
@@ -133,7 +102,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public void onContentChanged() {
-        LogUtils.log(Log.DEBUG, getCls(), "--->onContentChanged");
+        LogUtils.log(Log.DEBUG, logTag, "--->onContentChanged");
         super.onContentChanged();
     }
 
@@ -142,7 +111,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onNewIntent(Intent intent) {
-        LogUtils.log(Log.DEBUG, getCls(), "--->onNewIntent");
+        LogUtils.log(Log.DEBUG, logTag, "--->onNewIntent");
         super.onNewIntent(intent);
     }
 
@@ -167,7 +136,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        LogUtils.log(Log.DEBUG, getCls(), "--->onActivityResult");
+        LogUtils.log(Log.DEBUG, logTag, "--->onActivityResult");
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -177,7 +146,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        LogUtils.log(Log.DEBUG, getCls(), "--->onActivityResult");
+        LogUtils.log(Log.DEBUG, logTag, "--->onActivityResult");
         super.onRestoreInstanceState(savedInstanceState);
     }
 
@@ -186,7 +155,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        LogUtils.log(Log.DEBUG, getCls(), "--->onPostCreate");
+        LogUtils.log(Log.DEBUG, logTag, "--->onPostCreate");
         super.onPostCreate(savedInstanceState);
     }
 
@@ -204,7 +173,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onPostResume() {
-        LogUtils.log(Log.DEBUG, getCls(), "--->onPostResume");
+        LogUtils.log(Log.DEBUG, logTag, "--->onPostResume");
         super.onPostResume();
     }
 
@@ -215,7 +184,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public void onAttachedToWindow() {
-        LogUtils.log(Log.DEBUG, getCls(), "--->onAttachedToWindow");
+        LogUtils.log(Log.DEBUG, logTag, "--->onAttachedToWindow");
         super.onAttachedToWindow();
         // View decorView = getWindow().getDecorView();
         // 控制DecorView的大小来控制activity的大小，可做窗口activity
@@ -230,7 +199,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        LogUtils.log(Log.DEBUG, getCls(), "--->onCreateOptionsMenu");
+        LogUtils.log(Log.DEBUG, logTag, "--->onCreateOptionsMenu");
         // 也引入menu的layout，也可动态add(记得每次先clear)
         // getMenuInflater().inflate(res,menu);
         // 内部调用onCreateOptionsMenu(Menu menu) ,用于动态变换menu选项
@@ -252,7 +221,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        LogUtils.log(Log.DEBUG, getCls(), "--->onSaveInstanceState");
+        LogUtils.log(Log.DEBUG, logTag, "--->onSaveInstanceState");
         super.onSaveInstanceState(outState);
     }
 
@@ -269,7 +238,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public void onDetachedFromWindow() {
-        LogUtils.log(Log.DEBUG, getCls(), "--->onDetachedFromWindow");
+        LogUtils.log(Log.DEBUG, logTag, "--->onDetachedFromWindow");
         super.onDetachedFromWindow();
     }
 
@@ -279,8 +248,6 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        destroy();
     }
 
     /**
@@ -291,7 +258,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onResumeFragments() {
-        LogUtils.log(Log.DEBUG, getCls(), "onResumeFragments");
+        LogUtils.log(Log.DEBUG, logTag, "onResumeFragments");
         super.onResumeFragments();
     }
 
@@ -300,7 +267,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public void onEnterAnimationComplete() {
-        LogUtils.log(Log.DEBUG, getCls(), "onEnterAnimationComplete");
+        LogUtils.log(Log.DEBUG, logTag, "onEnterAnimationComplete");
         super.onEnterAnimationComplete();
     }
 
@@ -309,7 +276,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        LogUtils.log(Log.DEBUG, getCls(), "onOptionsItemSelected--->" + item.getTitle());
+        LogUtils.log(Log.DEBUG, logTag, "onOptionsItemSelected--->" + item.getTitle());
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
@@ -324,7 +291,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
-        LogUtils.log(Log.DEBUG, getCls(), "onCreateContextMenu");
+        LogUtils.log(Log.DEBUG, logTag, "onCreateContextMenu");
         super.onCreateContextMenu(menu, v, menuInfo);
     }
 
@@ -335,7 +302,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info =
                 (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        LogUtils.log(Log.DEBUG, getCls(), "onContextItemSelected--->position == " + info.position);
+        LogUtils.log(Log.DEBUG, logTag, "onContextItemSelected--->position == " + info.position);
         return super.onContextItemSelected(item);
     }
 
@@ -344,52 +311,58 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-        LogUtils.log(Log.DEBUG, getCls(), "onBackPressed");
+        LogUtils.log(Log.DEBUG, logTag, "onBackPressed");
         super.onBackPressed();
     }
 
     /**
-     * context启动activity
+     * ***********************************以下非activity自身的方法***********************************
+     * 获取T的名称,不能用getLocalClassName代替
      */
-    public static void startActivity(Context context, Intent intent) {
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+    @SuppressWarnings("unchecked")
+    protected String getCls() {
+        Class<T> cls = (Class<T>) (((ParameterizedType) (this.getClass()
+                .getGenericSuperclass())).getActualTypeArguments()[0]);
+
+        return cls.getSimpleName();
     }
 
     /**
-     * activity启动activity
+     * Context启动activity
      */
-    public static void startActivity(Activity activity, Intent intent, boolean anim) {
-        if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            activity.startActivity(intent,
-                    ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
+    public static void startActivity(Context context, Intent intent) {
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
+            if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                activity.startActivity(intent,
+                        ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
+            } else {
+                activity.startActivity(intent);
+                if (anim) // 4.4跳转效果
+                    activity.overridePendingTransition(kitkatAnimIn, kitkatAnimOut);
+            }
         } else {
-            activity.startActivity(intent);
-            if (anim) // 4.4跳转效果
-                activity.overridePendingTransition(kitkatAnimIn, kitkatAnimOut);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
         }
     }
 
     /**
      * fragment启动activity
      */
-    public static void startActivity(Fragment fragment, Activity parentActivity,
-                                     Intent intent, boolean anim) {
+    public static void startActivity(Fragment fragment, Activity parentActivity, Intent intent) {
         if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             fragment.startActivity(intent,
                     ActivityOptions.makeSceneTransitionAnimation(parentActivity).toBundle());
         } else {
             fragment.startActivity(intent);
-            // if (anim) // 4.4跳转效果
-            // parentActivity.overridePendingTransition(kitkatAnimIn, kitkatAnimOut);
         }
     }
 
     /**
      * 启动activity，setResult设置回传的resultCode和intent
      */
-    public static void startActivityForResult(Activity activity, Intent intent,
-                                              int requestCode, boolean anim) {
+    public static void startActivity(Activity activity, Intent intent, int requestCode) {
         if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             activity.startActivityForResult(intent, requestCode,
                     ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
@@ -401,10 +374,25 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     }
 
     /**
+     * 启动activity，setResult设置回传的resultCode和intent
+     */
+    public static void startActivity(Fragment fragment, Activity activity,
+                                              Intent intent, int requestCode) {
+        if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            fragment.startActivityForResult(intent, requestCode,
+                    ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
+        } else {
+            activity.startActivityForResult(intent, requestCode);
+            if (anim) // 4.4跳转效果
+                activity.overridePendingTransition(kitkatAnimIn, kitkatAnimOut);
+        }
+    }
+
+    /**
      * 多层fragment时，第二级fragment是无法在startActivityForResult上时候收到回传intent的
      */
-    public static void startActivityFromFragment(AppCompatActivity activity, Fragment fragment,
-                                                 Intent intent, int requestCode, boolean anim) {
+    public static void startActivityForFragment(AppCompatActivity activity, Fragment fragment,
+                                               Intent intent, int requestCode) {
         if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             activity.startActivityFromFragment(fragment, intent, requestCode,
                     ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());

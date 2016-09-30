@@ -8,13 +8,23 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+import android.util.Log;
 
-import java.io.InputStream;
+import com.bjxrgz.startup.base.MyApp;
+
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * Created by fd.meng on 2014/03/30
@@ -114,12 +124,133 @@ public class BitmapUtils {
     }
 
     /**
+     * ***********************************压缩***************************************
+     */
+    public static final Bitmap.CompressFormat PNG = Bitmap.CompressFormat.PNG; // 无损
+    public static final Bitmap.CompressFormat JPEG = Bitmap.CompressFormat.JPEG; // 有损
+
+    /**
+     * 大小压缩上限,超过就压缩 (0不压缩)
+     */
+    public static Bitmap compressBitmapSize(Bitmap bmp, Bitmap.CompressFormat type, int size) {
+        Bitmap result;
+        if (size > 0) { // 1024*1024 = 1M
+            // 字节流
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            // 这里压缩options%，把压缩后的数据存放到baos中
+            bmp.compress(type, 100, baos);
+            // 压缩比率
+            int options = 100;
+            // 循环判断如果压缩后图片是否大于maxSize,大于继续压缩
+            while (baos.toByteArray().length > size) {
+                // 重置baos即清空baos
+                baos.reset();
+                // 每次都减少10
+                options -= 10;
+                LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "compressBmpSize(options)--->" + options);
+                // 这里压缩options%，把压缩后的数据存放到baos中
+                bmp.compress(type, options, baos);
+            }
+            // 把压缩后的数据baos存放到ByteArrayInputStream中
+            ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());
+            // 把ByteArrayInputStream数据生成图片
+            result = BitmapFactory.decodeStream(isBm);
+        } else {
+            result = bmp;
+        }
+        return result;
+    }
+
+    /**
+     * 尺寸倍数,值越大，图片尺寸越小 (1不压缩)
+     */
+    public static boolean compressBitmapRatio(Bitmap bmp, File resultFile,
+                                              Bitmap.CompressFormat type, int ratio) {
+        if (ratio != 1) {
+            // 压缩Bitmap到对应尺寸
+            Bitmap result = Bitmap.createBitmap(bmp.getWidth() / ratio, bmp.getHeight() / ratio, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(result);
+            Rect rect = new Rect(0, 0, bmp.getWidth() / ratio, bmp.getHeight() / ratio);
+            canvas.drawBitmap(bmp, null, rect, null);
+        }
+        return compressBitmapQuality(bmp, resultFile, type, 100);
+    }
+
+    /**
+     * 质量压缩 值越大，图片质量越大 (100不压缩)
+     */
+    public static boolean compressBitmapQuality(Bitmap bmp, File resultFile,
+                                                Bitmap.CompressFormat type, int quality) {
+        BufferedOutputStream bos = null;
+        try {
+            bos = new BufferedOutputStream(new FileOutputStream(resultFile));
+            bmp.compress(type, quality, bos);
+            return true;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (bos != null) {
+                    bos.flush();
+                }
+                if (bos != null) {
+                    bos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 压缩图片(android自带方法压缩)
+     */
+    public static Bitmap compressBitmap(Bitmap bitmap) {
+        if (bitmap != null) {
+            int maxSize = 1024 * 1024 * 10; // 1M (我去 这是怎么算的啊)
+
+            int byteCount = bitmap.getByteCount(); // 为什么不对应啊
+
+            LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "compressBitmap/byteCount(start)--->" + byteCount);
+
+            while (byteCount > maxSize) {
+                int options = byteCount / maxSize; // 和参数没关系啊
+                int width = bitmap.getWidth() / options;
+                int height = bitmap.getHeight() / options;
+                bitmap = ThumbnailUtils.extractThumbnail(bitmap, width, height, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+                byteCount = bitmap.getByteCount();
+            }
+            LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "compressBitmap/byteCount(end)--->" + byteCount);
+        }
+        return bitmap;
+    }
+
+    /**
+     * 压缩图片
+     */
+    public static Bitmap compressFile(File file) {
+        int maxSize = 1024 * 1024; // 1M
+
+        Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+        long length = file.length();
+        LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "compressFile(length)--->" + length);
+
+        if (length > maxSize) {
+            return compressBitmap(bitmap);
+        } else {
+            return bitmap;
+        }
+    }
+
+    /**
      * ***********************************加载内存***************************************
      * <p>
      * 以下是加载图片的内存优化，如bitmap已存在app当中，请参考createBitmap
      * 二次采样，不会申请内存空间
      */
-    private static BitmapFactory.Options getOptionsTrue() {
+    public static BitmapFactory.Options getOptionsTrue() {
         BitmapFactory.Options options = new BitmapFactory.Options();
 
         options.inJustDecodeBounds = true;
@@ -132,7 +263,7 @@ public class BitmapUtils {
      * @param ratio   缩放至 1 / ratio
      * @return 会获取图片的options，带缩放属性
      */
-    private static BitmapFactory.Options getOptionsFalse(BitmapFactory.Options options, int ratio) {
+    public static BitmapFactory.Options getOptionsFalse(BitmapFactory.Options options, int ratio) {
         options.inSampleSize = ratio;
 
         options.inJustDecodeBounds = false;
@@ -143,7 +274,7 @@ public class BitmapUtils {
     /**
      * 同上 , 只不过  options.inSampleSize 要自己算
      */
-    private static BitmapFactory.Options getOptionsFalse(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+    public static BitmapFactory.Options getOptionsFalse(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
 
         options.inJustDecodeBounds = false;
@@ -167,106 +298,6 @@ public class BitmapUtils {
             inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
         }
         return inSampleSize;
-    }
-
-    /**
-     * 图片文件
-     */
-    public static Bitmap getOptionsBitmap(String filePath, int ratio) {
-
-        BitmapFactory.Options optionsTrue = getOptionsTrue();
-
-        BitmapFactory.decodeFile(filePath, optionsTrue);
-
-        BitmapFactory.Options optionsFalse = getOptionsFalse(optionsTrue, ratio);
-
-        return BitmapFactory.decodeFile(filePath, optionsFalse);
-    }
-
-    public static Bitmap getOptionsBitmap(String filePath, int reqWidth, int reqHeight) {
-
-        BitmapFactory.Options optionsTrue = getOptionsTrue();
-
-        BitmapFactory.decodeFile(filePath, optionsTrue);
-
-        BitmapFactory.Options optionsFalse = getOptionsFalse(optionsTrue, reqWidth, reqHeight);
-
-        return BitmapFactory.decodeFile(filePath, optionsFalse);
-    }
-
-    /**
-     * 字节流
-     */
-    public static Bitmap getOptionsBitmap(byte[] data, int ratio) {
-
-        BitmapFactory.Options optionsTrue = getOptionsTrue();
-
-        BitmapFactory.decodeByteArray(data, 0, data.length, optionsTrue);
-
-        BitmapFactory.Options optionsFalse = getOptionsFalse(optionsTrue, ratio);
-
-        return BitmapFactory.decodeByteArray(data, 0, data.length, optionsFalse);
-    }
-
-    public static Bitmap getOptionsBitmap(byte[] data, int reqWidth, int reqHeight) {
-
-        BitmapFactory.Options optionsTrue = getOptionsTrue();
-
-        BitmapFactory.decodeByteArray(data, 0, data.length, optionsTrue);
-
-        BitmapFactory.Options optionsFalse = getOptionsFalse(optionsTrue, reqWidth, reqHeight);
-
-        return BitmapFactory.decodeByteArray(data, 0, data.length, optionsFalse);
-    }
-
-    /**
-     * resource
-     */
-    public static Bitmap getOptionsBitmap(Context context, int resID, int ratio) {
-
-        BitmapFactory.Options optionsTrue = getOptionsTrue();
-
-        BitmapFactory.decodeResource(context.getResources(), resID, optionsTrue);
-
-        BitmapFactory.Options optionsFalse = getOptionsFalse(optionsTrue, ratio);
-
-        return BitmapFactory.decodeResource(context.getResources(), resID, optionsFalse);
-    }
-
-    public static Bitmap getOptionsBitmap(Context context, int resID, int reqWidth, int reqHeight) {
-
-        BitmapFactory.Options optionsTrue = getOptionsTrue();
-
-        BitmapFactory.decodeResource(context.getResources(), resID, optionsTrue);
-
-        BitmapFactory.Options optionsFalse = getOptionsFalse(optionsTrue, reqWidth, reqHeight);
-
-        return BitmapFactory.decodeResource(context.getResources(), resID, optionsFalse);
-    }
-
-    /**
-     * 输入流
-     */
-    public static Bitmap getOptionsBitmap(InputStream is, int ratio) {
-
-        BitmapFactory.Options optionsTrue = getOptionsTrue();
-
-        BitmapFactory.decodeStream(is, null, optionsTrue);
-
-        BitmapFactory.Options optionsFalse = getOptionsFalse(optionsTrue, ratio);
-
-        return BitmapFactory.decodeStream(is, null, optionsFalse);
-    }
-
-    public static Bitmap getOptionsBitmap(InputStream is, int reqWidth, int reqHeight) {
-
-        BitmapFactory.Options optionsTrue = getOptionsTrue();
-
-        BitmapFactory.decodeStream(is, null, optionsTrue);
-
-        BitmapFactory.Options optionsFalse = getOptionsFalse(optionsTrue, reqWidth, reqHeight);
-
-        return BitmapFactory.decodeStream(is, null, optionsFalse);
     }
 
 }

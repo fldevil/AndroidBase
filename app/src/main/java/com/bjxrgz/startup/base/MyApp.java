@@ -2,10 +2,7 @@ package com.bjxrgz.startup.base;
 
 import android.app.Activity;
 import android.app.Application;
-import android.app.Service;
 import android.content.ComponentCallbacks2;
-import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
@@ -13,74 +10,63 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
 import android.util.Log;
-import android.widget.Toast;
 
+import com.bjxrgz.startup.manager.PushManager;
 import com.bjxrgz.startup.manager.UserManager;
+import com.bjxrgz.startup.manager.XUtilsManager;
 import com.bjxrgz.startup.utils.LogUtils;
 
-import org.json.JSONObject;
-import org.xutils.BuildConfig;
-import org.xutils.ex.HttpException;
-import org.xutils.x;
-
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MyApp extends Application {
 
-    // 当前实例
-    public static MyApp instance;
-    // 默认线程池
-    public final static ExecutorService threadPool = Executors.newCachedThreadPool();
-    // 主线程handler
-    public final static Handler mainHandler = new Handler(Looper.getMainLooper());
-    // 传输数据的List，用完之后clear
-    public static List<Map<String, Object>> DATA = new ArrayList<>();
-    // 所有已启动的Activity
-    private List<Activity> activities = new LinkedList<>();
-    // 所有已启动的Service
-    private List<Service> services = new LinkedList<>();
-    // LogTag
-    public static final String LOG_TAG = "new_energy";
-    // log开关
-    public static final boolean PRINT_LOG = true;
-    // sd卡目录中app的资源目录
-    public static String APP_SDCARD_NAME = "";
-    //设备id
-    public static String DEVICE_ID = "345ujhgfds";
-    // umeng device token
-    public static String DEVICE_TOKEN = "dsfaghhghfdfh";
-    //设备类型
-    public static final String DEVICE = "Android";
-    //操作系统
-    public static final String SYSTEM_VERSION = android.os.Build.VERSION.RELEASE;
-    //APP版本名
-    public static String APP_VERSION_NAME = "1.0";
-    //APP版本名
-    public static int APP_VERSION_CODE = 1;
-    //
-    public static final String APPLICAITON_EXIT_ACTION = "com.package.ACTION_LOGOUT";
+
+    public static final boolean IS_RELEASE = false; // 是否正式版本
+
+    public static final String LOG_TAG = "app名称"; // LogTag
+
+    public static final boolean IS_LOG = true; // log开关
+
+    public static MyApp instance;  // 当前实例
+
+    public final static ExecutorService threadPool = Executors.newCachedThreadPool(); // 线程池
+
+    public final static Handler mainHandler = new Handler(Looper.getMainLooper()); // 主线程handler
+
+    private List<Activity> activities = new LinkedList<>(); // 所有已启动的Activity
+
+    public static String APP_VERSION_NAME = "1.0"; // APP版本名
+
+    public static int APP_VERSION_CODE = 1;  // APP版本名
+
+    public static String DEVICE_ID; // 设备id
+
+    public static String DEVICE_TOKEN;  // umeng device token
+
+    public static final String PLATFORM = "Android"; // 设备类型
+
+    public static final String OS_VERSION = android.os.Build.VERSION.RELEASE; // Android系统版本
+
+    public static String STORE_DIR; // sd卡目录中app的资源目录
+    public static String LOG_FILE; // 日志文件
 
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
-        x.Ext.init(this); // xUtils 初始化
-        UserManager.init(this); // User管理类初始化
+        PushManager.initAPP(this); // 推送初始化
+        XUtilsManager.initApp(this, MyApp.IS_LOG); // xUtils 初始化
+        UserManager.initApp(this); // 初始化preference
 
-        if (PRINT_LOG) {
-            x.Ext.setDebug(BuildConfig.DEBUG); // xUtils log
-        }
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            APP_SDCARD_NAME = Environment.getExternalStorageDirectory() + "/new_energy/";
+            STORE_DIR = Environment.getExternalStorageDirectory() + "/" + LOG_TAG + "/";
         } else {
-            APP_SDCARD_NAME = Environment.getRootDirectory() + "/new_energy/";
+            STORE_DIR = Environment.getRootDirectory() + "/" + LOG_TAG + "/";
         }
-
+        LOG_FILE = STORE_DIR + "log/log.txt";
         // 监听所有activity的生命周期 ,可撤销
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
@@ -126,75 +112,21 @@ public class MyApp extends Application {
             // 触发条件：当系统决定要杀死一个进程以求更多内存
             @Override
             public void onTrimMemory(int level) {
-                LogUtils.log(Log.DEBUG, "MyApp", "onTrimMemory--->level == " + level);
+                LogUtils.log(Log.ERROR, LOG_TAG, "onTrimMemory--->level == " + level);
             }
 
             // 配置发生变化，如横竖屏切换
             @Override
             public void onConfigurationChanged(Configuration newConfig) {
-                LogUtils.log(Log.DEBUG, "MyApp", "onTrimMemory--->");
+                LogUtils.log(Log.ERROR, LOG_TAG, "onTrimMemory--->");
             }
 
             // 触发条件：内存不足, 并且系统想要清理内存以获取更多内存时
             @Override
             public void onLowMemory() {
-                LogUtils.log(Log.DEBUG, "MyApp", "onLowMemory--->");
+                LogUtils.log(Log.ERROR, LOG_TAG, "onLowMemory--->");
             }
         });
-    }
-
-    /**
-     * 获取日志文件
-     */
-    public static String getLogPath() {
-        return APP_SDCARD_NAME + "log/new_energy_log.txt";
-    }
-
-    /**
-     * 获取资源路径
-     */
-    public static String getResourcePath() {
-        return APP_SDCARD_NAME + "resource/%s/%d/";
-    }
-
-    /**
-     * 检测用户账户是否在该设备上有效
-     */
-    public static void processError(Throwable ex, final Context context) {
-        try {
-            if (ex.getClass().equals(java.net.ConnectException.class)) {
-                Toast.makeText(context, "网络连接错误", Toast.LENGTH_SHORT).show();
-
-            } else if (ex.getClass().equals(org.xutils.ex.HttpException.class)) {
-                JSONObject object = new JSONObject(((HttpException) ex).getResult());
-                String message = (String) object.get("message"); // 错误信息
-
-                org.xutils.ex.HttpException hre = ((org.xutils.ex.HttpException) ex);
-                int code = hre.getCode(); // 返回码
-
-                if (code == 401 || code == 409 || code == 410) { // 跳转登录界面
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-
-//                    if (context instanceof LoginActivity) {
-//                        return;
-//                    }
-//                    Intent intent = new Intent(context, LoginActivity.class);
-//                    context.startActivity(intent);
-                } else if (code == 500) {
-                    Toast.makeText(context, "服务器异常", Toast.LENGTH_SHORT).show();
-                } else { // 弹出提示
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-                }
-            } else if (ex.getClass().equals(java.net.SocketTimeoutException.class)) {
-                Toast.makeText(context, "连接超时", Toast.LENGTH_SHORT).show();
-
-            } else {
-                // Toast.makeText(context, "异常:" + ex.getClass(), Toast.LENGTH_SHORT).show();
-                LogUtils.log(Log.ERROR, LOG_TAG, ex.toString(), null);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -212,36 +144,12 @@ public class MyApp extends Application {
     }
 
     /**
-     * start service在onCreate是调用此方法
-     */
-    public void addService(Service service) {
-        services.add(service);
-    }
-
-    /**
-     * start service在onDestroy是调用此方法
-     */
-    public void removeService(Service service) {
-        services.remove(service);
-    }
-
-    /**
      * 关闭所有activity，应用与一键退出
      */
     public void closeActivities() {
         for (Activity activity : activities) {
             if (activity != null)
                 activity.finish();
-        }
-    }
-
-    /**
-     * 关闭所有start service，应用与一键退出
-     */
-    public void closeServices() {
-        for (Service service : services) {
-            if (service != null)
-                stopService(new Intent(this, service.getClass()));
         }
     }
 

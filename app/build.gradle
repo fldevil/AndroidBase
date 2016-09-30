@@ -1,6 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
+
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
     signingConfigs {
         bjxrgz_debug {
             keyAlias 'Bjxrgz'
@@ -12,24 +16,12 @@ android {
         }
     }
 
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
-
-    // 以下两句防止图片导入报错
-    aaptOptions.cruncherEnabled = false
-    aaptOptions.useNewCruncher = false
-
     defaultConfig {
         applicationId "com.bjxrgz.startup"
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
-    }
-
-    lintOptions {
-        // 防止在发布的时候出现因MissingTranslation导致Build Failed!
-        disable 'MissingTranslation'
     }
 
     sourceSets {
@@ -62,10 +54,32 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    // 以下两句防止图片导入报错
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
+
+    dexOptions {
+        // bug value-2
+        javaMaxHeapSize "4g"
+    }
+
+    lintOptions {
+        // 防止在发布的时候出现因MissingTranslation导致Build Failed!
+        disable 'MissingTranslation'
+    }
+
+    packagingOptions {
+        // jar包冲突
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INFTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE.txt'
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:support-v4:23.4.0'
@@ -77,10 +91,11 @@ dependencies {
     compile 'com.google.code.gson:gson:2.4'
     // 友盟推送
     compile project(':PushSDK')
-    compile 'com.squareup.okio:okio:1.6.0'
-    compile 'com.squareup.wire:wire-runtime:2.1.2'
-    // 友盟统计
     compile 'com.umeng.analytics:analytics:latest.integration'
+    // 高德地图
+    compile files('libs/AMap_2DMap_V2.9.0_20160525.jar')
+    compile files('libs/AMap_Location_V2.6.0_20160628.jar')
+    compile files('libs/AMap_Search_V3.3.0_20160616.jar')
     // 圆形图像
     compile 'de.hdodenhof:circleimageview:2.0.0'
 }

@@ -2,6 +2,8 @@ package com.bjxrgz.startup.utils;
 
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -19,6 +21,7 @@ import android.view.inputmethod.InputMethodManager;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Created by fd.meng on 2014/03/30
@@ -36,7 +39,7 @@ public class DeviceUtils {
     }
 
     /**
-     * 获取分辨率对象 ,可以获取密度
+     * 获取分辨率对象 ,可以获取密度 ,以及屏幕宽高
      */
     public static DisplayMetrics getDisplayMetrics(Context context) {
 
@@ -65,6 +68,22 @@ public class DeviceUtils {
     public static InputMethodManager getInputMethodManager(Context context) {
 
         return ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE));
+    }
+
+    /**
+     * 剪切板
+     */
+    public static ClipboardManager getClipboardManager(Context context) {
+
+        return (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+    }
+
+    /**
+     * 环境
+     */
+    public static Locale getLocale(Context context) {
+
+        return context.getResources().getConfiguration().locale;
     }
 
     /**
@@ -253,14 +272,25 @@ public class DeviceUtils {
     }
 
     /**
-     * 是versionName，不是versionCode
+     * 是versionName
      */
-    public static String getAppVersion(Context context) {
+    public static String getVersionName(Context context) {
         PackageInfo packageInfo = getPackageInfo(context, context.getPackageName());
         if (packageInfo == null) {
             return "找不到包信息";
         }
         return packageInfo.versionName;
+    }
+
+    /**
+     * 是versionCode
+     */
+    public static int getVersionCode(Context context) {
+        PackageInfo packageInfo = getPackageInfo(context, context.getPackageName());
+        if (packageInfo == null) {
+            return 0;
+        }
+        return packageInfo.versionCode;
     }
 
     /**
@@ -290,8 +320,34 @@ public class DeviceUtils {
      * 弹出软键盘
      */
     public static void showSoftInputMode(Context context, View windowToken) {
-
         getInputMethodManager(context).showSoftInput(windowToken, InputMethodManager.SHOW_FORCED);
+    }
+
+    /**
+     * ************************************剪切板*************************************
+     */
+    public static void copyText(Context context, String label, String text) {
+
+        ClipData myClip = ClipData.newPlainText(label, text);
+
+        getClipboardManager(context).setPrimaryClip(myClip);
+    }
+
+    /**
+     * ************************************环境*************************************
+     * 是否为英语环境
+     */
+    public static boolean isEN(Context context) {
+        String language = getLocale(context).getLanguage();
+        return language.endsWith("en");
+    }
+
+    /**
+     * 是否为中文环境
+     */
+    public static boolean isZH(Context context) {
+        String language = getLocale(context).getLanguage();
+        return language.endsWith("zh");
     }
 
     /**
