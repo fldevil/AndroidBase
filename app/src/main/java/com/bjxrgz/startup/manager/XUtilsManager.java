@@ -14,7 +14,6 @@ import com.bjxrgz.startup.utils.LogUtils;
 import com.bjxrgz.startup.utils.WidgetUtils;
 
 import org.json.JSONObject;
-import org.xutils.BuildConfig;
 import org.xutils.ex.HttpException;
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
@@ -33,9 +32,7 @@ public class XUtilsManager {
      */
     public static void initApp(Application application, boolean isLog) {
         x.Ext.init(application); // xUtils 初始化
-        if (isLog) {
-            x.Ext.setDebug(BuildConfig.DEBUG); // xUtils log
-        }
+        x.Ext.setDebug(!isLog); // xUtils log
     }
 
     /**
@@ -63,7 +60,7 @@ public class XUtilsManager {
             } else if (ex.getClass().equals(org.xutils.ex.HttpException.class)) {
                 org.xutils.ex.HttpException hre = ((org.xutils.ex.HttpException) ex);
                 int code = hre.getCode(); // 返回码
-                LogUtils.log(Log.ERROR, MyApp.LOG_TAG, "HttpCode--->" + code);
+                LogUtils.e("HttpCode ---> " + code);
 
                 if (code == 404) {
                     WidgetUtils.showToast(context, R.string.http_error_404);
@@ -73,8 +70,7 @@ public class XUtilsManager {
 
                 } else if (code == 401 || code == 409 || code == 417) { // 跳转登录
                     JSONObject object = new JSONObject(((HttpException) ex).getResult());
-                    String message = (String) object.get("message"); // 错误信息
-                    LogUtils.log(Log.ERROR, MyApp.LOG_TAG, "HttpMessage--->" + object.toString());
+                    LogUtils.json(object.toString());
 
 //                    LoginActivity.goActivity(context, message); // 跳转登录界面
 
@@ -84,14 +80,14 @@ public class XUtilsManager {
                 } else { // 弹出提示
                     JSONObject object = new JSONObject(((HttpException) ex).getResult());
                     String message = (String) object.get("message"); // 错误信息
-                    LogUtils.log(Log.ERROR, MyApp.LOG_TAG, "HttpMessage--->" + object.toString());
                     WidgetUtils.showToast(context, message);
+                    LogUtils.json(object.toString());
                 }
             } else if (ex.getClass().equals(java.net.SocketTimeoutException.class)) {
                 WidgetUtils.showToast(context, R.string.http_error_time);
 
             } else {
-                LogUtils.log(Log.ERROR, MyApp.LOG_TAG, "httpError--->" + ex.toString());
+                LogUtils.e(ex.toString());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,7 +97,7 @@ public class XUtilsManager {
     /**
      * XUtilsManager里的接口定义
      */
-    interface Callback<T> {
+    public interface Callback<T> {
 
         void onSuccess(T result);
 
@@ -132,8 +128,7 @@ public class XUtilsManager {
 
             @Override
             public void onCancelled(CancelledException cex) {
-                LogUtils.log(Log.ERROR, MyApp.LOG_TAG,
-                        "getFile(onCancelled)--->" + cex.toString(), cex);
+                LogUtils.e(cex);
             }
 
             @Override
@@ -149,11 +144,11 @@ public class XUtilsManager {
      * get请求
      */
     public static void get(final Context context, RequestParams params,
-                           final String log, final Callback<String> callback) {
+                           final String tag, final Callback<String> callback) {
         x.http().get(params, new org.xutils.common.Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, log + "(success)--->" + result);
+                LogUtils.json(tag + "-success", result);
                 if (callback != null) {
                     callback.onSuccess(result);
                 }
@@ -161,14 +156,13 @@ public class XUtilsManager {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                LogUtils.log(Log.ERROR, MyApp.LOG_TAG, log + "(onError)--->");
+                LogUtils.e(tag + "-error", ex);
                 httpError(ex, context);
             }
 
             @Override
             public void onCancelled(CancelledException cex) {
-                LogUtils.log(Log.ERROR, MyApp.LOG_TAG,
-                        log + "(onCancelled)--->" + cex.toString(), cex);
+                LogUtils.e(tag + "-cancel", cex);
             }
 
             @Override
@@ -184,11 +178,11 @@ public class XUtilsManager {
      * post请求(无参)
      */
     public static void post(final Context context, RequestParams params,
-                            final String log, final Callback<String> callback) {
+                            final String tag, final Callback<String> callback) {
         x.http().post(params, new org.xutils.common.Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, log + "(success)--->" + result);
+                LogUtils.json(tag + "-success", result);
                 if (callback != null) {
                     callback.onSuccess(result);
                 }
@@ -196,14 +190,13 @@ public class XUtilsManager {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                LogUtils.log(Log.ERROR, MyApp.LOG_TAG, log + "(onError)--->");
+                LogUtils.e(tag + "-error", ex);
                 httpError(ex, context);
             }
 
             @Override
             public void onCancelled(CancelledException cex) {
-                LogUtils.log(Log.ERROR, MyApp.LOG_TAG,
-                        log + "(onCancelled)--->" + cex.toString(), cex);
+                LogUtils.e(tag + "-cancel", cex);
             }
 
             @Override
@@ -219,14 +212,14 @@ public class XUtilsManager {
      * post请求 json
      */
     public static void post(final Context context, RequestParams params,
-                            String json, final String log, final Callback<String> callback) {
-        LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, log + "(params)--->" + json);
+                            String json, final String tag, final Callback<String> callback) {
+        LogUtils.json(tag + "-params", json);
         params.setBodyContent(json);
         params.setAsJsonContent(true);
         x.http().post(params, new org.xutils.common.Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, log + "(success)--->" + result);
+                LogUtils.json(tag + "-success", result);
                 if (callback != null) {
                     callback.onSuccess(result);
                 }
@@ -234,14 +227,13 @@ public class XUtilsManager {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                LogUtils.log(Log.ERROR, MyApp.LOG_TAG, log + "(onError)--->");
+                LogUtils.e(tag + "-error", ex);
                 httpError(ex, context);
             }
 
             @Override
             public void onCancelled(CancelledException cex) {
-                LogUtils.log(Log.ERROR, MyApp.LOG_TAG,
-                        log + "(onCancelled)--->" + cex.toString(), cex);
+                LogUtils.e(tag + "-cancel", cex);
             }
 
             @Override
@@ -257,15 +249,15 @@ public class XUtilsManager {
      * post请求 object
      */
     public static void post(final Context context, RequestParams params, Object domain,
-                            final String log, final Callback<String> callback) {
+                            final String tag, final Callback<String> callback) {
         String json = GsonUtils.getInstance().toJson(domain);
-        LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, log + "(params)--->" + json);
+        LogUtils.json(tag + "-params", json);
         params.setBodyContent(json);
         params.setAsJsonContent(true);
         x.http().post(params, new org.xutils.common.Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, log + "(success)--->" + result);
+                LogUtils.json(tag + "-success", result);
                 if (callback != null) {
                     callback.onSuccess(result);
                 }
@@ -273,14 +265,13 @@ public class XUtilsManager {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                LogUtils.log(Log.ERROR, MyApp.LOG_TAG, log + "(onError)--->");
+                LogUtils.e(tag + "-error", ex);
                 httpError(ex, context);
             }
 
             @Override
             public void onCancelled(CancelledException cex) {
-                LogUtils.log(Log.ERROR, MyApp.LOG_TAG,
-                        log + "(onCancelled)--->" + cex.toString(), cex);
+                LogUtils.e(tag + "-cancel", cex);
             }
 
             @Override
@@ -296,11 +287,11 @@ public class XUtilsManager {
      * put请求 (无参)
      */
     public static void put(final Context context, RequestParams params,
-                           final String log, final Callback<String> callback) {
+                           final String tag, final Callback<String> callback) {
         x.http().request(HttpMethod.PUT, params, new org.xutils.common.Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, log + "(success)--->" + result);
+                LogUtils.json(tag + "-success", result);
                 if (callback != null) {
                     callback.onSuccess(result);
                 }
@@ -308,14 +299,13 @@ public class XUtilsManager {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                LogUtils.log(Log.ERROR, MyApp.LOG_TAG, log + "(onError)--->");
+                LogUtils.e(tag + "-error", ex);
                 httpError(ex, context);
             }
 
             @Override
             public void onCancelled(CancelledException cex) {
-                LogUtils.log(Log.ERROR, MyApp.LOG_TAG,
-                        log + "(onCancelled)--->" + cex.toString(), cex);
+                LogUtils.e(tag + "-cancel", cex);
             }
 
             @Override
@@ -331,15 +321,15 @@ public class XUtilsManager {
      * put请求 json
      */
     public static void put(final Context context, RequestParams params, String json,
-                           final String log, final Callback<String> callback) {
-        LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, log + "(params)--->" + json);
+                           final String tag, final Callback<String> callback) {
+        LogUtils.json(tag + "-params", json);
         params.setBodyContent(json);
         params.setAsJsonContent(true);
 
         x.http().request(HttpMethod.PUT, params, new org.xutils.common.Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, log + "(success)--->" + result);
+                LogUtils.json(tag + "-success", result);
                 if (callback != null) {
                     callback.onSuccess(result);
                 }
@@ -347,14 +337,13 @@ public class XUtilsManager {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                LogUtils.log(Log.ERROR, MyApp.LOG_TAG, log + "(onError)--->");
+                LogUtils.e(tag + "-error", ex);
                 httpError(ex, context);
             }
 
             @Override
             public void onCancelled(CancelledException cex) {
-                LogUtils.log(Log.ERROR, MyApp.LOG_TAG,
-                        log + "(onCancelled)--->" + cex.toString(), cex);
+                LogUtils.e(tag + "-cancel", cex);
             }
 
             @Override
@@ -370,16 +359,16 @@ public class XUtilsManager {
      * put请求 object
      */
     public static void put(final Context context, RequestParams params, Object domain,
-                           final String log, final Callback<String> callback) {
+                           final String tag, final Callback<String> callback) {
         String json = GsonUtils.getInstance().toJson(domain);
-        LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, log + "(params)--->" + json);
+        LogUtils.json(tag + "-params", json);
         params.setBodyContent(json);
         params.setAsJsonContent(true);
 
         x.http().request(HttpMethod.PUT, params, new org.xutils.common.Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, log + "(success)--->" + result);
+                LogUtils.json(tag + "-success", result);
                 if (callback != null) {
                     callback.onSuccess(result);
                 }
@@ -387,14 +376,13 @@ public class XUtilsManager {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                LogUtils.log(Log.ERROR, MyApp.LOG_TAG, log + "(onError)--->");
+                LogUtils.e(tag + "-error", ex);
                 httpError(ex, context);
             }
 
             @Override
             public void onCancelled(CancelledException cex) {
-                LogUtils.log(Log.ERROR, MyApp.LOG_TAG,
-                        log + "(onCancelled)--->" + cex.toString(), cex);
+                LogUtils.e(tag + "-cancel", cex);
             }
 
             @Override
@@ -410,11 +398,11 @@ public class XUtilsManager {
      * delete请求
      */
     public static void delete(final Context context, RequestParams params,
-                              final String log, final Callback<String> callback) {
+                              final String tag, final Callback<String> callback) {
         x.http().request(HttpMethod.DELETE, params, new org.xutils.common.Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, log + "(success)--->" + result);
+                LogUtils.json(tag + "-success", result);
                 if (callback != null) {
                     callback.onSuccess(result);
                 }
@@ -422,14 +410,13 @@ public class XUtilsManager {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                LogUtils.log(Log.ERROR, MyApp.LOG_TAG, log + "(onError)--->");
+                LogUtils.e(tag + "-error", ex);
                 httpError(ex, context);
             }
 
             @Override
             public void onCancelled(CancelledException cex) {
-                LogUtils.log(Log.ERROR, MyApp.LOG_TAG,
-                        log + "(onCancelled)--->" + cex.toString(), cex);
+                LogUtils.e(tag + "-cancel", cex);
             }
 
             @Override

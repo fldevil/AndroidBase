@@ -4,6 +4,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.bjxrgz.startup.base.MyApp;
+import com.orhanobut.logger.LogLevel;
+import com.orhanobut.logger.Logger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,96 +22,171 @@ import java.util.Date;
  * 日志处理
  */
 public class LogUtils {
+    //
+//    /**
+//     * 记录文本日志 , 默认Log.d
+//     */
+//    public static void log(int level, String tag, String message) {
+//        if (message == null) {
+//            message = "";
+//        }
+//        if (MyApp.IS_LOG) {
+//            switch (level) {
+//                case Log.DEBUG:
+//                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
+//                        Log.d(tag, message);
+//                    }
+//                    break;
+//                case Log.INFO:
+//                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
+//                        Log.i(tag, message);
+//                    }
+//                    break;
+//                case Log.ERROR:
+//                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
+//                        Log.e(tag, message);
+//                    }
+//                    break;
+//                case Log.VERBOSE:
+//                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
+//                        Log.v(tag, message);
+//                    }
+//                    break;
+//                case Log.WARN:
+//                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
+//                        Log.w(tag, message);
+//                    }
+//                    break;
+//                default:
+//                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
+//                        Log.d(tag, message);
+//                    }
+//                    break;
+//            }
+//        }
+//    }
+//
+//    /**
+//     * 记录Exception日志 , 默认Log.d
+//     */
+//    public static void log(int level, String tag, String message, Exception exc) {
+//        if (MyApp.IS_LOG) {
+//            if (message == null) {
+//                message = "";
+//            }
+//            switch (level) {
+//                case Log.DEBUG:
+//                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
+//                        Log.d(tag, message, exc);
+//                    }
+//                    break;
+//                case Log.INFO:
+//                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
+//                        Log.i(tag, message, exc);
+//                    }
+//                    break;
+//                case Log.ERROR:
+//                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
+//                        Log.e(tag, message, exc);
+//                    }
+//                    break;
+//                case Log.VERBOSE:
+//                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
+//                        Log.v(tag, message, exc);
+//                    }
+//                    break;
+//                case Log.WARN:
+//                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
+//                        Log.w(tag, message, exc);
+//                    }
+//                    break;
+//                case -1:
+//                    if (Log.isLoggable(MyApp.LOG_TAG, Log.DEBUG)) {
+//                        Log.d(tag, message);
+//                    }
+//                    break;
+//                default:
+//                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
+//                        Log.d(tag, message, exc);
+//                    }
+//                    break;
+//            }
+//        }
+//    }
 
-    /**
-     * 记录文本日志 , 默认Log.d
-     */
-    public static void log(int level, String tag, String message) {
-        if (message == null) {
-            message = "";
-        }
-        if (MyApp.IS_LOG) {
-            switch (level) {
-                case Log.DEBUG:
-                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
-                        Log.d(tag, message);
-                    }
-                    break;
-                case Log.INFO:
-                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
-                        Log.i(tag, message);
-                    }
-                    break;
-                case Log.ERROR:
-                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
-                        Log.e(tag, message);
-                    }
-                    break;
-                case Log.VERBOSE:
-                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
-                        Log.v(tag, message);
-                    }
-                    break;
-                case Log.WARN:
-                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
-                        Log.w(tag, message);
-                    }
-                    break;
-                default:
-                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
-                        Log.d(tag, message);
-                    }
-                    break;
-            }
+    public static void initApp(String LOG_TAG, boolean IS_LOG) {
+        Logger.Settings settings = Logger.init(LOG_TAG); // 打印tag
+        settings.setMethodCount(3);// 3以上才能显示调用方法
+        settings.hideThreadInfo(); // 隐藏线程显示
+        if (IS_LOG) { // log开关
+            settings.setLogLevel(LogLevel.FULL);
+        } else {
+            settings.setLogLevel(LogLevel.NONE);
         }
     }
 
     /**
-     * 记录Exception日志 , 默认Log.d
+     * 调试
      */
-    public static void log(int level, String tag, String message, Exception exc) {
-        if (MyApp.IS_LOG) {
-            if (message == null) {
-                message = "";
-            }
-            switch (level) {
-                case Log.DEBUG:
-                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
-                        Log.d(tag, message, exc);
-                    }
-                    break;
-                case Log.INFO:
-                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
-                        Log.i(tag, message, exc);
-                    }
-                    break;
-                case Log.ERROR:
-                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
-                        Log.e(tag, message, exc);
-                    }
-                    break;
-                case Log.VERBOSE:
-                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
-                        Log.v(tag, message, exc);
-                    }
-                    break;
-                case Log.WARN:
-                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
-                        Log.w(tag, message, exc);
-                    }
-                    break;
-                case -1:
-                    if (Log.isLoggable(MyApp.LOG_TAG, Log.DEBUG)) {
-                        Log.d(tag, message);
-                    }
-                    break;
-                default:
-                    if (Log.isLoggable(MyApp.LOG_TAG, Log.ERROR)) {
-                        Log.d(tag, message, exc);
-                    }
-                    break;
-            }
-        }
+    public static void d(String print) {
+        Logger.d(print);
+    }
+
+    public static void d(String tag, String print) {
+        Logger.d(tag, print);
+    }
+
+    public static void d(String print, int methodCount) {
+        Logger.d(print, methodCount);
+    }
+
+    /**
+     * 警告
+     */
+    public static void e(String print) {
+        Logger.e(print);
+    }
+
+    public static void e(String tag, String print) {
+        Logger.e(tag, print);
+    }
+
+    public static void e(String print, int methodCount) {
+        Logger.e(print, methodCount);
+    }
+
+    /**
+     * 异常
+     */
+    public static void e(Exception e) {
+        Logger.e(e);
+    }
+
+    public static void e(Throwable ex) {
+        Logger.e(ex.toString());
+    }
+
+    public static void e(String tag, Exception e) {
+        Logger.e(tag, e);
+    }
+
+    public static void e(String tag, Throwable ex) {
+        Logger.e(tag, ex.toString());
+    }
+
+    /**
+     * 实体类
+     */
+    public static void json(String json) {
+        Logger.json(json);
+    }
+
+    public static void json(String tag, String json) {
+        Logger.json(tag, json);
+    }
+
+    public static void json(String json, int methodCount) {
+        Logger.json(json, methodCount);
     }
 
     /**

@@ -30,7 +30,6 @@ public class NetUtils {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "NetUtils(ConnectReceiver)--->onReceive");
             if (mListener == null)
                 return;
             if (isAvailable(context)) {

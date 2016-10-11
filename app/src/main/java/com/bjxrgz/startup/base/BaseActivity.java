@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -74,8 +73,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN); // 总是隐藏键盘
         AnimUtils.initBaseActivity(this); // 布局动画
         super.onCreate(savedInstanceState); // 读取状态
-        pb = DialogUtils.createProgress(this, null, getString(R.string.wait), false, false, null);
         mActivity = this; // 实例
+        pb = DialogUtils.createProgress(this, null, getString(R.string.wait), false, false, null);
         mFragmentManager = getSupportFragmentManager(); // fragment管理者
         XUtilsManager.initBaseActivity(this); // xUtils初始化
         create(savedInstanceState); // 抽象方法
@@ -87,7 +86,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public void onAttachFragment(Fragment fragment) {
-        LogUtils.log(Log.DEBUG, logTag, "--->onAttachFragment");
+        LogUtils.d(logTag);
         super.onAttachFragment(fragment);
     }
 
@@ -102,7 +101,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public void onContentChanged() {
-        LogUtils.log(Log.DEBUG, logTag, "--->onContentChanged");
+        LogUtils.d(logTag);
         super.onContentChanged();
     }
 
@@ -111,7 +110,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onNewIntent(Intent intent) {
-        LogUtils.log(Log.DEBUG, logTag, "--->onNewIntent");
+        LogUtils.d(logTag);
         super.onNewIntent(intent);
     }
 
@@ -136,7 +135,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        LogUtils.log(Log.DEBUG, logTag, "--->onActivityResult");
+        LogUtils.d(logTag);
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -146,7 +145,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        LogUtils.log(Log.DEBUG, logTag, "--->onActivityResult");
+        LogUtils.d(logTag);
         super.onRestoreInstanceState(savedInstanceState);
     }
 
@@ -155,7 +154,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        LogUtils.log(Log.DEBUG, logTag, "--->onPostCreate");
+        LogUtils.d(logTag);
         super.onPostCreate(savedInstanceState);
     }
 
@@ -173,7 +172,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onPostResume() {
-        LogUtils.log(Log.DEBUG, logTag, "--->onPostResume");
+        LogUtils.d(logTag);
         super.onPostResume();
     }
 
@@ -184,7 +183,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public void onAttachedToWindow() {
-        LogUtils.log(Log.DEBUG, logTag, "--->onAttachedToWindow");
+        LogUtils.d(logTag);
         super.onAttachedToWindow();
         // View decorView = getWindow().getDecorView();
         // 控制DecorView的大小来控制activity的大小，可做窗口activity
@@ -199,7 +198,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        LogUtils.log(Log.DEBUG, logTag, "--->onCreateOptionsMenu");
+        LogUtils.d(logTag);
         // 也引入menu的layout，也可动态add(记得每次先clear)
         // getMenuInflater().inflate(res,menu);
         // 内部调用onCreateOptionsMenu(Menu menu) ,用于动态变换menu选项
@@ -221,7 +220,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        LogUtils.log(Log.DEBUG, logTag, "--->onSaveInstanceState");
+        LogUtils.d(logTag);
         super.onSaveInstanceState(outState);
     }
 
@@ -238,7 +237,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public void onDetachedFromWindow() {
-        LogUtils.log(Log.DEBUG, logTag, "--->onDetachedFromWindow");
+        LogUtils.d(logTag);
         super.onDetachedFromWindow();
     }
 
@@ -258,7 +257,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onResumeFragments() {
-        LogUtils.log(Log.DEBUG, logTag, "onResumeFragments");
+        LogUtils.d(logTag);
         super.onResumeFragments();
     }
 
@@ -267,7 +266,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public void onEnterAnimationComplete() {
-        LogUtils.log(Log.DEBUG, logTag, "onEnterAnimationComplete");
+        LogUtils.d(logTag);
         super.onEnterAnimationComplete();
     }
 
@@ -276,7 +275,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        LogUtils.log(Log.DEBUG, logTag, "onOptionsItemSelected--->" + item.getTitle());
+        LogUtils.d(logTag);
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
@@ -289,9 +288,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      * 创建上下文菜单 需主动注册registerForContextMenu(view); 也可注销
      */
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
-        LogUtils.log(Log.DEBUG, logTag, "onCreateContextMenu");
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        LogUtils.d(logTag);
         super.onCreateContextMenu(menu, v, menuInfo);
     }
 
@@ -302,7 +300,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info =
                 (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        LogUtils.log(Log.DEBUG, logTag, "onContextItemSelected--->position == " + info.position);
+        LogUtils.d(logTag + "position ---> " + info.position);
         return super.onContextItemSelected(item);
     }
 
@@ -311,7 +309,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-        LogUtils.log(Log.DEBUG, logTag, "onBackPressed");
+        LogUtils.d(logTag);
         super.onBackPressed();
     }
 
@@ -323,7 +321,6 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     protected String getCls() {
         Class<T> cls = (Class<T>) (((ParameterizedType) (this.getClass()
                 .getGenericSuperclass())).getActualTypeArguments()[0]);
-
         return cls.getSimpleName();
     }
 
@@ -377,7 +374,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      * 启动activity，setResult设置回传的resultCode和intent
      */
     public static void startActivity(Fragment fragment, Activity activity,
-                                              Intent intent, int requestCode) {
+                                     Intent intent, int requestCode) {
         if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             fragment.startActivityForResult(intent, requestCode,
                     ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
@@ -392,7 +389,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      * 多层fragment时，第二级fragment是无法在startActivityForResult上时候收到回传intent的
      */
     public static void startActivityForFragment(AppCompatActivity activity, Fragment fragment,
-                                               Intent intent, int requestCode) {
+                                                Intent intent, int requestCode) {
         if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             activity.startActivityFromFragment(fragment, intent, requestCode,
                     ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());

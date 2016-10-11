@@ -3,9 +3,6 @@ package com.bjxrgz.startup.utils;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Environment;
-import android.util.Log;
-
-import com.bjxrgz.startup.base.MyApp;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -195,7 +192,7 @@ public class FileUtils {
                 fileReader.close();
             }
         }
-        LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "读取出来的文件内容是--->\\r\\n" + result);
+        LogUtils.d("读取出来的文件内容是--->\\r\\n" + result);
         return result;
     }
 
@@ -228,7 +225,7 @@ public class FileUtils {
             // System.out.println("运行" + (end - begin)/1000 + "s");
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtils.log(Log.ERROR, MyApp.LOG_TAG, "FileUtils->hashFile:" + e.toString());
+            LogUtils.e(e);
         }
         return "";
     }
@@ -290,7 +287,7 @@ public class FileUtils {
             zis.close();
         } catch (IOException e) {
             e.printStackTrace();
-            LogUtils.log(Log.ERROR, MyApp.LOG_TAG, "FileUtils->unZip:" + e.toString());
+            LogUtils.e(e);
             // Log.e(this.getClass().getSimpleName(), "IOException", e);
             // cancel(true);
         }
@@ -522,14 +519,14 @@ public class FileUtils {
      */
     public static boolean createFile(File file) {
         if (file.exists()) {
-            LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "createFile--->文件已存在");
+            LogUtils.d("文件已存在");
             return false;
         }
         if (file.mkdirs()) {
-            LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "createFile--->文件创建成功");
+            LogUtils.d("文件创建成功");
             return true;
         } else {
-            LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "createFile--->文件创建失败");
+            LogUtils.d("文件创建失败");
             return false;
         }
     }
@@ -540,7 +537,7 @@ public class FileUtils {
     public static int deleteFile(File file) {
         int number = 0;
         if (file == null || !file.exists()) {
-            LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "deleteFile--->文件不存在");
+            LogUtils.d("文件不存在");
             return number;
         }
         if (file.isFile()) {
@@ -663,15 +660,15 @@ public class FileUtils {
      */
     private static boolean beforeCopy(File source, File target) {
         if (!source.exists()) {
-            LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "beforeCopy--->源文件不存在");
+            LogUtils.d("源文件不存在");
             return false;
         }
         if (!source.canRead()) {
-            LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "beforeCopy--->源文件不可读");
+            LogUtils.d("源文件不可读");
             return false;
         }
         if (target.exists()) {
-            LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "beforeCopy--->目标文件已存在");
+            LogUtils.d("目标文件已存在");
             return false;
         } else {
             if (!createFile(target)) {
@@ -679,7 +676,7 @@ public class FileUtils {
             }
         }
         if (!target.canWrite()) {
-            LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "beforeCopy--->目标文件不可写");
+            LogUtils.d("目标文件不可写");
             return false;
         }
         return true;

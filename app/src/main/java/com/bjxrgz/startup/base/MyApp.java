@@ -9,7 +9,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
-import android.util.Log;
 
 import com.bjxrgz.startup.manager.PushManager;
 import com.bjxrgz.startup.manager.UserManager;
@@ -24,11 +23,11 @@ import java.util.concurrent.Executors;
 
 public class MyApp extends Application {
 
-    public static final boolean IS_RELEASE = false; // 是否正式版本
+    public static final boolean IS_RELEASE = false; // 上线为true
 
-    public static final boolean IS_LOG = true; // log开关
+    public static final boolean IS_LOG = true; // 上线为false
 
-    public static final String LOG_TAG = "app名称"; // LogTag
+    public static final String LOG_TAG = "start_up"; // LogTag
 
     public static MyApp instance;  // 当前实例
 
@@ -57,6 +56,7 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
+        LogUtils.initApp(LOG_TAG, IS_LOG); // 日志初始化
         PushManager.initAPP(this); // 推送初始化
         XUtilsManager.initApp(this, MyApp.IS_LOG); // xUtils 初始化
         UserManager.initApp(this); // 初始化preference
@@ -75,60 +75,57 @@ public class MyApp extends Application {
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-                LogUtils.log(Log.DEBUG, activity.getClass().getSimpleName(), "--->onCreate");
+                LogUtils.d(activity.getClass().getSimpleName());
                 addActivity(activity);
             }
 
             @Override
             public void onActivityStarted(Activity activity) {
-                LogUtils.log(Log.DEBUG, activity.getClass().getSimpleName(), "--->onStarted");
+                LogUtils.d(activity.getClass().getSimpleName());
             }
 
             @Override
             public void onActivityResumed(Activity activity) {
-                LogUtils.log(Log.DEBUG, activity.getClass().getSimpleName(), "--->onResumed");
+                LogUtils.d(activity.getClass().getSimpleName());
             }
 
             @Override
             public void onActivityPaused(Activity activity) {
-                LogUtils.log(Log.DEBUG, activity.getClass().getSimpleName(), "--->onPaused");
+                LogUtils.d(activity.getClass().getSimpleName());
             }
 
             @Override
             public void onActivityStopped(Activity activity) {
-                LogUtils.log(Log.DEBUG, activity.getClass().getSimpleName(), "--->onStopped");
+                LogUtils.d(activity.getClass().getSimpleName());
             }
 
             @Override
             public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-                LogUtils.log(Log.DEBUG, activity.getClass().getSimpleName(), "--->onCreated");
+                LogUtils.d(activity.getClass().getSimpleName());
             }
 
             @Override
             public void onActivityDestroyed(Activity activity) {
-                LogUtils.log(Log.DEBUG, activity.getClass().getSimpleName(), "--->onDestroyed");
+                LogUtils.d(activity.getClass().getSimpleName());
                 removeActivity(activity);
             }
         });
 
         // 监听当前app的内存 ,可撤销
         registerComponentCallbacks(new ComponentCallbacks2() {
-            // 触发条件：当系统决定要杀死一个进程以求更多内存
             @Override
             public void onTrimMemory(int level) {
-                LogUtils.log(Log.ERROR, LOG_TAG, "onTrimMemory--->level == " + level);
+                LogUtils.d("杀死一个进程以求更多内存(level) ---> " + level);
             }
 
-            // 配置发生变化，如横竖屏切换
             @Override
             public void onConfigurationChanged(Configuration newConfig) {
-                LogUtils.log(Log.ERROR, LOG_TAG, "onTrimMemory--->");
+                LogUtils.d("配置发生变化");
             }
 
-            // 触发条件：内存不足, 并且系统想要清理内存以获取更多内存时
             @Override
             public void onLowMemory() {
-                LogUtils.log(Log.ERROR, LOG_TAG, "onLowMemory--->");
+                LogUtils.e("内存不足,清理内存以获取更多内存");
             }
         });
     }

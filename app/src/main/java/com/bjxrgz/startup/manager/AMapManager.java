@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -204,7 +203,7 @@ public class AMapManager {
                         aMapLocation.getCityCode();//城市编码
                         aMapLocation.getAdCode();//地区编码
                         aMapLocation.getAoiName();//获取当前定位点的AOI信息
-                        LogUtils.log(Log.DEBUG, "onLocationChanged", "--->" + aMapLocation.toString());
+                        LogUtils.d(aMapLocation.toString());
 
                         if (locationCallBack != null) {
                             locationCallBack.onSuccess(aMapLocation);
@@ -216,7 +215,7 @@ public class AMapManager {
 //                        WidgetUtils.showToast(MyApp.instance, R.string.map_location_error);
                         String errText = "定位失败," + aMapLocation.getErrorCode()
                                 + ": " + aMapLocation.getErrorInfo();
-                        LogUtils.log(Log.ERROR, "onLocationChanged", "--->" + errText);
+                        LogUtils.e(errText);
                     }
                 }
             }
@@ -260,7 +259,7 @@ public class AMapManager {
                     //若当前城市查询不到所需Poi信息，可以通过result.getSearchSuggestionCitys()获取当前Poi搜索的建议城市
                     //如果搜索关键字明显为误输入，则可通过result.getSearchSuggestionKeywords()方法得到搜索关键词建议
                     ArrayList<PoiItem> pois = poiResult.getPois();
-                    LogUtils.log(Log.DEBUG, "onPoiSearched", "--->" + pois.toString());
+                    LogUtils.d(pois.toString());
                     if (searchCallBack != null) {
                         searchCallBack.onSuccess(pois);
                     }

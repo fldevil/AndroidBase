@@ -147,7 +147,7 @@ public class BitmapUtils {
                 baos.reset();
                 // 每次都减少10
                 options -= 10;
-                LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "compressBmpSize(options)--->" + options);
+                LogUtils.d("options ---> " + options);
                 // 这里压缩options%，把压缩后的数据存放到baos中
                 bmp.compress(type, options, baos);
             }
@@ -213,7 +213,7 @@ public class BitmapUtils {
 
             int byteCount = bitmap.getByteCount(); // 为什么不对应啊
 
-            LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "compressBitmap/byteCount(start)--->" + byteCount);
+            LogUtils.d(" start ---> " + byteCount);
 
             while (byteCount > maxSize) {
                 int options = byteCount / maxSize; // 和参数没关系啊
@@ -222,7 +222,7 @@ public class BitmapUtils {
                 bitmap = ThumbnailUtils.extractThumbnail(bitmap, width, height, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
                 byteCount = bitmap.getByteCount();
             }
-            LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "compressBitmap/byteCount(end)--->" + byteCount);
+            LogUtils.d(" end ---> " + byteCount);
         }
         return bitmap;
     }
@@ -235,7 +235,7 @@ public class BitmapUtils {
 
         Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
         long length = file.length();
-        LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "compressFile(length)--->" + length);
+        LogUtils.d( "length ---> " + length);
 
         if (length > maxSize) {
             return compressBitmap(bitmap);

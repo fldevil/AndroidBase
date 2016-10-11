@@ -1,8 +1,5 @@
 package com.bjxrgz.startup.manager;
 
-import android.util.Log;
-
-import com.bjxrgz.startup.base.MyApp;
 import com.bjxrgz.startup.utils.LogUtils;
 
 import org.xutils.http.RequestParams;
@@ -37,7 +34,7 @@ public class HttpParamsManager {
      */
     public static RequestParams getTokenRequestParams(String uri) {
         String userToken = UserManager.getInstance().getUser().getUserToken();
-        LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "userToken--->" + userToken);
+        LogUtils.d("userToken", userToken);
 
         RequestParams params = new RequestParams(uri);
         params.addHeader(API_KEY_NAME, API_KEY);

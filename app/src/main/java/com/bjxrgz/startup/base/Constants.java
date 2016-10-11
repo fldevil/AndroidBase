@@ -21,4 +21,6 @@ public class Constants {
             Constants.API_HOST = Constants.API_TEST;
         }
     }
+
+    public static final String API_HOME = "http://www.bjxrgz.com:808/bio/api/v1/zh-CN/home"; // 测试
 }

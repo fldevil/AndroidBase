@@ -2,7 +2,6 @@ package com.bjxrgz.startup.manager;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.bjxrgz.startup.base.MyApp;
 import com.bjxrgz.startup.utils.LogUtils;
@@ -35,12 +34,12 @@ public class PushManager {
             @Override
             public void onSuccess(String deviceToken) {
                 MyApp.DEVICE_TOKEN = deviceToken;
-                LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "PushManager(register)--->" + deviceToken);
+                LogUtils.d("deviceToken", deviceToken);
             }
 
             @Override
             public void onFailure(String s, String s1) {
-                LogUtils.log(Log.ERROR, MyApp.LOG_TAG, "PushManager(register)--->" + s + "-" + s1);
+                LogUtils.e(s + "\n" + s1);
             }
         });
     }
@@ -53,24 +52,23 @@ public class PushManager {
             mPushAgent.enable(new IUmengCallback() {
                 @Override
                 public void onSuccess() {
-                    LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "PushManager--->enable(success)");
+                    getDeviceToken();
                 }
 
                 @Override
                 public void onFailure(String s, String s1) {
-                    LogUtils.log(Log.ERROR, MyApp.LOG_TAG, "PushManager--->enable(Failure)--->" + s + "-" + s1);
+                    LogUtils.e(s + "\n" + s1);
                 }
             });
         } else {
             mPushAgent.disable(new IUmengCallback() {
                 @Override
                 public void onSuccess() {
-                    LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "PushManager--->disable(success)");
                 }
 
                 @Override
                 public void onFailure(String s, String s1) {
-                    LogUtils.log(Log.ERROR, MyApp.LOG_TAG, "PushManager--->disable(Failure)--->" + s + "-" + s1);
+                    LogUtils.e(s + "\n" + s1);
                 }
             });
         }
@@ -83,7 +81,7 @@ public class PushManager {
         if (TextUtils.isEmpty(MyApp.DEVICE_TOKEN)) {
             MyApp.DEVICE_TOKEN = mPushAgent.getRegistrationId();
         }
-        LogUtils.log(Log.DEBUG, MyApp.LOG_TAG, "PushManager--->getDeviceToken--->" + MyApp.DEVICE_TOKEN);
+        LogUtils.d("deviceToken", MyApp.DEVICE_TOKEN);
     }
 
     /**

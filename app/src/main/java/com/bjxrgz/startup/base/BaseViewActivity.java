@@ -1,16 +1,5 @@
 package com.bjxrgz.startup.base;
 
-import android.view.View;
-import android.widget.CheckBox;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.bjxrgz.startup.R;
-
-import org.xutils.view.annotation.Event;
-import org.xutils.view.annotation.ViewInject;
-
 /**
  * Created by Fan on 2016/7/16.
  * BaseViewActivity

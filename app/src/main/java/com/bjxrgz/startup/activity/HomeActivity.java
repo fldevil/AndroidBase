@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import com.bjxrgz.startup.R;
 import com.bjxrgz.startup.base.BaseActivity;
+import com.bjxrgz.startup.manager.APIManager;
+import com.bjxrgz.startup.manager.XUtilsManager;
 import com.umeng.analytics.MobclickAgent;
 
 import org.xutils.view.annotation.ContentView;
@@ -25,7 +27,17 @@ public class HomeActivity extends BaseActivity<HomeActivity> {
 
     @Override
     protected void create(Bundle savedInstanceState) {
+        APIManager.demo(mActivity, new XUtilsManager.Callback() {
+            @Override
+            public void onSuccess(Object result) {
 
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
     }
 
     @Override
