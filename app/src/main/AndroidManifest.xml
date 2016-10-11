@@ -62,7 +62,11 @@
         </activity>
         <!-- 主页面 -->
         <activity android:name=".activity.HomeActivity" />
-
+        <!-- 版本更新 -->
+        <service
+            android:name=".service.UpdateService"
+            android:enabled="true"
+            android:exported="true" />
         <!-- 友盟 -->
         <meta-data
             android:name="UMENG_APPKEY"
@@ -77,10 +81,7 @@
             android:value="5bb1b4f82f624df8dc1b8e4afb31b7b2" />
 
         <service android:name="com.amap.api.location.APSService" />
-        <service
-            android:name=".service.UpdateService"
-            android:enabled="true"
-            android:exported="true"></service>
+
     </application>
 
 </manifest>

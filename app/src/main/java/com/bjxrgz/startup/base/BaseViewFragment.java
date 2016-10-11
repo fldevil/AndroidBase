@@ -1,12 +1,65 @@
 package com.bjxrgz.startup.base;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public abstract class BaseViewFragment extends BaseFragment {
-//
+public abstract class BaseViewFragment<T> extends BaseFragment<T> {
+
+    private Unbinder unbinder;
+
+    protected abstract int initContentView(LayoutInflater inflater, ViewGroup container,
+                                           Bundle savedInstanceState);
+
+    protected abstract void initObject(View view, @Nullable Bundle savedInstanceState);
+
+    protected abstract void initView(View view, @Nullable Bundle savedInstanceState);
+
+    protected abstract void initData(View view, @Nullable Bundle savedInstanceState);
+
+    protected abstract void refreshData();
+
+    @Override
+    protected View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        int rootRes = initContentView(inflater, container, savedInstanceState);
+        View rootView = inflater.inflate(rootRes, container, false);
+        if (rootView != null) {
+            unbinder = ButterKnife.bind(mFragment, rootView);
+        }
+        return rootView;
+    }
+
+    @Override
+    protected void viewCreate(View view, @Nullable Bundle savedInstanceState) {
+        initObject(view, savedInstanceState);
+        initView(view, savedInstanceState);
+        initData(view, savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        refreshData();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (unbinder != null) {
+            unbinder.unbind();
+        }
+    }
+
+    //
 //    @ViewInject(R.id.tvTopTitle)
 //    private TextView tvTopTitle;
 //    // left

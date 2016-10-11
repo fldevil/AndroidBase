@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import butterknife.ButterKnife;
+
 public class MyApp extends Application {
 
     public static final boolean IS_RELEASE = false; // 上线为true
@@ -57,6 +59,7 @@ public class MyApp extends Application {
         super.onCreate();
         instance = this;
         LogUtils.initApp(LOG_TAG, IS_LOG); // 日志初始化
+        ButterKnife.setDebug(IS_LOG); // 懒人框架打印
         PushManager.initAPP(this); // 推送初始化
         XUtilsManager.initApp(this, MyApp.IS_LOG); // xUtils 初始化
         UserManager.initApp(this); // 初始化preference

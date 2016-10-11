@@ -1,27 +1,44 @@
 package com.bjxrgz.startup.activity;
 
 import android.os.Bundle;
+import android.view.WindowManager;
+import android.widget.ImageView;
 
 import com.bjxrgz.startup.R;
-import com.bjxrgz.startup.base.BaseActivity;
+import com.bjxrgz.startup.base.BaseViewActivity;
 import com.bjxrgz.startup.base.MyApp;
 import com.bjxrgz.startup.manager.PushManager;
 
-import org.xutils.view.annotation.ContentView;
+import butterknife.BindView;
 
 /**
  * Created by JiangZhiGuo on 2016/06/01
- * <p>
+ * <p/>
  * describe 欢迎界面，启动界面
  */
-@ContentView(R.layout.activity_start)
-public class StartActivity extends BaseActivity<StartActivity> {
+public class StartActivity extends BaseViewActivity<StartActivity> {
+
+    @BindView(R.id.ivWelcome)
+    ImageView ivWelcome;
 
     @Override
-    protected void create(Bundle savedInstanceState) {
-        PushManager.setPush(true);
+    protected void initObject(Bundle savedInstanceState) {
+        PushManager.setPush(true); // 推送开关
+    }
 
-        goHome();
+    @Override
+    protected void initView(Bundle savedInstanceState) {
+        mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); // 全屏
+        initContentView(R.layout.activity_start);
+    }
+
+    @Override
+    protected void initData(Bundle savedInstanceState) {
+        goHome(); // 跳转主页
+    }
+
+    @Override
+    protected void refreshData() {
     }
 
     private void goHome() {
@@ -29,9 +46,9 @@ public class StartActivity extends BaseActivity<StartActivity> {
             @Override
             public void run() {
                 HomeActivity.goActivity(mActivity);
-
             }
         }, 1500);
+        // 立刻关闭当前页面会出现空白缝隙
         MyApp.mainHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -39,5 +56,4 @@ public class StartActivity extends BaseActivity<StartActivity> {
             }
         }, 3000);
     }
-
 }

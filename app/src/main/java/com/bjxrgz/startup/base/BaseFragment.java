@@ -19,20 +19,20 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 
 import com.bjxrgz.startup.R;
-import com.bjxrgz.startup.manager.XUtilsManager;
 import com.bjxrgz.startup.utils.AnimUtils;
 import com.bjxrgz.startup.utils.DialogUtils;
 import com.bjxrgz.startup.utils.LogUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 
 /**
  * Created by JiangZhiGuo on 2016/06/01
- * <p>
+ * <p/>
  * describe Fragment的基类,主要用于log日志和初始化工作
  */
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment<T> extends Fragment {
 
     public FragmentActivity mActivity;
     public BaseFragment mFragment;
@@ -48,14 +48,11 @@ public abstract class BaseFragment extends Fragment {
     public static <T> T newInstance(Class<T> clz, Bundle args) {
         T fragment = null;
         try {
-            // 获取Fragment内名为setArguments的函数
-            Method setArguments = clz.getMethod("setArguments", Bundle.class);
-            // 走的无参构造函数
-            fragment = clz.newInstance();
-            // 往Bundle里传值，这里是子类的类名
-            args.putString("logTag", fragment.getClass().getSimpleName());
-            // 执行setArguments方法
-            setArguments.invoke(fragment, args);
+            Method setArguments = clz.getMethod("setArguments", Bundle.class); // 获取Fragment内名为setArguments的函数
+            fragment = clz.newInstance();  // 走的无参构造函数
+            if (args == null) // 往Bundle里传值，这里是子类的类名
+                args = new Bundle();
+            setArguments.invoke(fragment, args); // 执行setArguments方法
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         } catch (NoSuchMethodException e) {
@@ -66,6 +63,13 @@ public abstract class BaseFragment extends Fragment {
             e.printStackTrace();
         }
         return fragment;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected String getCls() {
+        Class<T> cls = (Class<T>) (((ParameterizedType) (this.getClass()
+                .getGenericSuperclass())).getActualTypeArguments()[0]);
+        return cls.getSimpleName();
     }
 
     /**
@@ -87,14 +91,14 @@ public abstract class BaseFragment extends Fragment {
 
     /**
      * **********************************以下是生命周期*******************************
-     * <p>
+     * <p/>
      * 在xml中定义的，onInflate方法第一个被调用,否则直接下一步
      */
     @Override
     public void onInflate(Context context, AttributeSet attrs, Bundle savedInstanceState) {
+        logTag = getCls();
         LogUtils.d(logTag);
         super.onInflate(context, attrs, savedInstanceState);
-
     }
 
     /**
@@ -103,6 +107,7 @@ public abstract class BaseFragment extends Fragment {
      */
     @Override
     public void onAttach(Context context) {
+        logTag = getCls();
         LogUtils.d(logTag);
         super.onAttach(context);
         if (context instanceof FragmentActivity) {
@@ -119,15 +124,11 @@ public abstract class BaseFragment extends Fragment {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         LogUtils.d(logTag);
+        super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);// Fragment与ActionBar和MenuItem集成
         pb = DialogUtils.createProgress(getContext(), null, getString(R.string.wait), false, true, null);
-
-        if (getArguments() != null) { // 取出打印log
-            mBundle = getArguments();
-            logTag = mBundle.getString("logTag");
-        }
+        mBundle = getArguments(); // 取出Bundle
     }
 
     /**
@@ -136,17 +137,20 @@ public abstract class BaseFragment extends Fragment {
      * 这里的做法是个onDestroyView配套的
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LogUtils.d(logTag);
         View view = getView();
         if (view == null) {
             view = createView(inflater, container, savedInstanceState);
         }
-        XUtilsManager.initBaseFragment(this, view);
         return view;
     }
 
+    @Override
+    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        LogUtils.d(logTag);
+        return super.onCreateAnimation(transit, enter, nextAnim);
+    }
 
     /**
      * 一般在这里进行控件的实例化,加载监听器, 参数view就是fragment的layout
@@ -268,7 +272,7 @@ public abstract class BaseFragment extends Fragment {
 
     /**
      * **************************************以上是生命周期**************************************
-     * <p>
+     * <p/>
      * 捕获是否hide的状态，可以做更新操作
      */
     @Override
@@ -286,12 +290,6 @@ public abstract class BaseFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
-    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
-        LogUtils.d(logTag);
-        return super.onCreateAnimation(transit, enter, nextAnim);
-    }
-
     /**
      * 上下文菜单是独立的，和activity无关联，功能健全
      */
@@ -303,7 +301,7 @@ public abstract class BaseFragment extends Fragment {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        LogUtils.d(logTag);
+        LogUtils.d(logTag + " ---> " + item.getItemId());
         return super.onContextItemSelected(item);
     }
 
