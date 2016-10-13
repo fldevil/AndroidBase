@@ -1,34 +1,71 @@
 package com.bjxrgz.startup.utils;
 
 import android.content.Context;
-import android.text.TextUtils;
-import android.text.format.Formatter;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Hashtable;
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
+
+import java.io.UnsupportedEncodingException;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.bjxrgz.startup.utils.ConstUtils.REGEX_CHZ;
+import static com.bjxrgz.startup.utils.ConstUtils.REGEX_DATE;
+import static com.bjxrgz.startup.utils.ConstUtils.REGEX_EMAIL;
+import static com.bjxrgz.startup.utils.ConstUtils.REGEX_IDCARD15;
+import static com.bjxrgz.startup.utils.ConstUtils.REGEX_IDCARD18;
+import static com.bjxrgz.startup.utils.ConstUtils.REGEX_IP;
+import static com.bjxrgz.startup.utils.ConstUtils.REGEX_MOBILE;
+import static com.bjxrgz.startup.utils.ConstUtils.REGEX_NUMBER;
+import static com.bjxrgz.startup.utils.ConstUtils.REGEX_PASSWORD;
+import static com.bjxrgz.startup.utils.ConstUtils.REGEX_TEL;
+import static com.bjxrgz.startup.utils.ConstUtils.REGEX_URL;
+
 /**
- * Created by fd.meng on 2014/03/30
- * <p>
+ * Created by jiang on 2016/10/13
+ * <p/>
  * 字符串处理类
  */
 public class StringUtils {
 
     /**
-     * 格式化文件大小
+     * 语言环境
      */
-    public static String getFileSize(Context context, long fileLength) {
-
-        return Formatter.formatFileSize(context, fileLength);
+    public static Locale getLocale(Context context) {
+        return context.getResources().getConfiguration().locale;
     }
 
+    /**
+     * 是否为英语环境
+     */
+    public static boolean isEN(Context context) {
+        String language = getLocale(context).getLanguage();
+        return language.endsWith("en");
+    }
+
+    /**
+     * 是否为中文环境
+     */
+    public static boolean isZH(Context context) {
+        String language = getLocale(context).getLanguage();
+        return language.endsWith("zh");
+    }
+
+    public static String getUUID() {
+        return UUID.randomUUID().toString().replace("-", "");
+    }
+
+    /**
+     * 可作为随机文件名等
+     */
     public static String getRandom(int length) {
-        String random = UUID.randomUUID().toString().replace("-", "");
+        String random = getUUID();
         return random.substring(random.length() - length, random.length());
     }
 
@@ -37,6 +74,9 @@ public class StringUtils {
      */
     public static int getLength(String validateStr) {
         int valueLength = 0;
+        if (validateStr == null) {
+            return valueLength;
+        }
         String chinese = "[\u0391-\uFFE5]";
         /* 获取字段值的长度，如果含中文字符，则每个中文字符长度为2，否则为1 */
         for (int i = 0; i < validateStr.length(); i++) {
@@ -62,170 +102,293 @@ public class StringUtils {
     }
 
     /**
-     * 验证密码 6-16位，数字和字母组合
-     */
-    public static boolean isPassword(String str) {
-        String reg = "^(?=.*?[a-zA-Z])(?=.*?[0-9])[a-zA-Z0-9]{6,16}$";
-        return str.matches(reg);
-    }
-
-    /**
      * 判断是否为数字
      */
     public static boolean isNumber(String src) {
-        if (isEmpty(src))
-            return false;
-        Pattern pattern = Pattern.compile("[0-9]*");
-        Matcher m = pattern.matcher(src);
-        return m.matches();
+        return isMatch(REGEX_NUMBER, src);
     }
 
     /**
-     * 判断字符串是否为日期格式
+     * 验证密码 6-16位，数字和字母组合
      */
-    public static boolean isDate(String src) {
-        if (isEmpty(src))
-            return false;
-        Pattern pattern = Pattern
-                .compile("^((\\d{2}(([02468][048])|([13579][26]))[\\-\\/\\s]?((((0?[13578])|(1[02]))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(3[01])))|(((0?[469])|(11))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(30)))|(0?2[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])))))|(\\d{2}(([02468][1235679])|([13579][01345789]))[\\-\\/\\s]?((((0?[13578])|(1[02]))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(3[01])))|(((0?[469])|(11))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(30)))|(0?2[\\-\\/\\s]?((0?[1-9])|(1[0-9])|(2[0-8]))))))(\\s(((0?[0-9])|([1-2][0-3]))\\:([0-5]?[0-9])((\\s)|(\\:([0-5]?[0-9])))))?$");
-        Matcher m = pattern.matcher(src);
-        return m.matches();
+    public static boolean isPassword(String password) {
+        return isMatch(REGEX_PASSWORD, password);
     }
 
     /**
-     * 判断是否为邮箱
+     * 验证身份证号码15位
+     *
+     * @param string 待验证文本
+     * @return {@code true}: 匹配<br>{@code false}: 不匹配
      */
-    public static boolean isEmail(String src) {
-        if (isEmpty(src))
-            return false;
-        Pattern pattern = Pattern.compile("\\w+@\\w+(\\.\\w+)+");
-        Matcher m = pattern.matcher(src);
-        return m.matches();
+    public static boolean isIDCard15(String string) {
+        return isMatch(REGEX_IDCARD15, string);
     }
 
     /**
-     * 判断是否为手机号 11位
+     * 验证身份证号码18位
+     *
+     * @param string 待验证文本
+     * @return {@code true}: 匹配<br>{@code false}: 不匹配
      */
-    public static boolean isMobileNumber(String src) {
-        if (TextUtils.isEmpty(src))
-            return false;
-        Pattern pattern = Pattern.compile("^(13[0-9]|14[0-9]|15[0-9]|18[0-9])\\d{8}$");
-        Matcher m = pattern.matcher(src);
-        return m.matches();
+    public static boolean isIDCard18(String string) {
+        return isMatch(REGEX_IDCARD18, string);
     }
 
     /**
-     * 判断是否为身份证号
+     * 验证邮箱
+     *
+     * @param string 待验证文本
+     * @return {@code true}: 匹配<br>{@code false}: 不匹配
      */
-    public static boolean isIdCard(String IDStr) {
-        String[] ValCodeArr = {"1", "0", "x", "9", "8", "7", "6", "5", "4",
-                "3", "2"};
-        String[] Wi = {"7", "9", "10", "5", "8", "4", "2", "1", "6", "3", "7",
-                "9", "10", "5", "8", "4", "2"};
-        // ================ 号码的长度 15位或18位 ================
-        if (IDStr.length() != 15 && IDStr.length() != 18) {
-            return false;
+    public static boolean isEmail(String string) {
+        return isMatch(REGEX_EMAIL, string);
+    }
+
+    /**
+     * 验证yyyy-MM-dd格式的日期校验，已考虑平闰年
+     *
+     * @param string 待验证文本
+     * @return {@code true}: 匹配<br>{@code false}: 不匹配
+     */
+    public static boolean isDate(String string) {
+        return isMatch(REGEX_DATE, string);
+    }
+
+    /**
+     * 验证汉字
+     *
+     * @param string 待验证文本
+     * @return {@code true}: 匹配<br>{@code false}: 不匹配
+     */
+    public static boolean isCN(String string) {
+        return isMatch(REGEX_CHZ, string);
+    }
+
+    /**
+     * 验证URL
+     *
+     * @param string 待验证文本
+     * @return {@code true}: 匹配<br>{@code false}: 不匹配
+     */
+    public static boolean isURL(String string) {
+        return isMatch(REGEX_URL, string);
+    }
+
+    /**
+     * 验证IP地址
+     *
+     * @param string 待验证文本
+     * @return {@code true}: 匹配<br>{@code false}: 不匹配
+     */
+    public static boolean isIP(String string) {
+        return isMatch(REGEX_IP, string);
+    }
+
+    /**
+     * string是否匹配regex
+     *
+     * @param regex  正则表达式字符串
+     * @param string 要匹配的字符串
+     * @return {@code true}: 匹配<br>{@code false}: 不匹配
+     */
+    public static boolean isMatch(String regex, String string) {
+        return !isEmpty(string) && Pattern.matches(regex, string);
+    }
+
+    /**
+     * 验证手机号（精确）
+     *
+     * @param string 待验证文本
+     * @return {@code true}: 匹配<br>{@code false}: 不匹配
+     */
+    public static boolean isMobile(String string) {
+        return isMatch(REGEX_MOBILE, string);
+    }
+
+    /**
+     * 验证电话号码
+     *
+     * @param string 待验证文本
+     * @return {@code true}: 匹配<br>{@code false}: 不匹配
+     */
+    public static boolean isTel(String string) {
+        return isMatch(REGEX_TEL, string);
+    }
+
+    /**
+     * 转化为半角字符
+     *
+     * @param s 待转字符串
+     * @return 半角字符串
+     */
+    public static String toDBC(String s) {
+        if (isEmpty(s)) {
+            return s;
         }
-        // ================ 数字 除最后以为都为数字 ================
-        String Ai = "";
-        if (IDStr.length() == 18) {
-            Ai = IDStr.substring(0, 17);
-        } else if (IDStr.length() == 15) {
-            Ai = IDStr.substring(0, 6) + "19" + IDStr.substring(6, 15);
+        char[] chars = s.toCharArray();
+        for (int i = 0, len = chars.length; i < len; i++) {
+            if (chars[i] == 12288) {
+                chars[i] = ' ';
+            } else if (65281 <= chars[i] && chars[i] <= 65374) {
+                chars[i] = (char) (chars[i] - 65248);
+            } else {
+                chars[i] = chars[i];
+            }
         }
-        if (!isNumber(Ai)) {
-            return false;
+        return new String(chars);
+    }
+
+    /**
+     * 转化为全角字符
+     *
+     * @param s 待转字符串
+     * @return 全角字符串
+     */
+    public static String toSBC(String s) {
+        if (isEmpty(s)) {
+            return s;
         }
-        // ================ 出生年月是否有效 ================
-        String strYear = Ai.substring(6, 10);// 年份
-        String strMonth = Ai.substring(10, 12);// 月份
-        String strDay = Ai.substring(12, 14);// 月份
-        if (!isDate(strYear + "-" + strMonth + "-" + strDay)) {
-            return false;
+        char[] chars = s.toCharArray();
+        for (int i = 0, len = chars.length; i < len; i++) {
+            if (chars[i] == ' ') {
+                chars[i] = (char) 12288;
+            } else if (33 <= chars[i] && chars[i] <= 126) {
+                chars[i] = (char) (chars[i] + 65248);
+            } else {
+                chars[i] = chars[i];
+            }
         }
-        GregorianCalendar gc = new GregorianCalendar();
-        SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
+        return new String(chars);
+    }
+
+    /**
+     * 首字母大写
+     *
+     * @param s 待转字符串
+     * @return 首字母大写字符串
+     */
+    public static String upperFirstLetter(String s) {
+        if (isEmpty(s) || !Character.isLowerCase(s.charAt(0))) {
+            return s;
+        }
+        return String.valueOf((char) (s.charAt(0) - 32)) + s.substring(1);
+    }
+
+    /**
+     * 首字母小写
+     *
+     * @param s 待转字符串
+     * @return 首字母小写字符串
+     */
+    public static String lowerFirstLetter(String s) {
+        if (isEmpty(s) || !Character.isUpperCase(s.charAt(0))) {
+            return s;
+        }
+        return String.valueOf((char) (s.charAt(0) + 32)) + s.substring(1);
+    }
+
+    /**
+     * 反转字符串
+     *
+     * @param s 待反转字符串
+     * @return 反转字符串
+     */
+    public static String reverse(String s) {
+        int len = s.length();
+        if (len <= 1) return s;
+        int mid = len >> 1;
+        char[] chars = s.toCharArray();
+        char c;
+        for (int i = 0; i < mid; ++i) {
+            c = chars[i];
+            chars[i] = chars[len - i - 1];
+            chars[len - i - 1] = c;
+        }
+        return new String(chars);
+    }
+
+    /**
+     * 单个汉字转成ASCII码
+     *
+     * @param s 单个汉字字符串
+     * @return 如果字符串长度是1返回的是对应的ascii码，否则返回-1
+     */
+    private static int getASCII(String s) {
+        if (s.length() != 1) return -1;
+        int ascii = 0;
         try {
-            if ((gc.get(Calendar.YEAR) - Integer.parseInt(strYear)) > 150
-                    || (gc.getTime().getTime() - s.parse(
-                    strYear + "-" + strMonth + "-" + strDay).getTime()) < 0) {
-                return false; // 身份证生日不在有效范围。
+            byte[] bytes = s.getBytes("GB2312");
+            if (bytes.length == 1) {
+                ascii = bytes[0];
+            } else if (bytes.length == 2) {
+                int highByte = 256 + bytes[0];
+                int lowByte = 256 + bytes[1];
+                ascii = (256 * highByte + lowByte) - 256 * 256;
+            } else {
+                throw new IllegalArgumentException("Illegal resource string");
             }
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        } catch (java.text.ParseException e) {
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        if (Integer.parseInt(strMonth) > 12 || Integer.parseInt(strMonth) == 0) {
-            return false; // 身份证月份无效
-        }
-        if (Integer.parseInt(strDay) > 31 || Integer.parseInt(strDay) == 0) {
-            return false; // 身份证日期无效
-        }
-        // ================ 地区码时候有效 ================
-        Hashtable h = GetAreaCode();
-        if (h.get(Ai.substring(0, 2)) == null) {
-            return false;
-        }
-        // ================ 判断最后一位的值 ================
-        int TotalmulAiWi = 0;
-        for (int i = 0; i < 17; i++) {
-            TotalmulAiWi = TotalmulAiWi
-                    + Integer.parseInt(String.valueOf(Ai.charAt(i)))
-                    * Integer.parseInt(Wi[i]);
-        }
-        int modValue = TotalmulAiWi % 11;
-        String strVerifyCode = ValCodeArr[modValue];
-        Ai = Ai + strVerifyCode;
-
-        if (IDStr.length() == 18) {
-            if (!Ai.equals(IDStr)) {
-                return false; // 身份证无效，不是合法的身份证号码
-            }
-        } else {
-            return false;
-        }
-        return true;
+        return ascii;
     }
 
-    private static Hashtable GetAreaCode() {
-        Hashtable hashtable = new Hashtable();
-        hashtable.put("11", "北京");
-        hashtable.put("12", "天津");
-        hashtable.put("13", "河北");
-        hashtable.put("14", "山西");
-        hashtable.put("15", "内蒙古");
-        hashtable.put("21", "辽宁");
-        hashtable.put("22", "吉林");
-        hashtable.put("23", "黑龙江");
-        hashtable.put("31", "上海");
-        hashtable.put("32", "江苏");
-        hashtable.put("33", "浙江");
-        hashtable.put("34", "安徽");
-        hashtable.put("35", "福建");
-        hashtable.put("36", "江西");
-        hashtable.put("37", "山东");
-        hashtable.put("41", "河南");
-        hashtable.put("42", "湖北");
-        hashtable.put("43", "湖南");
-        hashtable.put("44", "广东");
-        hashtable.put("45", "广西");
-        hashtable.put("46", "海南");
-        hashtable.put("50", "重庆");
-        hashtable.put("51", "四川");
-        hashtable.put("52", "贵州");
-        hashtable.put("53", "云南");
-        hashtable.put("54", "西藏");
-        hashtable.put("61", "陕西");
-        hashtable.put("62", "甘肃");
-        hashtable.put("63", "青海");
-        hashtable.put("64", "宁夏");
-        hashtable.put("65", "新疆");
-        hashtable.put("71", "台湾");
-        hashtable.put("81", "香港");
-        hashtable.put("82", "澳门");
-        hashtable.put("91", "国外");
-        return hashtable;
+    /**
+     * 将字符串中的中文转化为拼音,其他字符不变
+     */
+    public static String getPingYin(String inputString) {
+        HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
+        format.setCaseType(HanyuPinyinCaseType.LOWERCASE);
+        format.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+        format.setVCharType(HanyuPinyinVCharType.WITH_V);
+
+        Pattern p = Pattern.compile("^[\u4E00-\u9FA5A-Za-z_]+$");
+        Matcher matcher = p.matcher(inputString.substring(0, 1));
+        if (matcher.find()) {
+            char[] input = inputString.trim().toCharArray();
+            String output = "";
+            try {
+                for (char anInput : input) {
+                    if (Character.toString(anInput).matches(
+                            "[\\u4E00-\\u9FA5]+")) {
+                        String[] temp = PinyinHelper.toHanyuPinyinStringArray(
+                                anInput, format);
+                        output += temp[0];
+                    } else
+                        output += Character.toString(anInput);
+                }
+            } catch (BadHanyuPinyinOutputFormatCombination e) {
+                e.printStackTrace();
+            }
+            return output;
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * 获取拼音首字母
+     */
+    public static String getFirstSpell(String chines) {
+        String pinyinName = "";
+        char[] nameChar = chines.toCharArray();
+        HanyuPinyinOutputFormat defaultFormat = new HanyuPinyinOutputFormat();
+        defaultFormat.setCaseType(HanyuPinyinCaseType.UPPERCASE);
+        defaultFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+        for (char aNameChar : nameChar) {
+            if (aNameChar > 128) {
+                try {
+                    pinyinName += PinyinHelper.toHanyuPinyinStringArray(
+                            aNameChar, defaultFormat)[0].charAt(0);
+                } catch (BadHanyuPinyinOutputFormatCombination e) {
+                    e.printStackTrace();
+                }
+            } else {
+                pinyinName += aNameChar;
+            }
+        }
+        return pinyinName;
     }
 
 }

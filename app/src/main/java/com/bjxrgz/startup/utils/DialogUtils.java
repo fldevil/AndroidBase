@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
@@ -18,11 +19,21 @@ import com.bjxrgz.startup.R;
 import java.util.Calendar;
 
 /**
- * Created by fd.meng on 2014/03/30
- * <p>
+ * Created by Jiang on 2016/10/13
+ * <p/>
  * DialogUtils: 获取对话框 alert，progress，单选，多选，日期
  */
 public class DialogUtils {
+
+    /**
+     * 自定义对话框
+     */
+    public static Dialog createCustom(Activity activity, View view) {
+        final Dialog dialog = new Dialog(activity, R.style.mCustomDialog);
+        WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
+        dialog.setContentView(view, lp);
+        return dialog;
+    }
 
     /**
      * 自定义对话框
@@ -45,17 +56,25 @@ public class DialogUtils {
     /**
      * 进度对话框 , 可loading可progress
      */
-    public static ProgressDialog createProgress(Context context, String title, String message,
-                                                boolean horizontal, boolean cancel,
+    public static ProgressDialog createLoading(Context context, String message, boolean cancel) {
+        ProgressDialog dialog = new ProgressDialog(context);
+        dialog.setMessage(message);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(cancel);
+        return dialog;
+    }
+
+    /**
+     * 进度对话框 , 可loading可progress
+     */
+    public static ProgressDialog createProgress(Context context, String title, String message, boolean cancel,
                                                 DialogInterface.OnCancelListener listener) {
         ProgressDialog dialog = new ProgressDialog(context);
         dialog.setTitle(title);
         dialog.setMessage(message);
-        if (horizontal) {
-            dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            dialog.setMax(100);
-            dialog.setProgress(0);
-        }
+        dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        dialog.setMax(100);
+        dialog.setProgress(0);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(cancel);
         dialog.setOnCancelListener(listener);
@@ -67,8 +86,7 @@ public class DialogUtils {
      */
     public static AlertDialog createAlert(Context context, String title, String message,
                                           String positive, String negative,
-                                          final DialogInterface.OnClickListener positiveListener,
-                                          final DialogInterface.OnClickListener negativeListener) {
+                                          final DialogInterface.OnClickListener positiveListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         if (TextUtils.isEmpty(title)) {
             title = context.getString(R.string.prompt);
@@ -82,7 +100,7 @@ public class DialogUtils {
             negative = context.getString(R.string.cancel);
         }
         builder.setPositiveButton(positive, positiveListener);
-        builder.setNegativeButton(negative, negativeListener);
+        builder.setNegativeButton(negative, null);
         return builder.create();
     }
 
@@ -120,19 +138,40 @@ public class DialogUtils {
     }
 
     /**
-     * 日期对话框
-     * Calendar转化时和这里的monthOfYear是对应的, 手写的传出需要monthOfYear + 1
+     * 创建系统日期选择对话框
      */
-    public static DatePickerDialog showDaterPicker(Context context, int[] date,
-                                                   DatePickerDialog.OnDateSetListener listener) {
-        if (date == null) { // 获取当前时间
-            Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-            date = new int[]{year, month, day};
-        }
-        return new DatePickerDialog(context, listener, date[0], date[1], date[2]);
+    public static DatePickerDialog showDatePicker(Context context, Calendar calendar,
+                                                  DatePickerDialog.OnDateSetListener onDateSetListener) {
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        DatePickerDialog picker = new DatePickerDialog(context, onDateSetListener, year, month, day);
+        picker.show();
+        return picker;
+    }
+
+    /**
+     * 创建系统时间选择对话框 24小时
+     */
+    public static TimePickerDialog show24TimePicker(Context context, Calendar calendar,
+                                                    TimePickerDialog.OnTimeSetListener onTimeSetListener) {
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        TimePickerDialog picker = new TimePickerDialog(context, onTimeSetListener, hour, minute, true);
+        picker.show();
+        return picker;
+    }
+
+    /**
+     * 创建系统时间选择对话框 12小时
+     */
+    public static TimePickerDialog show12TimePicker(Context context, Calendar calendar,
+                                                    TimePickerDialog.OnTimeSetListener onTimeSetListener) {
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        TimePickerDialog picker = new TimePickerDialog(context, onTimeSetListener, hour, minute, false);
+        picker.show();
+        return picker;
     }
 
     /**

@@ -2,7 +2,7 @@ package com.bjxrgz.startup.manager;
 
 import android.content.Context;
 
-import com.bjxrgz.startup.base.Constants;
+import com.bjxrgz.startup.utils.ConstUtils;
 
 import org.xutils.http.RequestParams;
 
@@ -16,7 +16,7 @@ public class APIManager {
      * demo
      */
     public static void demo(Context context, XUtilsManager.Callback callback) {
-        RequestParams params = HttpParamsManager.getRequestParams(Constants.API_HOME);
+        RequestParams params = HttpParamsManager.getRequestParams(ConstUtils.API_HOME);
         XUtilsManager.get(context, params, "demo", callback);
     }
 

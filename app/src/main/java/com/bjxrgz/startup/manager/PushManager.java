@@ -3,7 +3,6 @@ package com.bjxrgz.startup.manager;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.bjxrgz.startup.base.MyApp;
 import com.bjxrgz.startup.utils.LogUtils;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.IUmengCallback;
@@ -17,24 +16,21 @@ import com.umeng.message.PushAgent;
  */
 public class PushManager {
 
-    // umeng
-    public static final String UMENG_KEY = " 579f12c067e58eb387000a70";
-    public static final String UMENG_MESSAGE_SECRET = "259ac76441a3aac7788694b9579cfec2";
-    public static final String APP_MASTER_SECRET = "pbmenpubcbytew3hsq5fvnu3u7ukiwdr";
+    private static String DEVICE_TOKEN; // 友盟标识
+    private static PushAgent mPushAgent;
 
-    public static PushAgent mPushAgent;
-
-    public static void initAPP(Context context) {
+    public static void initAPP(Context context, boolean isLog) {
         // 获取mPushAgent
         mPushAgent = PushAgent.getInstance(context.getApplicationContext());
         // 统计应用启动数据
         mPushAgent.onAppStart();
+        mPushAgent.setDebugMode(isLog);
         // 注册推送服务，每次调用register方法都会回调该接口
         mPushAgent.register(new IUmengRegisterCallback() {
             @Override
             public void onSuccess(String deviceToken) {
-                MyApp.DEVICE_TOKEN = deviceToken;
-                LogUtils.d("deviceToken", deviceToken);
+                DEVICE_TOKEN = deviceToken;
+                LogUtils.d("registerPush", deviceToken);
             }
 
             @Override
@@ -77,11 +73,12 @@ public class PushManager {
     /**
      * 主动获取DeviceToken
      */
-    public static void getDeviceToken() {
-        if (TextUtils.isEmpty(MyApp.DEVICE_TOKEN)) {
-            MyApp.DEVICE_TOKEN = mPushAgent.getRegistrationId();
+    public static String getDeviceToken() {
+        if (TextUtils.isEmpty(DEVICE_TOKEN)){
+            DEVICE_TOKEN = mPushAgent.getRegistrationId();
         }
-        LogUtils.d("deviceToken", MyApp.DEVICE_TOKEN);
+        LogUtils.d("deviceToken", DEVICE_TOKEN);
+        return DEVICE_TOKEN;
     }
 
     /**

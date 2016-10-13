@@ -37,11 +37,7 @@ import java.util.ArrayList;
  */
 public class AMapManager {
 
-    // aMaps
-    public static final String LBS_KEY = "3477a7d3ac841c00e52777f655125d49";
-
-    public static AMapLocationClient getClient(Context context,
-                                               AMapLocationClientOption clientOption) {
+    public static AMapLocationClient getClient(Context context, AMapLocationClientOption clientOption) {
         AMapLocationClient mapClient = new AMapLocationClient(context);
         mapClient.setLocationOption(clientOption);
         return mapClient;

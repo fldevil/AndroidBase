@@ -1,13 +1,14 @@
 package com.bjxrgz.startup.activity;
 
 import android.os.Bundle;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.bjxrgz.startup.R;
 import com.bjxrgz.startup.base.BaseViewActivity;
 import com.bjxrgz.startup.base.MyApp;
 import com.bjxrgz.startup.manager.PushManager;
+import com.bjxrgz.startup.utils.AsyncUtils;
+import com.bjxrgz.startup.utils.ScreenUtils;
 
 import butterknife.BindView;
 
@@ -28,7 +29,7 @@ public class StartActivity extends BaseViewActivity<StartActivity> {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); // 全屏
+        ScreenUtils.requestFullScreen(mActivity);
         initContentView(R.layout.activity_start);
     }
 
@@ -42,14 +43,14 @@ public class StartActivity extends BaseViewActivity<StartActivity> {
     }
 
     private void goHome() {
-        MyApp.mainHandler.postDelayed(new Runnable() {
+        AsyncUtils.mainHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 HomeActivity.goActivity(mActivity);
             }
         }, 1500);
         // 立刻关闭当前页面会出现空白缝隙
-        MyApp.mainHandler.postDelayed(new Runnable() {
+        AsyncUtils.mainHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 mActivity.finish();

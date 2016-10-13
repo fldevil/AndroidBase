@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.View;
 
 import com.bjxrgz.startup.R;
-import com.bjxrgz.startup.base.MyApp;
-import com.bjxrgz.startup.utils.GsonUtils;
+import com.bjxrgz.startup.utils.ActivityUtils;
 import com.bjxrgz.startup.utils.LogUtils;
 import com.bjxrgz.startup.utils.WidgetUtils;
 
@@ -75,7 +73,7 @@ public class XUtilsManager {
 //                    LoginActivity.goActivity(context, message); // 跳转登录界面
 
                 } else if (code == 410) { // 退出app
-                    MyApp.instance.closeActivities();
+                    ActivityUtils.closeActivities();
 
                 } else { // 弹出提示
                     JSONObject object = new JSONObject(((HttpException) ex).getResult());
@@ -250,7 +248,7 @@ public class XUtilsManager {
      */
     public static void post(final Context context, RequestParams params, Object domain,
                             final String tag, final Callback<String> callback) {
-        String json = GsonUtils.getInstance().toJson(domain);
+        String json = GsonManager.getInstance().toJson(domain);
         LogUtils.json(tag + "-params", json);
         params.setBodyContent(json);
         params.setAsJsonContent(true);
@@ -360,7 +358,7 @@ public class XUtilsManager {
      */
     public static void put(final Context context, RequestParams params, Object domain,
                            final String tag, final Callback<String> callback) {
-        String json = GsonUtils.getInstance().toJson(domain);
+        String json = GsonManager.getInstance().toJson(domain);
         LogUtils.json(tag + "-params", json);
         params.setBodyContent(json);
         params.setAsJsonContent(true);

@@ -1,7 +1,5 @@
 package com.bjxrgz.startup.utils;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -15,12 +13,10 @@ import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
-import java.util.Calendar;
-
 /**
- * Created by fd.meng on 2014/03/30
+ * Created by Jiang on 2016/06/01
  * <p/>
- * 处理  Toast, SnackBar, popWindow, popMenu,
+ * 处理  Toast, SnackBar, popWindow
  */
 public class WidgetUtils {
 
@@ -133,30 +129,4 @@ public class WidgetUtils {
         return menu;
     }
 
-    /**
-     * 创建系统日期选择对话框
-     */
-    public static void systemDatePickerShow(Context context, Calendar calendar,
-                                            DatePickerDialog.OnDateSetListener onDateSetListener){
-        new DatePickerDialog(context,onDateSetListener,calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show();
-    }
-
-    /**
-     * 创建系统时间选择对话框 24小时
-     */
-    public static void systemTimePickerShow24(Context context, Calendar calendar,
-                                              TimePickerDialog.OnTimeSetListener onTimeSetListener){
-        new TimePickerDialog(context,onTimeSetListener,calendar.get(Calendar.HOUR_OF_DAY),
-                calendar.get(Calendar.MINUTE),true).show();
-    }
-
-    /**
-     * 创建系统时间选择对话框 12小时
-     */
-    public static void systemTimePickerShow12(Context context, Calendar calendar,
-                                              TimePickerDialog.OnTimeSetListener onTimeSetListener){
-        new TimePickerDialog(context,onTimeSetListener,calendar.get(Calendar.HOUR_OF_DAY),
-                calendar.get(Calendar.MINUTE),false).show();
-    }
 }

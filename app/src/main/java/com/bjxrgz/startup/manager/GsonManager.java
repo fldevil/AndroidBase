@@ -1,4 +1,4 @@
-package com.bjxrgz.startup.utils;
+package com.bjxrgz.startup.manager;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
@@ -9,7 +9,7 @@ import com.google.gson.GsonBuilder;
  * Created by Fan-pc on 2015/11/13.
  * 单例创建json
  */
-public class GsonUtils {
+public class GsonManager {
 
     private static final Gson GSON = new Gson();
     private static final Gson GSON_BUILDER = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {

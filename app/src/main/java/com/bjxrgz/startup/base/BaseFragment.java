@@ -21,7 +21,6 @@ import android.view.animation.Animation;
 import com.bjxrgz.startup.R;
 import com.bjxrgz.startup.utils.AnimUtils;
 import com.bjxrgz.startup.utils.DialogUtils;
-import com.bjxrgz.startup.utils.LogUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -30,7 +29,7 @@ import java.lang.reflect.ParameterizedType;
 /**
  * Created by JiangZhiGuo on 2016/06/01
  * <p/>
- * describe Fragment的基类,主要用于log日志和初始化工作
+ * describe Fragment的基类
  */
 public abstract class BaseFragment<T> extends Fragment {
 
@@ -38,12 +37,22 @@ public abstract class BaseFragment<T> extends Fragment {
     public BaseFragment mFragment;
     public FragmentManager mFragmentManager;
     protected Bundle mBundle;// 接受数据的Bundle
-    protected ProgressDialog pb;
-    private String logTag = "BaseFragment";// 子类的类名
+    protected ProgressDialog loading;
+    protected String logTag = "BaseFragment";// 子类的类名
 
     /**
-     * 两种方法获取当前fragment的实例
-     * 1.反射生成对象
+     * 子类重写类似方法 获取对象
+     */
+    public static BaseFragment newFragment() {
+        Bundle bundle = new Bundle();
+        BaseFragment baseFragment = BaseFragment.newInstance(BaseFragment.class, bundle);
+        // 设置bundle的内容...
+        baseFragment.setArguments(bundle);
+        return baseFragment;
+    }
+
+    /**
+     * 反射生成对象
      */
     public static <T> T newInstance(Class<T> clz, Bundle args) {
         T fragment = null;
@@ -72,18 +81,6 @@ public abstract class BaseFragment<T> extends Fragment {
         return cls.getSimpleName();
     }
 
-    /**
-     * 2.子类重写类似方法 获取对象
-     */
-    public static BaseFragment newFragment() {
-        Bundle bundle = new Bundle();
-        BaseFragment baseFragment = BaseFragment.newInstance(BaseFragment.class, bundle);
-        // 设置bundle的内容...
-        bundle.putString("logTag", "手动写当前类名字");
-        baseFragment.setArguments(bundle);
-        return baseFragment;
-    }
-
     protected abstract View createView(LayoutInflater inflater, ViewGroup container,
                                        Bundle savedInstanceState);
 
@@ -97,7 +94,6 @@ public abstract class BaseFragment<T> extends Fragment {
     @Override
     public void onInflate(Context context, AttributeSet attrs, Bundle savedInstanceState) {
         logTag = getCls();
-        LogUtils.d(logTag);
         super.onInflate(context, attrs, savedInstanceState);
     }
 
@@ -108,7 +104,6 @@ public abstract class BaseFragment<T> extends Fragment {
     @Override
     public void onAttach(Context context) {
         logTag = getCls();
-        LogUtils.d(logTag);
         super.onAttach(context);
         if (context instanceof FragmentActivity) {
             mActivity = (FragmentActivity) context;
@@ -124,10 +119,9 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        LogUtils.d(logTag);
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);// Fragment与ActionBar和MenuItem集成
-        pb = DialogUtils.createProgress(getContext(), null, getString(R.string.wait), false, true, null);
+        loading = DialogUtils.createLoading(mActivity, getString(R.string.wait), true);
         mBundle = getArguments(); // 取出Bundle
     }
 
@@ -138,7 +132,6 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        LogUtils.d(logTag);
         View view = getView();
         if (view == null) {
             view = createView(inflater, container, savedInstanceState);
@@ -148,7 +141,6 @@ public abstract class BaseFragment<T> extends Fragment {
 
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
-        LogUtils.d(logTag);
         return super.onCreateAnimation(transit, enter, nextAnim);
     }
 
@@ -157,7 +149,6 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        LogUtils.d(logTag);
         super.onViewCreated(view, savedInstanceState);
         viewCreate(view, savedInstanceState);
     }
@@ -168,7 +159,6 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        LogUtils.d(logTag);
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -177,7 +167,6 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        LogUtils.d(logTag);
         super.onViewStateRestored(savedInstanceState);
     }
 
@@ -186,7 +175,6 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onStart() {
-        LogUtils.d(logTag);
         super.onStart();
     }
 
@@ -195,7 +183,6 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onResume() {
-        LogUtils.d(logTag);
         super.onResume();
     }
 
@@ -205,7 +192,6 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        LogUtils.d(logTag);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -214,7 +200,6 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onPause() {
-        LogUtils.d(logTag);
         super.onPause();
     }
 
@@ -223,7 +208,7 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        LogUtils.d(logTag);
+        super.onSaveInstanceState(outState);
     }
 
     /**
@@ -231,7 +216,6 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onStop() {
-        LogUtils.d(logTag);
         super.onStop();
     }
 
@@ -241,7 +225,6 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onDestroyView() {
-        LogUtils.d(logTag);
         // viewpager有四个fragment 当滑动到第四页的时候 第一页执行onDestroyView(),但没有执行onDestroy。
         // 他依然和activity关联。当在滑动到第一页的时候又执行了 onCreateView()。会出现重复加载view的局面
         // 这里的做法是个onCreateView配套的
@@ -257,7 +240,6 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onDestroy() {
-        LogUtils.d(logTag);
         super.onDestroy();
     }
 
@@ -266,7 +248,6 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onDetach() {
-        LogUtils.d(logTag);
         super.onDetach();
     }
 
@@ -277,7 +258,6 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onHiddenChanged(boolean hidden) {
-        LogUtils.d(logTag);
         super.onHiddenChanged(hidden);
     }
 
@@ -286,7 +266,6 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        LogUtils.d(logTag);
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -295,13 +274,11 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        LogUtils.d(logTag);
         super.onCreateContextMenu(menu, v, menuInfo);
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        LogUtils.d(logTag + " ---> " + item.getItemId());
         return super.onContextItemSelected(item);
     }
 

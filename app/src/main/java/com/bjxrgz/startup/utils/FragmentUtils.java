@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 /**
- * Created by fd.meng on 2014/03/30
+ * Created by Jiang on 2016/0/01
  * <p/>
  * Fragment处理类, 包括FragmentManager的获取
  */

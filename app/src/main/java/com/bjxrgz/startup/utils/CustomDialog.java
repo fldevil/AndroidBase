@@ -15,7 +15,7 @@ import com.bjxrgz.startup.R;
 /**
  * Created by fd.meng on 2014/03/30
  * <p/>
- * 自定义的对话框
+ * ISO风格对话框
  */
 public class CustomDialog extends Dialog {
 

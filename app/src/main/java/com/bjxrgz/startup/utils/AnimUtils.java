@@ -52,7 +52,7 @@ import android.widget.ViewSwitcher;
 import java.util.List;
 
 /**
- * Created by fd.meng on 2014/03/30
+ * Created by Jiang on 2016/06/01
  * <p>
  * AnimUtils: 动画处理类
  * 1.帧动画 AnimationDrawable ---> 是drawable的子类
@@ -116,11 +116,8 @@ public class AnimUtils {
      * @return Drawable可以强转成AnimationDrawable , animation.start(); animation.stop();
      */
     public static AnimationDrawable getAnimationDrawable(Context context, ImageView image, int animListID) {
-
         AnimationDrawable animation = (AnimationDrawable) ContextCompat.getDrawable(context, animListID);
-
         image.setImageDrawable(animation);
-
         return animation;
     }
 
@@ -130,7 +127,6 @@ public class AnimUtils {
      * 渐变动画
      */
     public static AlphaAnimation getAlpha(float from, float to) {
-
         return new AlphaAnimation(from, to);
     }
 
@@ -150,7 +146,6 @@ public class AnimUtils {
      * 旋转动画
      */
     public static RotateAnimation getRotate(float from, float to, float pivotX, float pivotY) {
-
         return new RotateAnimation(from, to, Animation.RELATIVE_TO_SELF,
                 pivotX, Animation.RELATIVE_TO_SELF, pivotY);
     }
@@ -160,7 +155,6 @@ public class AnimUtils {
      */
     public static ScaleAnimation getScale(float fromX, float toX, float fromY,
                                           float toY, float pivotX, float pivotY) {
-
         return new ScaleAnimation(fromX, toX, fromY, toY,
                 Animation.RELATIVE_TO_SELF, pivotX, Animation.RELATIVE_TO_SELF, pivotY);
     }
@@ -219,7 +213,6 @@ public class AnimUtils {
      */
     public static void startLayoutAnimation(ViewGroup group,
                                             LayoutAnimationController controller) {
-
         group.setLayoutAnimation(controller);
         group.startLayoutAnimation();
     }
@@ -229,7 +222,6 @@ public class AnimUtils {
      */
     public static void setLayoutAnimationListener(ViewGroup group,
                                                   Animation.AnimationListener listener) {
-
         group.setLayoutAnimationListener(listener);
     }
 
@@ -241,7 +233,6 @@ public class AnimUtils {
      * @param values   除了起始值和终点值之外，还可以有过渡值
      */
     public static ObjectAnimator getObject(View view, String property, float... values) {
-
         return ObjectAnimator.ofFloat(view, property, values);
     }
 
@@ -273,7 +264,6 @@ public class AnimUtils {
         transition.setDuration(duration);
         transition.setAnimator(LayoutTransition.APPEARING, appear);
         transition.setAnimator(LayoutTransition.DISAPPEARING, disappear);
-
         return transition;
     }
 
@@ -292,7 +282,6 @@ public class AnimUtils {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static Animator getCircular(View view, int centerX, int centerY,
                                        float startRadius, float endRadius) {
-
         return ViewAnimationUtils.createCircularReveal(view,
                 centerX, centerY, startRadius, endRadius);
     }
@@ -301,12 +290,10 @@ public class AnimUtils {
      * 监听开始，结束，取消，重复
      */
     public static void addListener(ValueAnimator animator, Animator.AnimatorListener listener) {
-
         animator.addListener(listener);
     }
 
     public static void removeListeners(ValueAnimator animator) {
-
         animator.removeAllListeners();
     }
 
@@ -316,12 +303,10 @@ public class AnimUtils {
      */
     public static void addUpdateListener(ValueAnimator animator,
                                          ValueAnimator.AnimatorUpdateListener listener) {
-
         animator.addUpdateListener(listener);
     }
 
     public static void removeUpdateListeners(ValueAnimator animator) {
-
         animator.removeAllUpdateListeners();
     }
 
@@ -332,7 +317,6 @@ public class AnimUtils {
      */
     public static void addViewAnimatorChild(ViewAnimator animator, View child, int index,
                                             ViewGroup.LayoutParams params) {
-
         animator.addView(child, index, params);
     }
 
@@ -357,7 +341,6 @@ public class AnimUtils {
 
         flipper.setFlipInterval(delay); // 切换时间间隔
         flipper.setAutoStart(auto); // 是否自动幻灯片
-
         return flipper;
     }
 
@@ -379,7 +362,6 @@ public class AnimUtils {
         });
         if (list != null && list.size() != 0)
             switcher.setImageDrawable(list.get(0)); // 开始时的展现
-
         return switcher;
     }
 
@@ -401,7 +383,6 @@ public class AnimUtils {
         });
         if (list != null && list.size() != 0)
             switcher.setCurrentText(list.get(0)); // 开始时的展现
-
         return switcher;
     }
 
@@ -412,7 +393,6 @@ public class AnimUtils {
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static Scene getScene(ViewGroup parent, int layoutID, Context context) {
-
         return Scene.getSceneForLayout(parent, layoutID, context);
     }
 
@@ -452,7 +432,6 @@ public class AnimUtils {
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static void addListener(Transition transition, Transition.TransitionListener listener) {
-
         transition.addListener(listener);
     }
 
@@ -461,7 +440,6 @@ public class AnimUtils {
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static void goTrans(Scene scene) {
-
         TransitionManager.go(scene);
     }
 
@@ -470,7 +448,6 @@ public class AnimUtils {
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static void goTrans(Scene scene, Transition transition) {
-
         TransitionManager.go(scene, transition);
     }
 

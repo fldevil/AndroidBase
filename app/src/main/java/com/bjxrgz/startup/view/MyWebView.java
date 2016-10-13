@@ -9,7 +9,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.bjxrgz.startup.utils.FileUtils;
+import com.bjxrgz.startup.base.MyApp;
 
 /**
  * 通用WebView
@@ -41,7 +41,8 @@ public class MyWebView extends WebView {
     }
 
     private void init(Context context) {
-        cacheDir = FileUtils.getExternalCacheDir(context).getAbsolutePath() + "web_cache";
+        String resDir = MyApp.instance.appInfo.getResDir();
+        cacheDir = resDir + "web_cache";
 
         // 还可以(can)goBack / (can)goForward
 
