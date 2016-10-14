@@ -2,26 +2,25 @@ package com.bjxrgz.startup.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bjxrgz.startup.R;
 import com.bjxrgz.startup.base.BaseViewActivity;
-import com.bjxrgz.startup.base.MyApp;
+import com.bjxrgz.startup.domain.Home;
 import com.bjxrgz.startup.manager.APIManager;
-import com.bjxrgz.startup.manager.XUtilsManager;
+import com.bjxrgz.startup.manager.HttpManager;
 import com.bjxrgz.startup.utils.ActivityUtils;
-import com.bjxrgz.startup.utils.FileUtils;
-import com.bjxrgz.startup.utils.MediaUtils;
-import com.bjxrgz.startup.utils.StringUtils;
 import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by JiangZhiGuo on 2016/06/01
@@ -42,13 +41,6 @@ public class HomeActivity extends BaseViewActivity<HomeActivity> {
 
     @OnClick(R.id.image)
     public void onClick() {
-//        String fileName = StringUtils.getRandom(5) + ".png";
-//        String resDir = MyApp.instance.appInfo.getResDir();
-//        result = new File(resDir, fileName);
-//        FileUtils.createOrExistsFile(result);
-//        Intent intent = MediaUtils.getCameraIntent(result);
-        Intent intent = MediaUtils.getPictureIntent();
-        startActivityForResult(intent, 10);
     }
 
     public static void goActivity(Activity activity) {
@@ -63,28 +55,12 @@ public class HomeActivity extends BaseViewActivity<HomeActivity> {
     @Override
     protected void initView(Bundle savedInstanceState) {
         initContentView(R.layout.activity_home);
-//        String week = TimeUtils.getWeek(TimeUtils.getCurrentDate());
-//        int weekIndex = TimeUtils.getWeekIndex(TimeUtils.getCurrentDate());
-//        boolean leapYear = TimeUtils.isLeapYear(2016);
-//        LogUtils.e(week + "\n" + weekIndex + "\n" + leapYear);
 
     }
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-//        getData();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 10) {
-//            Bitmap bitmapFile = MediaUtils.getCameraBitmap(result);
-//            image2.setImageBitmap(bitmapFile);
-
-            Bitmap bitmap = MediaUtils.getPictureBitmap(mActivity, data);
-            image1.setImageBitmap(bitmap);
-        }
+        getData();
     }
 
     @Override
@@ -105,14 +81,15 @@ public class HomeActivity extends BaseViewActivity<HomeActivity> {
     }
 
     private void getData() {
-        APIManager.demo(mActivity, new XUtilsManager.Callback() {
+        APIManager service = HttpManager.getService(HttpManager.getEmptyHeader());
+        HttpManager.enqueue(service.getHome2(), new HttpManager.CallBack<Home>() {
             @Override
-            public void onSuccess(Object result) {
+            public void onSuccess(Home result) {
 
             }
 
             @Override
-            public void onFinished() {
+            public void onFailure() {
 
             }
         });

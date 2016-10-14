@@ -14,7 +14,7 @@ import android.view.WindowManager;
 
 /**
  * Created by JiangZhiGuo on 2016/10/12.
- * describe
+ * describe 屏幕管理工具类
  */
 public class ScreenUtils {
 

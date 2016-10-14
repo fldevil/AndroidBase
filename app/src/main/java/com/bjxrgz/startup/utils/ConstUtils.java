@@ -99,21 +99,4 @@ public class ConstUtils {
     /* 正则：IP地址 */
     public static final String REGEX_IP = "((2[0-4]\\d|25[0-5]|[01]?\\d\\d?)\\.){3}(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)";
 
-    /**
-     * ************************************API**********************************
-     */
-    private static final String HOST_TEST = ""; // 测试
-    private static final String HOST_RELEASE = ""; // 正式
-    public static String API_HOST;
-
-    static {
-        if (MyApp.IS_RELEASE) {
-            API_HOST = HOST_RELEASE;
-        } else {
-            API_HOST = HOST_TEST;
-        }
-    }
-
-    public static final String API_HOME = "http://www.bjxrgz.com:808/bio/api/v1/zh-CN/home"; // 测试
-
 }

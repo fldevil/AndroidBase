@@ -1,7 +1,5 @@
 package com.bjxrgz.startup.utils;
 
-import android.content.Context;
-
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
@@ -10,7 +8,6 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,29 +30,6 @@ import static com.bjxrgz.startup.utils.ConstUtils.REGEX_URL;
  * 字符串处理类
  */
 public class StringUtils {
-
-    /**
-     * 语言环境
-     */
-    public static Locale getLocale(Context context) {
-        return context.getResources().getConfiguration().locale;
-    }
-
-    /**
-     * 是否为英语环境
-     */
-    public static boolean isEN(Context context) {
-        String language = getLocale(context).getLanguage();
-        return language.endsWith("en");
-    }
-
-    /**
-     * 是否为中文环境
-     */
-    public static boolean isZH(Context context) {
-        String language = getLocale(context).getLanguage();
-        return language.endsWith("zh");
-    }
 
     public static String getUUID() {
         return UUID.randomUUID().toString().replace("-", "");

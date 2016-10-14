@@ -7,8 +7,8 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.bjxrgz.startup.manager.PushManager;
+import com.bjxrgz.startup.manager.HttpManager;
 import com.bjxrgz.startup.manager.UserManager;
-import com.bjxrgz.startup.manager.XUtilsManager;
 import com.bjxrgz.startup.utils.ActivityUtils;
 import com.bjxrgz.startup.utils.AppUtils;
 import com.bjxrgz.startup.utils.DeviceUtils;
@@ -39,7 +39,7 @@ public class MyApp extends Application {
         ButterKnife.setDebug(IS_LOG); // 懒人框架打印
         UserManager.initApp(this); // 初始化preference
         PushManager.initAPP(this, IS_LOG); // 推送初始化
-        XUtilsManager.initApp(this, MyApp.IS_LOG); // xUtils 初始化
+        HttpManager.initAPP();
 
         initListener();
     }

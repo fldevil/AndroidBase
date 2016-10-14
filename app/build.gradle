@@ -109,5 +109,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'de.hdodenhof:circleimageview:2.0.0'
-    compile 'org.xutils:xutils:3.3.34'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.1'
 }

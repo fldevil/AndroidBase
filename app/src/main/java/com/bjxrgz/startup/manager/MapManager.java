@@ -35,7 +35,7 @@ import java.util.ArrayList;
  * Created by JiangZhiGuo on 2016/08/05.
  * describe 高德地图管理
  */
-public class AMapManager {
+public class MapManager {
 
     public static AMapLocationClient getClient(Context context, AMapLocationClientOption clientOption) {
         AMapLocationClient mapClient = new AMapLocationClient(context);
