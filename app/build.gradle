@@ -90,6 +90,11 @@ buildscript {
     }
 }
 
+// BaseRecyclerViewAdapterHelper配置
+repositories {
+    maven { url "https://jitpack.io" }
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
@@ -111,4 +116,5 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.0.1'
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:v2.0.0'
 }

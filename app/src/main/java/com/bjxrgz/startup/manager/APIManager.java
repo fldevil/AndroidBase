@@ -1,6 +1,5 @@
 package com.bjxrgz.startup.manager;
 
-import com.bjxrgz.startup.domain.Home;
 import com.bjxrgz.startup.domain.User;
 
 import java.util.List;
@@ -26,7 +25,7 @@ public interface APIManager {
     Call<ResponseBody> getUser(); // 从ResponseBody里获取string
 
     @GET("home")
-    Call<Home> getHome2(); // 直接返回bean
+    Call<User> getHome2(); // 直接返回bean
 
     @GET("home?limit=100")
     Call<User> getUser3(); // 可直接写死参数

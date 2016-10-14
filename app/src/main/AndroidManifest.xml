@@ -34,6 +34,20 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <!-- 友盟 -->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
+        <meta-data
+            android:name="UMENG_MESSAGE_SECRET"
+            android:value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
+
+        <!-- 高德地图 -->
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="5bb1b4f82f624df8dc1b8e4afb31b7b2" />
+
+        <service android:name="com.amap.api.location.APSService" />
 
         <!-- 启动页 -->
         <activity android:name=".activity.StartActivity">
@@ -50,21 +64,6 @@
             android:name=".service.UpdateService"
             android:enabled="true"
             android:exported="true" />
-        <!-- 友盟 -->
-        <meta-data
-            android:name="UMENG_APPKEY"
-            android:value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
-        <meta-data
-            android:name="UMENG_MESSAGE_SECRET"
-            android:value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
-
-        <!-- 高德地图 -->
-        <meta-data
-            android:name="com.amap.api.v2.apikey"
-            android:value="5bb1b4f82f624df8dc1b8e4afb31b7b2" />
-
-        <service android:name="com.amap.api.location.APSService" />
 
     </application>
-
 </manifest>
