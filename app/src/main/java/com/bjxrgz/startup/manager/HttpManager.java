@@ -12,6 +12,7 @@ import com.bjxrgz.startup.utils.WidgetUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
@@ -19,8 +20,10 @@ import java.util.Map;
 
 import okhttp3.Headers;
 import okhttp3.Interceptor;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -174,9 +177,9 @@ public class HttpManager {
                 int code = response.code();
                 Headers headers = response.headers();
 
-                if (code == 200) { // 成功
+                if (response.isSuccessful()) { // 成功
                     T result = response.body();
-                    LogUtils.d(headers.toString());
+                    LogUtils.d(code + "\n" + headers.toString());
 
                     String json = GsonManager.getInstance().toJson(result);
                     LogUtils.json(json);
