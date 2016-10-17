@@ -12,7 +12,6 @@ import com.bjxrgz.startup.utils.WidgetUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
@@ -20,10 +19,8 @@ import java.util.Map;
 
 import okhttp3.Headers;
 import okhttp3.Interceptor;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,19 +35,20 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class HttpManager {
 
     /* 这里的URL最好以/结尾 */
-    public static String API_HOST; // 当前使用的HOST
-    private static final String HOST_TEST = "http://www.bjxrgz.com:808/bio/api/v1/"; // 测试
+    private static String API_HOST; // 当前使用的HOST
+    private static final String HOST_DEBUG = "http://www.bjxrgz.com:808/bio/api/v1/"; // 测试
     private static final String HOST_RELEASE = "http://www.bjxrgz.com:808/bio/api/v1/"; // 正式
 
+    /* 语言环境，没有不写 */
     private static final String LAN_CN = "zh-CN/"; // 中文
     private static final String LAN_EN = "en/"; // 英文
 
 
     public static void initAPP() {
-        if (MyApp.IS_RELEASE) {
-            API_HOST = HOST_RELEASE;
+        if (MyApp.DEBUG) {
+            API_HOST = HOST_DEBUG;
         } else {
-            API_HOST = HOST_TEST;
+            API_HOST = HOST_RELEASE;
         }
     }
 

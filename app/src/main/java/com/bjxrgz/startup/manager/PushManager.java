@@ -24,7 +24,7 @@ public class PushManager {
         mPushAgent = PushAgent.getInstance(context.getApplicationContext());
         // 统计应用启动数据
         mPushAgent.onAppStart();
-        mPushAgent.setDebugMode(false);
+        mPushAgent.setDebugMode(isLog);
         // 注册推送服务，每次调用register方法都会回调该接口
         mPushAgent.register(new IUmengRegisterCallback() {
             @Override

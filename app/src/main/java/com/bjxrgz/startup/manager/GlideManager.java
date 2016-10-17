@@ -21,13 +21,13 @@ import java.io.File;
  */
 public class GlideManager {
 
-    public static final String FORE_URL = "";
+    private static final String FORE_URL = "";
 
-    public static final int ERROR_HEAD = R.mipmap.ic_launcher; // 错误头像
-    public static final int ERROR_IMG = R.mipmap.ic_launcher; // 错误图片
+    private static final int ERROR_HEAD = R.mipmap.ic_launcher; // 错误头像
+    private static final int ERROR_IMG = R.mipmap.ic_launcher; // 错误图片
 
-    public static final int FADE_TIME = 200; // 渐变时间
-    public static final DiskCacheStrategy CACHE_TYPE = DiskCacheStrategy.SOURCE; // 缓存类型
+    private static final int FADE_TIME = 200; // 渐变时间
+    private static final DiskCacheStrategy CACHE_TYPE = DiskCacheStrategy.SOURCE; // 缓存类型
 
     /**
      * 清除内存缓存

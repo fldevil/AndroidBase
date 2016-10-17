@@ -14,7 +14,7 @@ public class UserManager {
     /**
      * 保存Preference的name
      */
-    public static final String PREFERENCE_NAME = "userInfo";
+    private static final String PREFERENCE_NAME = "userInfo";
     private static UserManager userManager;
     private static SharedPreferences preferences;
     private static SharedPreferences.Editor editor;

@@ -18,9 +18,9 @@ import butterknife.ButterKnife;
 
 public class MyApp extends Application {
 
-    public static final boolean IS_RELEASE = false; // 上线为true
+    public static final boolean DEBUG = true; // 上线为true
 
-    public static final boolean IS_LOG = true; // 上线为false
+    public static final boolean LOG = true; // 上线为false
 
     public static MyApp instance;  // 当前实例
 
@@ -35,10 +35,10 @@ public class MyApp extends Application {
         appInfo = AppUtils.getAppInfo(instance);
         deviceInfo = DeviceUtils.getDeviceInfo(instance);
 
-        LogUtils.initApp(IS_LOG); // 日志初始化
-        ButterKnife.setDebug(IS_LOG); // 懒人框架打印
+        LogUtils.initApp(LOG); // 日志初始化
+        ButterKnife.setDebug(LOG); // 懒人框架打印
         UserManager.initApp(this); // 初始化preference
-        PushManager.initAPP(this, IS_LOG); // 推送初始化
+        PushManager.initAPP(this, LOG); // 推送初始化
         HttpManager.initAPP();
 
         initListener();
