@@ -10,10 +10,10 @@ android {
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
     }
 
-    signingConfigs {
+    signingConfigs { // 签名信息
         bjxrgz_debug {
             keyAlias 'Bjxrgz'
             keyPassword 'Bjxrgz998'
@@ -24,51 +24,53 @@ android {
         }
     }
 
-    buildTypes {
+    buildTypes { // 打包选项
+        debug {
+            signingConfig signingConfigs.bjxrgz_debug // 设置签名信息
+            minifyEnabled false // 混淆开关
+            // 指定混淆规则文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-
-        debug {
-            signingConfig signingConfigs.bjxrgz_debug
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
     }
 
-    sourceSets {
+    sourceSets { // 源码设置
         main {
-            jniLibs.srcDirs = ['libs']
+            jniLibs.srcDirs = ['libs'] // 指定lib库目录
         }
-
-        instrumentTest.setRoot('tests')
-
-        debug.setRoot('build-types/debug')
-        release.setRoot('build-types/release')
+        instrumentTest.setRoot('tests') // 指定测试所在的路径
+        debug.setRoot('build-types/debug') // 指定debug模式的路径
+        release.setRoot('build-types/release') // 指定release模式的路径
     }
 
-    // 以下两句防止图片导入报错
-    aaptOptions.cruncherEnabled = false
-    aaptOptions.useNewCruncher = false
-
-    dexOptions {
-        // bug value-2
-        javaMaxHeapSize "4g"
+    productFlavors { // 发布渠道
     }
 
-    lintOptions {
+    lintOptions { // 编译的lint检查
         // 防止在发布的时候出现因MissingTranslation导致Build Failed!
         disable 'MissingTranslation'
+        // 移除lint检查的error
+        abortOnError false
     }
 
-    packagingOptions {
-        // jar包冲突
+    packagingOptions { // 解决jar包冲突
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INFTICE'
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE.txt'
     }
+
+    dexOptions { // bug value-2
+        javaMaxHeapSize "4g"
+    }
+
+    // 以下两句防止图片导入报错
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
 }
 
 // butterKnife 配置
@@ -110,4 +112,5 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.0.1'
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:v2.0.0'
+    compile 'org.greenrobot:greendao:3.2.0'
 }

@@ -6,8 +6,8 @@ import android.content.ComponentCallbacks2;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
-import com.bjxrgz.startup.manager.PushManager;
 import com.bjxrgz.startup.manager.HttpManager;
+import com.bjxrgz.startup.manager.PushManager;
 import com.bjxrgz.startup.manager.UserManager;
 import com.bjxrgz.startup.utils.ActivityUtils;
 import com.bjxrgz.startup.utils.AppUtils;
@@ -18,9 +18,9 @@ import butterknife.ButterKnife;
 
 public class MyApp extends Application {
 
-    public static final boolean DEBUG = true; // 上线为true
+    public static final boolean DEBUG = true; // 测试模式(上线为false)
 
-    public static final boolean LOG = true; // 上线为false
+    public static final boolean LOG = true; // 打印日志(上线为false)
 
     public static MyApp instance;  // 当前实例
 
@@ -35,10 +35,10 @@ public class MyApp extends Application {
         appInfo = AppUtils.getAppInfo(instance);
         deviceInfo = DeviceUtils.getDeviceInfo(instance);
 
-        LogUtils.initApp(LOG); // 日志初始化
-        ButterKnife.setDebug(LOG); // 懒人框架打印
-        UserManager.initApp(this); // 初始化preference
-        PushManager.initAPP(this, LOG); // 推送初始化
+        LogUtils.initApp(LOG);
+        ButterKnife.setDebug(LOG);
+        UserManager.initApp(this);
+        PushManager.initAPP(this, LOG);
         HttpManager.initAPP();
 
         initListener();
@@ -62,7 +62,7 @@ public class MyApp extends Application {
                 LogUtils.e("内存不足,清理内存以获取更多内存");
             }
         });
-        // 监听所有activity,可撤销
+        // 监听所有activity生命周期,可撤销
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
