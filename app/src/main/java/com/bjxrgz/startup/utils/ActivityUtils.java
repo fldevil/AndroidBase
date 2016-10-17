@@ -7,12 +7,12 @@ import android.app.ActivityOptions;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.Formatter;
-import android.util.Log;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,12 +23,19 @@ import java.util.List;
  */
 public class ActivityUtils {
 
-    protected static boolean anim = true; // 跳转动画开关
+    private static boolean anim = true; // 跳转动画开关
     // 4.4版本下的跳转效果 5.0以上的在baseActivity里就设定好了
     private static final int kitkatAnimIn = android.R.anim.fade_in;
     private static final int kitkatAnimOut = android.R.anim.fade_out;
     // 所有已启动的Activity
     private static List<Activity> activities = new LinkedList<>();
+
+    /**
+     * 内存，进程，服务，任务
+     */
+    private static ActivityManager getActivityManager(Context context) {
+        return (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+    }
 
     /**
      * activity在onCreate是调用此方法
@@ -45,12 +52,13 @@ public class ActivityUtils {
     }
 
     /**
-     * 关闭所有activity，应用与一键退出
+     * 关闭所有activity，应用于一键退出
      */
     public static void closeActivities() {
         for (Activity activity : activities) {
-            if (activity != null)
+            if (activity != null) {
                 activity.finish();
+            }
         }
         activities.clear();
     }
@@ -78,38 +86,39 @@ public class ActivityUtils {
     /**
      * fragment启动activity
      */
-    public static void startActivity(Fragment fragment, Activity parentActivity, Intent intent) {
+    public static void startActivity(Fragment from, Activity to, Intent intent) {
         if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            fragment.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(parentActivity).toBundle());
+            from.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(to).toBundle());
         } else {
-            fragment.startActivity(intent);
+            from.startActivity(intent);
         }
     }
 
     /**
      * 启动activity，setResult设置回传的resultCode和intent
      */
-    public static void startActivity(Activity activity, Intent intent, int requestCode) {
+    public static void startActivity(Activity from, Intent intent, int requestCode) {
         if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            activity.startActivityForResult(intent, requestCode, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
+            from.startActivityForResult(intent, requestCode, ActivityOptions.makeSceneTransitionAnimation(from).toBundle());
         } else {
-            activity.startActivityForResult(intent, requestCode);
-            if (anim) // 4.4跳转效果
-                activity.overridePendingTransition(kitkatAnimIn, kitkatAnimOut);
+            from.startActivityForResult(intent, requestCode);
+            if (anim) { // 4.4跳转效果
+                from.overridePendingTransition(kitkatAnimIn, kitkatAnimOut);
+            }
         }
     }
 
     /**
      * Fragment启动activity，setResult设置回传的resultCode和intent
      */
-    public static void startActivity(Fragment fragment, Activity activity, Intent intent, int requestCode) {
+    public static void startActivity(Fragment from, Activity to, Intent intent, int requestCode) {
         if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            fragment.startActivityForResult(intent, requestCode,
-                    ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
+            from.startActivityForResult(intent, requestCode, ActivityOptions.makeSceneTransitionAnimation(to).toBundle());
         } else {
-            activity.startActivityForResult(intent, requestCode);
-            if (anim) // 4.4跳转效果
-                activity.overridePendingTransition(kitkatAnimIn, kitkatAnimOut);
+            from.startActivityForResult(intent, requestCode);
+            if (anim) { // 4.4跳转效果
+                to.overridePendingTransition(kitkatAnimIn, kitkatAnimOut);
+            }
         }
     }
 
@@ -135,51 +144,19 @@ public class ActivityUtils {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 activity.finishAndRemoveTask();
             }
-        } else
+        } else {
             activity.finish();
+        }
     }
 
     /**
-     * 判断是否存在Activity
-     *
-     * @param context     上下文
-     * @param packageName 包名
-     * @param className   activity全路径类名
-     * @return {@code true}: 是<br>{@code false}: 否
-     */
-    public static boolean isExistActivity(Context context, String packageName, String className) {
-        Intent intent = new Intent();
-        intent.setClassName(packageName, className);
-        return !(context.getPackageManager().resolveActivity(intent, 0) == null ||
-                intent.resolveActivity(context.getPackageManager()) == null ||
-                context.getPackageManager().queryIntentActivities(intent, 0).size() == 0);
-    }
-
-    /**
-     * 内存，进程，服务，任务
-     */
-    public static ActivityManager getActivityManager(Context context) {
-        return (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-    }
-
-    /**
-     * packageName 系统进程是杀不死的，只能杀死用户进程。
-     */
-    public static void killBackgroundProcess(Context context, String packageName) {
-        getActivityManager(context).killBackgroundProcesses(packageName);
-    }
-
-    /**
-     * >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>运存<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+     * ***********************************运存***********************************
      * <p>
      * 获取手机内存信息
      */
     public static ActivityManager.MemoryInfo getMemoryInfo(Context context) {
-
         ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
-
         getActivityManager(context).getMemoryInfo(memoryInfo);
-
         return memoryInfo;
     }
 
@@ -214,12 +191,19 @@ public class ActivityUtils {
 
 
     /**
-     * >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>进程<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+     * ***********************************进程***********************************
      * <p>
      * 获取运行的进程信息
      */
     public static List<ActivityManager.RunningAppProcessInfo> getRunningProcesses(Context context) {
         return getActivityManager(context).getRunningAppProcesses();
+    }
+
+    /**
+     * packageName 系统进程是杀不死的，只能杀死用户进程。
+     */
+    public static void killBackgroundProcess(Context context, String packageName) {
+        getActivityManager(context).killBackgroundProcesses(packageName);
     }
 
     /**
@@ -260,7 +244,7 @@ public class ActivityUtils {
     }
 
     /**
-     * >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>服务<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+     * ***********************************服务***********************************
      * <p>
      * 获取运行的服务信息
      */
@@ -331,6 +315,23 @@ public class ActivityUtils {
      */
     public static int getClientCount(ActivityManager.RunningServiceInfo runningServiceInfo) {
         return runningServiceInfo.clientCount;
+    }
+
+    /**
+     * 判断是否存在Activity
+     *
+     * @param context     上下文
+     * @param packageName 包名
+     * @param className   activity全路径类名
+     * @return {@code true}: 是<br>{@code false}: 否
+     */
+    public static boolean isExistActivity(Context context, String packageName, String className) {
+        Intent intent = new Intent();
+        intent.setClassName(packageName, className);
+        ResolveInfo resolveInfo = context.getPackageManager().resolveActivity(intent, 0);
+        ComponentName componentName = intent.resolveActivity(context.getPackageManager());
+        int size = context.getPackageManager().queryIntentActivities(intent, 0).size();
+        return !(resolveInfo == null || componentName == null || size == 0);
     }
 
 }
