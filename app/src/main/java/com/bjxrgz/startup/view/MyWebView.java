@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -17,7 +18,7 @@ import com.bjxrgz.startup.base.MyApp;
 public class MyWebView extends WebView {
 
     // 缓存目录
-    private String cacheDir;
+    public static String cacheDir;
 
     public MyWebView(Context context) {
         super(context);
@@ -60,8 +61,8 @@ public class MyWebView extends WebView {
 
             // 打开内部连接
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                return super.shouldOverrideUrlLoading(view, url);
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                return super.shouldOverrideUrlLoading(view, request);
             }
         });
 
