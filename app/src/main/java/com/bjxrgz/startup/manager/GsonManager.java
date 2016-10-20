@@ -7,7 +7,7 @@ import com.google.gson.GsonBuilder;
 
 /**
  * Created by Fan-pc on 2015/11/13.
- * 单例创建json
+ * describe Gson工具类
  */
 public class GsonManager {
 

@@ -12,7 +12,7 @@ import com.umeng.message.PushAgent;
 
 /**
  * Created by JiangZhiGuo on 2016/8/5.
- * describe 推送管理
+ * describe 友盟管理工具类
  */
 public class PushManager {
 
