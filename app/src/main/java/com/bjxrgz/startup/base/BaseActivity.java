@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.bjxrgz.startup.R;
+import com.bjxrgz.startup.manager.PushManager;
 import com.bjxrgz.startup.utils.ActivityUtils;
 import com.bjxrgz.startup.utils.AnimUtils;
 import com.bjxrgz.startup.utils.DialogUtils;
@@ -119,6 +120,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+//        AsyncUtils.register(this);
     }
 
     /**
@@ -152,6 +154,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        PushManager.analysisOnResume(this);
         NetUtils.isAvailable(this);
     }
 
@@ -197,6 +200,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        PushManager.analysisOnPause(this);
     }
 
     /**

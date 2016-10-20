@@ -2,9 +2,10 @@ package com.bjxrgz.startup.domain;
 
 /**
  * Created by JiangZhiGuo on 2016/9/30.
- * describe
+ * describe 用户实体类
  */
 public class User {
+
     private String id;
     private String userToken;
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.bjxrgz.startup.domain.User;
+import com.bjxrgz.startup.utils.LogUtils;
 
 /**
  * Created by Fan on 2016/6/16.
@@ -51,6 +52,7 @@ public class UserManager {
     }
 
     public void setUser(User user) {
+        LogUtils.json("setUser", GsonManager.getInstance().toJson(user));
         editor.putString(USER_USER_ID, user.getId());
         editor.putString(USER_USER_TOKEN, user.getUserToken());
         editor.commit();
@@ -60,6 +62,7 @@ public class UserManager {
         User user = new User();
         user.setId(preferences.getString(USER_USER_ID, ""));
         user.setUserToken(preferences.getString(USER_USER_TOKEN, ""));
+        LogUtils.json("getUser", GsonManager.getInstance().toJson(user));
         return user;
     }
 

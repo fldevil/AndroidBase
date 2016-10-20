@@ -24,7 +24,11 @@ public class PushManager {
         mPushAgent = PushAgent.getInstance(context.getApplicationContext());
         // 统计应用启动数据
         mPushAgent.onAppStart();
+        // 打印日志
         mPushAgent.setDebugMode(isLog);
+        // 收集奔溃日志
+        MobclickAgent.setScenarioType(context, MobclickAgent.EScenarioType.E_UM_NORMAL);
+        MobclickAgent.setCatchUncaughtExceptions(true);
         // 注册推送服务，每次调用register方法都会回调该接口
         mPushAgent.register(new IUmengRegisterCallback() {
             @Override
@@ -41,9 +45,9 @@ public class PushManager {
     }
 
     /**
-     * 开关
+     * 开关,在startActivity中调用
      */
-    public static void setPush(boolean open) {
+    public static void setEnable(boolean open) {
         if (open) {
             mPushAgent.enable(new IUmengCallback() {
                 @Override
@@ -74,7 +78,7 @@ public class PushManager {
      * 主动获取DeviceToken
      */
     public static String getDeviceToken() {
-        if (TextUtils.isEmpty(DEVICE_TOKEN)){
+        if (TextUtils.isEmpty(DEVICE_TOKEN)) {
             DEVICE_TOKEN = mPushAgent.getRegistrationId();
         }
         LogUtils.d("deviceToken", DEVICE_TOKEN);
@@ -82,17 +86,36 @@ public class PushManager {
     }
 
     /**
-     * umeng 统计 在activity中的OnResume中调用
+     * 数据统计(崩溃日志) 在activity中的OnResume中调用
      */
-    public static void mobclickOnResume(Context context) {
+    public static void analysisOnResume(Context context) {
         MobclickAgent.onResume(context);
     }
 
     /**
-     * umeng 统计 在activity中的OnPause中调用
+     * 数据统计(崩溃日志) 在activity中的OnPause中调用
      */
-    public static void mobclickOnPause(Context context) {
+    public static void analysisOnPause(Context context) {
         MobclickAgent.onPause(context);
+    }
+
+    /**
+     * 账号的统计
+     *
+     * @param provider 账号来源。如果用户通过第三方账号登陆，可以调用此接口进行统计。
+     *                 支持自定义，不能以下划线"_"开头，使用大写字母和数字标识，长度小于32 字节
+     * @param id       用户账号ID，长度小于64字节
+     */
+    public static void userIn(String provider, String id) {
+        MobclickAgent.onProfileSignIn(provider, id);
+    }
+
+    public static void userIn(String id) {
+        MobclickAgent.onProfileSignIn(id);
+    }
+
+    public static void userOut() {
+        MobclickAgent.onProfileSignOff();
     }
 
     /**
@@ -115,13 +138,6 @@ public class PushManager {
         } else { // 不震动
             mPushAgent.setNotificationPlayVibrate(MsgConstant.NOTIFICATION_PLAY_SDK_DISABLE);
         }
-    }
-
-    /**
-     * 设置推广渠道
-     */
-    public static void sethannel(String channl) {
-        mPushAgent.setMessageChannel(channl);
     }
 
 }

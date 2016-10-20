@@ -1,12 +1,11 @@
 package com.bjxrgz.startup.activity;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.widget.ImageView;
 
 import com.bjxrgz.startup.R;
 import com.bjxrgz.startup.base.BaseViewActivity;
+import com.bjxrgz.startup.base.MyApp;
 import com.bjxrgz.startup.manager.PushManager;
 import com.bjxrgz.startup.utils.ScreenUtils;
 
@@ -24,7 +23,7 @@ public class StartActivity extends BaseViewActivity<StartActivity> {
 
     @Override
     protected void initObject(Bundle savedInstanceState) {
-        PushManager.setPush(true); // 推送开关
+        PushManager.setEnable(true); // 推送开关
     }
 
     @Override
@@ -42,20 +41,25 @@ public class StartActivity extends BaseViewActivity<StartActivity> {
     protected void refreshData() {
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     private void goHome() {
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
+        MyApp.mainHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 HomeActivity.goActivity(mActivity);
             }
         }, 1500);
         // 立刻关闭当前页面会出现空白缝隙
-        handler.postDelayed(new Runnable() {
+        MyApp.mainHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 mActivity.finish();
             }
         }, 3000);
     }
+
 }

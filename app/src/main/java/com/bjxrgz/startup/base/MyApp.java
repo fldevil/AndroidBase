@@ -5,6 +5,8 @@ import android.app.Application;
 import android.content.ComponentCallbacks2;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.bjxrgz.startup.manager.HttpManager;
 import com.bjxrgz.startup.manager.PushManager;
@@ -14,32 +16,37 @@ import com.bjxrgz.startup.utils.AppUtils;
 import com.bjxrgz.startup.utils.DeviceUtils;
 import com.bjxrgz.startup.utils.LogUtils;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import butterknife.ButterKnife;
 
 public class MyApp extends Application {
 
-    public static final boolean DEBUG = true; // 测试模式(上线为false)
-
+    public static final boolean DEBUG = true; // 测试模式(上线为false
     public static final boolean LOG = true; // 打印日志(上线为false)
 
-    public static MyApp instance;  // 当前实例
+    public static MyApp instance;  // MyApp实例
+    public static Handler mainHandler;// 主线程handler
+    public static ExecutorService threadPool; // 缓冲线程池
 
     public AppUtils.AppInfo appInfo; // app信息
-
     public DeviceUtils.DeviceInfo deviceInfo; // device信息
 
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
-        appInfo = AppUtils.getAppInfo(instance);
-        deviceInfo = DeviceUtils.getDeviceInfo(instance);
+        mainHandler = new Handler(Looper.getMainLooper());
+        threadPool = Executors.newCachedThreadPool();
+        appInfo = AppUtils.getAppInfo(this);
+        deviceInfo = DeviceUtils.getDeviceInfo(this);
 
         LogUtils.initApp(LOG);
         ButterKnife.setDebug(LOG);
         UserManager.initApp(this);
-        PushManager.initAPP(this, LOG);
         HttpManager.initAPP();
+        PushManager.initAPP(this, LOG);
 
         initListener();
     }

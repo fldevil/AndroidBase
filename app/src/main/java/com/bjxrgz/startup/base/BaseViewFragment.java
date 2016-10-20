@@ -17,8 +17,7 @@ public abstract class BaseViewFragment<T> extends BaseFragment<T> {
 
     private Unbinder unbinder;
 
-    protected abstract int initContentView(LayoutInflater inflater, ViewGroup container,
-                                           Bundle savedInstanceState);
+    protected abstract int initContentView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
 
     protected abstract void initObject(View view, @Nullable Bundle savedInstanceState);
 

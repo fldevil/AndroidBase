@@ -7,7 +7,6 @@ import android.os.Bundle;
 import com.bjxrgz.startup.R;
 import com.bjxrgz.startup.base.BaseViewActivity;
 import com.bjxrgz.startup.utils.ActivityUtils;
-import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by JiangZhiGuo on 2016/06/01
@@ -38,18 +37,6 @@ public class HomeActivity extends BaseViewActivity<HomeActivity> {
     @Override
     protected void refreshData() {
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this); // 友盟统计
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this); // 友盟统计
     }
 
 }

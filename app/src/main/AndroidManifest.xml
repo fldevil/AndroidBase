@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- 访问WIFI状态 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <!-- 向扩展卡写入数据 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
@@ -17,15 +19,13 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <!-- 相机 -->
     <uses-permission android:name="android.permission.CAMERA" />
-
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
     <!-- 用于进行网络定位 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- 用于访问GPS定位 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
         android:name=".base.MyApp"
@@ -36,6 +36,9 @@
         android:theme="@style/AppTheme">
         <!-- 友盟 -->
         <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="umeng" />
+        <meta-data
             android:name="UMENG_APPKEY"
             android:value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
         <meta-data
@@ -45,7 +48,7 @@
         <!-- 高德地图 -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="5bb1b4f82f624df8dc1b8e4afb31b7b2" />
+            android:value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
 
         <service android:name="com.amap.api.location.APSService" />
 
@@ -59,7 +62,7 @@
         </activity>
         <!-- 主页面 -->
         <activity android:name=".activity.HomeActivity" />
-        <!-- 版本更新 -->
+        <!-- 更新服务 -->
         <service
             android:name=".service.UpdateService"
             android:enabled="true"
