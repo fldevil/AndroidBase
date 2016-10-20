@@ -6,7 +6,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by JiangZhiGuo on 2016/10/13.
- * describe 同步/异步管理工具类
+ * describe EventBus管理工具类
  */
 public class BusManager {
 
