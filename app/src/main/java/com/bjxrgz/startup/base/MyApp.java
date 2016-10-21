@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 
 public class MyApp extends Application {
 
-    public static final boolean DEBUG = true; // 测试模式(上线为false
+    public static final boolean DEBUG = true; // 测试模式(上线为false)
     public static final boolean LOG = true; // 打印日志(上线为false)
 
     public static MyApp instance;  // MyApp实例

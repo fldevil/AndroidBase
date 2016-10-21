@@ -48,8 +48,7 @@ import java.io.OutputStream;
  */
 public class ImageUtils {
 
-    public static final Bitmap.CompressFormat PNG = Bitmap.CompressFormat.PNG; // 无损
-    public static final Bitmap.CompressFormat JPEG = Bitmap.CompressFormat.JPEG; // 有损
+    public static final Bitmap.CompressFormat FORMAT = Bitmap.CompressFormat.JPEG; // 通常
 
     /**
      * 剪切view , 还有设置四大属性的方法，太多了 不封装了
@@ -1219,7 +1218,7 @@ public class ImageUtils {
     public static boolean isImage(String filePath) {
         String path = filePath.toUpperCase();
         return path.endsWith(".PNG") || path.endsWith(".JPG")
-                || path.endsWith(".JPEG") || path.endsWith(".BMP")
+                || path.endsWith(".FORMAT") || path.endsWith(".BMP")
                 || path.endsWith(".GIF");
     }
 
@@ -1277,7 +1276,7 @@ public class ImageUtils {
      * @return 图片类型
      */
     public static String getImageType(byte[] bytes) {
-        if (isJPEG(bytes)) return "JPEG";
+        if (isJPEG(bytes)) return "FORMAT";
         if (isGIF(bytes)) return "GIF";
         if (isPNG(bytes)) return "PNG";
         if (isBMP(bytes)) return "BMP";
@@ -1392,7 +1391,7 @@ public class ImageUtils {
     public static Bitmap compressByQuality(Bitmap src, int quality, boolean recycle) {
         if (isEmptyBitmap(src) || quality < 0 || quality > 100) return null;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        src.compress(Bitmap.CompressFormat.JPEG, quality, baos);
+        src.compress(FORMAT, quality, baos);
         byte[] bytes = baos.toByteArray();
         if (recycle && !src.isRecycled()) src.recycle();
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -1421,10 +1420,10 @@ public class ImageUtils {
         if (isEmptyBitmap(src) || maxByteSize <= 0) return null;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         int quality = 100;
-        src.compress(Bitmap.CompressFormat.JPEG, quality, baos);
+        src.compress(FORMAT, quality, baos);
         while (baos.toByteArray().length > maxByteSize && quality >= 0) {
             baos.reset();
-            src.compress(Bitmap.CompressFormat.JPEG, quality -= 5, baos);
+            src.compress(FORMAT, quality -= 5, baos);
         }
         if (quality < 0) return null;
         byte[] bytes = baos.toByteArray();
@@ -1456,14 +1455,14 @@ public class ImageUtils {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = sampleSize;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        src.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        src.compress(FORMAT, 100, baos);
         byte[] bytes = baos.toByteArray();
         if (recycle && !src.isRecycled()) src.recycle();
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
     }
 
     public static Bitmap compressBySize(Bitmap src, Bitmap.CompressFormat type, double maxSize) {
-        //图片允许最大空间   单位：KB
+        // 图片允许最大空间  压缩尺寸 单位B 需要略微小1/5
         //将bitmap放至数组中，意在bitmap的大小（与实际读取的原文件要大）
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         src.compress(type, 100, baos);
@@ -1473,8 +1472,9 @@ public class ImageUtils {
         if (mid > maxSize) {
             //获取bitmap大小 是允许最大大小的多少倍
             double i = mid / maxSize;
+            double sqrt = Math.sqrt(i);
             //开始压缩  此处用到平方根 将宽带和高度压缩掉对应的平方根倍 （1.保持刻度和高度和原bitmap比率一致，压缩后也达到了最大大小占用空间的大小）
-            src = zoomImage(src, src.getWidth() / Math.sqrt(i), src.getHeight() / Math.sqrt(i));
+            src = zoomImage(src, src.getWidth() / sqrt, src.getHeight() / sqrt);
         }
         return src;
     }
@@ -1487,8 +1487,7 @@ public class ImageUtils {
      * @param newHeight ：缩放后高度
      * @return
      */
-    public static Bitmap zoomImage(Bitmap bgimage, double newWidth,
-                                   double newHeight) {
+    public static Bitmap zoomImage(Bitmap bgimage, double newWidth, double newHeight) {
         // 获取这个图片的宽和高
         float width = bgimage.getWidth();
         float height = bgimage.getHeight();

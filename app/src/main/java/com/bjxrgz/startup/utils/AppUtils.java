@@ -220,7 +220,7 @@ public class AppUtils {
      *
      * @return true : 可用<br>false : 不可用
      */
-    public static boolean isSDCardEnable() {
+    private static boolean isSDCardEnable() {
         return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
     }
 
@@ -232,7 +232,7 @@ public class AppUtils {
     }
 
     /**
-     * 自定义资源路径
+     * 自定义资源路径(部分手机有差别)
      */
     private static String getResDir(String appName) {
         String resDir;
@@ -267,7 +267,7 @@ public class AppUtils {
     /**
      * 清除缓存(Glide手动清)
      */
-    public static void clearCache(Context context) {
+    public static void clearSys(Context context) {
         File externalFilesDir = context.getExternalFilesDir("");
         File externalCacheDir = context.getExternalCacheDir();
         File internalFilesDir = context.getFilesDir();

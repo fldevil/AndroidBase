@@ -1,5 +1,7 @@
 package com.bjxrgz.startup.utils;
 
+import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,7 +11,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -63,9 +64,9 @@ public class MediaUtils {
      * 拍照 , (Bitmap) intent.getExtras().get("data");
      * 不加保存路径的话，图片会被压缩保存
      */
-    public static Intent getCameraIntent(File resultFile) {
+    public static Intent getCameraIntent(File cameraFile) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        Uri uri = Uri.fromFile(resultFile);
+        Uri uri = Uri.fromFile(cameraFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         return intent;
     }
@@ -73,10 +74,15 @@ public class MediaUtils {
     /**
      * 在onActivityResult中获取拍照所得到的照片
      */
-    public static Bitmap getCameraBitmap(File resultFile) {
-        Bitmap bitmap = ImageUtils.adjustPhoto(resultFile);
-        // 这里对图片进行压缩处理
-        return bitmap;
+    public static Bitmap getCameraBitmap(File cameraFile, double maxSize) {
+        if (cameraFile == null || cameraFile.length() == 0) {
+            FileUtils.deleteFile(cameraFile); // 删除垃圾文件
+            return null;
+        } else {
+            Bitmap adjust = ImageUtils.adjustPhoto(cameraFile); // 角度
+            FileUtils.deleteFile(cameraFile); // 删除源文件
+            return ImageUtils.compressBySize(adjust, ImageUtils.FORMAT, maxSize);// 转换文件
+        }
     }
 
     /**
@@ -97,14 +103,50 @@ public class MediaUtils {
     /**
      * 在onActivityResult中获取选择所得到的照片
      */
-    public static Bitmap getPictureBitmap(Context context, Intent data) {
-        InputStream stream = openInput(context, data.getData());
-        Bitmap bitmap = null;
-        if (stream != null) {
-            bitmap = BitmapFactory.decodeStream(new BufferedInputStream(stream));
+    public static Bitmap getPictureBitmap(Activity activity, Intent data, double maxSize) {
+        if (data == null) {
+            return null;
         }
-        // 这里对图片进行压缩处理
-        return bitmap;
+        Uri uri = getUri(activity, data);
+        InputStream stream = openInput(activity, uri);
+        Bitmap src = BitmapFactory.decodeStream(stream);
+        return ImageUtils.compressBySize(src, ImageUtils.FORMAT, maxSize);
+    }
+
+    /**
+     * 解决小米手机上获取图片路径为null的情况
+     */
+    private static Uri getUri(Context context, Intent intent) {
+        Uri uri = intent.getData();
+        String type = intent.getType(); // 小米的type不是null 其他的是
+        if (uri.getScheme().equals("file") && (type.contains("image/"))) {
+            String path = uri.getEncodedPath();
+            if (path != null) {
+                path = Uri.decode(path);
+                ContentResolver cr = context.getContentResolver();
+                StringBuilder buff = new StringBuilder();
+                buff.append("(").append(MediaStore.Images.ImageColumns.DATA).append("=")
+                        .append("'" + path + "'").append(")");
+                Cursor cur = cr.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        new String[]{MediaStore.Images.ImageColumns._ID},
+                        buff.toString(), null, null);
+                int index = 0;
+                if (cur != null) {
+                    for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()) {
+                        index = cur.getColumnIndex(MediaStore.Images.ImageColumns._ID);
+                        index = cur.getInt(index);
+                    }
+                    cur.close();
+                }
+                if (index > 0) {
+                    Uri uri_temp = Uri.parse("content://media/external/images/media/" + index);
+                    if (uri_temp != null) {
+                        uri = uri_temp;
+                    }
+                }
+            }
+        }
+        return uri;
     }
 
     /**
