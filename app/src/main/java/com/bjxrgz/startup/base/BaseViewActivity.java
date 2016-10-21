@@ -1,41 +1,10 @@
 package com.bjxrgz.startup.base;
 
-import android.os.Bundle;
-
-import butterknife.ButterKnife;
-
 /**
  * Created by Fan on 2016/7/16.
  * BaseViewActivity
  */
 public abstract class BaseViewActivity<T> extends BaseActivity<T> {
-
-    protected abstract void initObject(Bundle savedInstanceState);
-
-    protected abstract void initView(Bundle savedInstanceState);
-
-    protected abstract void initData(Bundle savedInstanceState);
-
-    protected abstract void refreshData();
-
-    /* 相当于setContentView */
-    public void initContentView(int res) {
-        setContentView(res);
-        ButterKnife.bind(this);
-    }
-
-    @Override
-    protected void create(Bundle savedInstanceState) {
-        initObject(savedInstanceState);
-        initView(savedInstanceState);
-        initData(savedInstanceState);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        refreshData();
-    }
 //
 //    @ViewInject(R.id.tvTopTitle)
 //    private TextView tvTopTitle;

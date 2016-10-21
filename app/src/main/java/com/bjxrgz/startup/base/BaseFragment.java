@@ -26,6 +26,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 /**
  * Created by JiangZhiGuo on 2016/06/01
  * <p/>
@@ -39,6 +42,7 @@ public abstract class BaseFragment<T> extends Fragment {
     protected Bundle mBundle;// 接受数据的Bundle
     protected ProgressDialog loading;
     protected String logTag = "BaseFragment";// 子类的类名
+    private Unbinder unbinder;
 
     /**
      * 子类重写类似方法 获取对象
@@ -81,10 +85,13 @@ public abstract class BaseFragment<T> extends Fragment {
         return cls.getSimpleName();
     }
 
-    protected abstract View createView(LayoutInflater inflater, ViewGroup container,
-                                       Bundle savedInstanceState);
+    protected abstract void initObject(Bundle savedInstanceState);
 
-    protected abstract void viewCreate(View view, @Nullable Bundle savedInstanceState);
+    protected abstract int createViewRes(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
+
+    protected abstract void initView(View view, @Nullable Bundle savedInstanceState);
+
+    protected abstract void initData(Bundle savedInstanceState);
 
     /**
      * **********************************以下是生命周期*******************************
@@ -123,6 +130,7 @@ public abstract class BaseFragment<T> extends Fragment {
         setHasOptionsMenu(true);// Fragment与ActionBar和MenuItem集成
         loading = DialogUtils.createLoading(mActivity, getString(R.string.wait), true);
         mBundle = getArguments(); // 取出Bundle
+        initObject(savedInstanceState);
     }
 
     /**
@@ -134,7 +142,9 @@ public abstract class BaseFragment<T> extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = getView();
         if (view == null) {
-            view = createView(inflater, container, savedInstanceState);
+            int rootRes = createViewRes(inflater, container, savedInstanceState);
+            view = inflater.inflate(rootRes, container, false);
+            unbinder = ButterKnife.bind(mFragment, view);
         }
         return view;
     }
@@ -150,7 +160,7 @@ public abstract class BaseFragment<T> extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewCreate(view, savedInstanceState);
+        initView(view, savedInstanceState);
     }
 
     /**
@@ -160,6 +170,7 @@ public abstract class BaseFragment<T> extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        initData(savedInstanceState);
     }
 
     /**
@@ -231,6 +242,9 @@ public abstract class BaseFragment<T> extends Fragment {
         View view = getView();
         if (view != null) {
             ((ViewGroup) view.getParent()).removeView(view);
+        }
+        if (unbinder != null) {
+            unbinder.unbind();
         }
         super.onDestroyView();
     }

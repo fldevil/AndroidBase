@@ -26,6 +26,8 @@ import com.bjxrgz.startup.utils.ScreenUtils;
 
 import java.lang.reflect.ParameterizedType;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by JiangZhiGuo on 2016/06/01
  * <p/>
@@ -54,7 +56,17 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
         return cls.getSimpleName();
     }
 
-    protected abstract void create(Bundle savedInstanceState);
+    /* 相当于setContentView 在initView()里调用 */
+    public void initContentView(int res) {
+        setContentView(res);
+        ButterKnife.bind(this);
+    }
+
+    protected abstract void initObject(Bundle savedInstanceState);
+
+    protected abstract void initView(Bundle savedInstanceState);
+
+    protected abstract void initData();
 
     /**
      * ***********************************以下是生命周期***********************************
@@ -72,7 +84,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
         mActivity = this; // 实例
         loading = DialogUtils.createLoading(this, getString(R.string.wait), true);
         mFragmentManager = getSupportFragmentManager();
-        create(savedInstanceState); // 抽象方法
+        initObject(savedInstanceState);
+        initView(savedInstanceState);
     }
 
     /**
@@ -96,6 +109,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     public void onContentChanged() {
         super.onContentChanged();
+        initData();
     }
 
     /**

@@ -33,19 +33,13 @@ public class StartActivity extends BaseViewActivity<StartActivity> {
     }
 
     @Override
-    protected void initData(Bundle savedInstanceState) {
-        goHome(); // 跳转主页
+    protected void initData() {
+        goHome();
     }
 
-    @Override
-    protected void refreshData() {
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
+    /**
+     * 跳转主页
+     */
     private void goHome() {
         MyApp.mainHandler.postDelayed(new Runnable() {
             @Override

@@ -27,16 +27,10 @@ public class HomeActivity extends BaseViewActivity<HomeActivity> {
     @Override
     protected void initView(Bundle savedInstanceState) {
         initContentView(R.layout.activity_home);
-
     }
 
     @Override
-    protected void initData(Bundle savedInstanceState) {
-    }
-
-    @Override
-    protected void refreshData() {
-
+    protected void initData() {
     }
 
 }
