@@ -45,18 +45,17 @@ public class MyWebView extends WebView {
         String resDir = MyApp.instance.appInfo.getResDir();
         cacheDir = resDir + "web_cache";
 
-        // 还可以(can)goBack / (can)goForward
-
         // 设置监听
         this.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-            }
-
+            // 页面打开时
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
+            }
+            // 页面关闭时
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
             }
 
             // 打开内部连接
@@ -96,5 +95,25 @@ public class MyWebView extends WebView {
         settings.setAppCachePath(cacheDir);
         settings.setAppCacheEnabled(true);
         settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK); // 优先使用缓存
+    }
+
+    @Override
+    public void goBack() {
+        super.goBack();
+    }
+
+    @Override
+    public void goForward() {
+        super.goForward();
+    }
+
+    @Override
+    public boolean canGoBack() {
+        return super.canGoBack();
+    }
+
+    @Override
+    public boolean canGoForward() {
+        return super.canGoForward();
     }
 }
