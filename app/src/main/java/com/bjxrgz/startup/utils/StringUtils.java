@@ -300,7 +300,7 @@ public class StringUtils {
                 int lowByte = 256 + bytes[1];
                 ascii = (256 * highByte + lowByte) - 256 * 256;
             } else {
-                throw new IllegalArgumentException("Illegal resource string");
+                throw new IllegalArgumentException("不是单个汉字");
             }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -324,8 +324,7 @@ public class StringUtils {
             String output = "";
             try {
                 for (char anInput : input) {
-                    if (Character.toString(anInput).matches(
-                            "[\\u4E00-\\u9FA5]+")) {
+                    if (Character.toString(anInput).matches("[\\u4E00-\\u9FA5]+")) {
                         String[] temp = PinyinHelper.toHanyuPinyinStringArray(
                                 anInput, format);
                         output += temp[0];

@@ -185,7 +185,7 @@ public class AppUtils {
             sha1 = EncryptUtils.encryptSHA1ToString(signatures[0].toByteArray()).replaceAll("(?<=[0-9A-F]{2})[0-9A-F]{2}", ":$0");
         }
         boolean isSystem = (ApplicationInfo.FLAG_SYSTEM & ai.flags) == ApplicationInfo.FLAG_SYSTEM;
-        String resDir = getResDir(appName);
+        String resDir = getResDir(StringUtils.getPingYin(appName));
         FileUtils.createOrExistsDir(resDir); // 并创建
         String logDir = getLogDir(resDir);
         FileUtils.createOrExistsDir(logDir); // 并创建
