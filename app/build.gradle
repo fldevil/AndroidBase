@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt' // butterKnife
+apply plugin: 'org.greenrobot.greendao' // greenDao
 
 android {
 
@@ -17,7 +19,7 @@ android {
         bjxrgz_debug {
             keyAlias 'Bjxrgz'
             keyPassword 'Bjxrgz998'
-//            storeFile file('/Users/mengfd/Documents/projects/kaola/launch/android/kaola_android_key_pro_new.jks')
+//            storeFile file('/Users/mengfd/Documents/projects/kaola/launch/android/bjxrgz_android_debug.jks')
 //            storeFile file('E:/android_key/bjxrgz_android_debug.jks')
             storeFile file('D:/gitRep/Android/key/bjxrgz_android_debug.jks')
             storePassword 'Bjxrgz998'
@@ -71,23 +73,6 @@ android {
     // 以下两句防止图片导入报错
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
-}
-
-// butterKnife 配置
-apply plugin: 'com.neenbedankt.android-apt'
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-    }
-}
-
-// BaseRecyclerViewAdapterHelper配置
-repositories {
-    maven { url "https://jitpack.io" }
 }
 
 dependencies {
