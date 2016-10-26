@@ -24,9 +24,11 @@ import okhttp3.Request;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Converter;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * Created by JiangZhiGuo on 2016/10/13.
@@ -35,8 +37,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class HttpManager {
 
     private static String BASE_URL; // 当前使用的HOST
-    private static OkHttpClient tokenClient;
-    private static OkHttpClient emptyClient;
+    private static APIManager APITokenGson;
+    private static APIManager APITokenString;
+    private static APIManager APIEmptyGson;
+    private static APIManager APIEmptyString;
 
     public static void initAPP() {
         if (MyApp.DEBUG) {
@@ -44,30 +48,9 @@ public class HttpManager {
         } else {
             BASE_URL = APIManager.HOST_RELEASE;
         }
-        tokenClient = getClient(getTokenHeader());
-        emptyClient = getClient(getEmptyHeader());
     }
 
-    /**
-     * 获取OKHttp的client
-     */
-    private static OkHttpClient getClient(Interceptor header) {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.addInterceptor(header);
-        return builder.build();
-    }
-
-    public static OkHttpClient getTokenClient() {
-        return tokenClient;
-    }
-
-    public static OkHttpClient getEmptyClient() {
-        return emptyClient;
-    }
-
-    /**
-     * 构建头信息
-     */
+    /*构建头信息*/
     private static Interceptor getHeader(final Map<String, String> options) {
         return new Interceptor() {
             @Override
@@ -82,7 +65,7 @@ public class HttpManager {
         };
     }
 
-    private static Interceptor getEmptyHeader() {
+    private static Interceptor getHeaderEmpty() {
         HashMap<String, String> options = new HashMap<>();
         options.put("API_KEY", "330892d73e5f1171be4d8df7550bc2f3");
         options.put("Content-Type", "application/json;charset=utf-8");
@@ -90,7 +73,7 @@ public class HttpManager {
         return getHeader(options);
     }
 
-    private static Interceptor getTokenHeader() {
+    private static Interceptor getHeaderToken() {
         HashMap<String, String> options = new HashMap<>();
         options.put("API_KEY", "330892d73e5f1171be4d8df7550bc2f3");
         options.put("Content-Type", "application/json;charset=utf-8");
@@ -100,40 +83,81 @@ public class HttpManager {
         return getHeader(options);
     }
 
-    /*语言环境*/
-    private static Locale getLocale(Context context) {
-        return context.getResources().getConfiguration().locale;
+    /*数据解析构造器*/
+    private static GsonConverterFactory getGsonFactory() {
+        return GsonConverterFactory.create();
     }
 
-    /*是否为英语环境*/
-    private static boolean isEN(Context context) {
-        String language = getLocale(context).getLanguage();
-        return language.endsWith("en");
+    private static ScalarsConverterFactory getStringFactory() {
+        return ScalarsConverterFactory.create();
     }
 
-    /*是否为中文环境*/
-    private static boolean isZH(Context context) {
-        String language = getLocale(context).getLanguage();
-        return language.endsWith("zh");
-    }
-
-    /**
-     * 获取Retrofit实例
-     */
-    private static Retrofit getRetrofit(OkHttpClient client) {
-        Retrofit.Builder builder = new Retrofit.Builder();
-        builder.baseUrl(BASE_URL); // host
-        builder.addConverterFactory(GsonConverterFactory.create()); //gson构造器
-        builder.client(client); // client
+    /*获取OKHttp的client*/
+    private static OkHttpClient getClient(Interceptor header) {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        if (header != null) {
+            builder.addInterceptor(header);
+        }
         return builder.build();
     }
 
-    /**
-     * 获取service 开始请求网络
-     */
-    public static APIManager getService(OkHttpClient client) {
-        Retrofit retrofit = getRetrofit(client);
+    /*获取Retrofit实例*/
+    private static Retrofit getRetrofit(Interceptor header, Converter.Factory factory) {
+        Retrofit.Builder builder = new Retrofit.Builder();
+        builder.baseUrl(BASE_URL); // host
+        builder.addConverterFactory(factory); //解析构造器
+        builder.client(getClient(header)); // client
+        return builder.build();
+    }
+
+    /*获取service 开始请求网络*/
+    private static APIManager getService(Interceptor header, Converter.Factory factory) {
+        Retrofit retrofit = getRetrofit(header, factory);
         return retrofit.create(APIManager.class);
+    }
+
+    public static APIManager getAPITokenGson() {
+        if (APITokenGson == null) {
+            synchronized (HttpManager.class) {
+                if (APITokenGson == null) {
+                    APITokenGson = getService(getHeaderToken(), getGsonFactory());
+                }
+            }
+        }
+        return APITokenGson;
+    }
+
+    public static APIManager getAPITokenString() {
+        if (APITokenString == null) {
+            synchronized (HttpManager.class) {
+                if (APITokenString == null) {
+                    APITokenString = getService(getHeaderToken(), getStringFactory());
+                }
+            }
+        }
+        return APITokenString;
+    }
+
+    public static APIManager getAPIEmptyGson() {
+        if (APIEmptyGson == null) {
+            synchronized (HttpManager.class) {
+                if (APIEmptyGson == null) {
+                    APIEmptyGson = getService(getHeaderToken(), getStringFactory());
+                }
+            }
+        }
+        return APIEmptyGson;
+    }
+
+    public static APIManager getAPIEmptyString() {
+        if (APIEmptyString == null) {
+            synchronized (HttpManager.class) {
+                if (APIEmptyString == null) {
+                    APIEmptyString = getService(getHeaderToken(), getStringFactory());
+                }
+            }
+        }
+        return APIEmptyString;
     }
 
     /**
@@ -149,18 +173,19 @@ public class HttpManager {
             public void onResponse(Call<T> call, Response<T> response) {
                 int code = response.code();
                 Headers headers = response.headers();
-
-                if (response.isSuccessful()) { // 成功
+                if (code == 200) { // 200成功
                     T result = response.body();
-                    LogUtils.d(code + "\n" + headers.toString());
-
-                    String json = GsonManager.getInstance().toJson(result);
+                    String json;
+                    if (result instanceof String) {
+                        json = result.toString();
+                    } else {
+                        json = GsonManager.getInstance().toJson(result);
+                    }
                     LogUtils.json(json);
-
                     if (callBack != null) {
                         callBack.onSuccess(result);
                     }
-                } else { // 错误
+                } else { // 非200错误
                     ResponseBody error = response.errorBody();
                     if (error != null) {
                         try {
@@ -239,6 +264,23 @@ public class HttpManager {
         } else {
             LogUtils.e(ex.toString());
         }
+    }
+
+    /*语言环境*/
+    private static Locale getLocale(Context context) {
+        return context.getResources().getConfiguration().locale;
+    }
+
+    /*是否为英语环境*/
+    private static boolean isEN(Context context) {
+        String language = getLocale(context).getLanguage();
+        return language.endsWith("en");
+    }
+
+    /*是否为中文环境*/
+    private static boolean isZH(Context context) {
+        String language = getLocale(context).getLanguage();
+        return language.endsWith("zh");
     }
 
 }
