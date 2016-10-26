@@ -76,10 +76,9 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         logTag = getCls();
-        ScreenUtils.requestNoTitle(this);
-        ScreenUtils.requestPortrait(this);
-        InputUtils.initNoAuto(this);
-        AnimUtils.initBaseActivity(this);
+        ScreenUtils.initActivity(this);
+        InputUtils.initActivity(this);
+        AnimUtils.initActivity(this);
         super.onCreate(savedInstanceState);
         mActivity = this; // 实例
         loading = DialogUtils.createLoading(this, getString(R.string.wait), true);

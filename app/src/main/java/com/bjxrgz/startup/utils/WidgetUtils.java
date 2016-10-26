@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
-import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.transition.AutoTransition;
 import android.view.View;
@@ -36,28 +35,13 @@ public class WidgetUtils {
     }
 
     /**
-     * SnackBar
-     */
-    public static void showSnaker(View view, String message, String action,
-                                  View.OnClickListener listener) {
-
-        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).setAction(action, listener).show();
-    }
-
-    public static void showSnaker(View view, int message, String action,
-                                  View.OnClickListener listener) {
-
-        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).setAction(action, listener).show();
-    }
-
-    /**
      * 创建适配的PopupWindow，不要多次创建
      */
     public static PopupWindow createPopWindow(View popView) {
         PopupWindow popupWindow = new PopupWindow(popView,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT);
-        //还必须设置一个背景图，这里是透明背景
+        // 还必须设置一个背景图，这里是透明背景
         popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         popupWindow.setOutsideTouchable(true);//点击其他地方消失
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -72,7 +56,7 @@ public class WidgetUtils {
      */
     public static PopupWindow createPopWindow(View popView, int width, int height) {
         PopupWindow popupWindow = new PopupWindow(popView, width, height);
-        //还必须设置一个背景图，这里是透明背景
+        // 还必须设置一个背景图，这里是透明背景
         popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         popupWindow.setOutsideTouchable(true);//点击其他地方消失
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

@@ -81,7 +81,7 @@ public class AnimUtils {
     public static final int TRANS_SLIDE = 2;    // 指定边缘进出
     public static final int TRANS_FADE = 3;     // 透明度渐变进出
 
-    public static void initBaseActivity(Activity activity) {
+    public static void initActivity(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = activity.getWindow();
             window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
@@ -90,10 +90,8 @@ public class AnimUtils {
         }
     }
 
-    /**
-     * 只要进的动画就好，出的有时候执行不完全会bug
-     */
-    public static void initBaseFragment(Fragment fragment) {
+    public static void initFragment(Fragment fragment) {
+        // 只要进的动画就好，出的有时候执行不完全会bug
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             fragment.setEnterTransition(new AutoTransition());
 //            fragment.setExitTransition(new AutoTransition());
@@ -103,7 +101,7 @@ public class AnimUtils {
     }
 
     /**
-     * >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>帧动画<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+     * **********************************帧动画**********************************
      *
      * @param image      加载帧动画的imageView
      * @param animListID res的drawable目录下定义：下面的true为重复播放
@@ -122,39 +120,35 @@ public class AnimUtils {
     }
 
     /**
-     * >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>补间动画<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+     * **********************************补间动画**********************************
      * <p>
      * 渐变动画
      */
-    public static AlphaAnimation getAlpha(float from, float to) {
+    public static AlphaAnimation getAnimationAlpha(float from, float to) {
         return new AlphaAnimation(from, to);
     }
 
     /**
      * 移动动画
      */
-    public static TranslateAnimation getTranslate(float fromX, float toX,
-                                                  float fromY, float toY) {
+    public static TranslateAnimation getAnimationTranslate(float fromX, float toX, float fromY, float toY) {
         return new TranslateAnimation(
-                Animation.RELATIVE_TO_SELF, fromX,
-                Animation.RELATIVE_TO_SELF, toX,
-                Animation.RELATIVE_TO_SELF, fromY,
-                Animation.RELATIVE_TO_SELF, toY);
+                Animation.RELATIVE_TO_SELF, fromX, Animation.RELATIVE_TO_SELF, toX,
+                Animation.RELATIVE_TO_SELF, fromY, Animation.RELATIVE_TO_SELF, toY);
     }
 
     /**
      * 旋转动画
      */
-    public static RotateAnimation getRotate(float from, float to, float pivotX, float pivotY) {
-        return new RotateAnimation(from, to, Animation.RELATIVE_TO_SELF,
-                pivotX, Animation.RELATIVE_TO_SELF, pivotY);
+    public static RotateAnimation getAnimationRotate(float from, float to, float pivotX, float pivotY) {
+        return new RotateAnimation(from, to,
+                Animation.RELATIVE_TO_SELF, pivotX, Animation.RELATIVE_TO_SELF, pivotY);
     }
 
     /**
      * 缩放动画
      */
-    public static ScaleAnimation getScale(float fromX, float toX, float fromY,
-                                          float toY, float pivotX, float pivotY) {
+    public static ScaleAnimation getAnimationScale(float fromX, float toX, float fromY, float toY, float pivotX, float pivotY) {
         return new ScaleAnimation(fromX, toX, fromY, toY,
                 Animation.RELATIVE_TO_SELF, pivotX, Animation.RELATIVE_TO_SELF, pivotY);
     }
@@ -174,8 +168,18 @@ public class AnimUtils {
         set.setFillAfter(fill); // 是否保持在结束的位置
         set.setRepeatMode(mode); // 重复模式  (默认RESTART)
         set.setInterpolator(new DecelerateInterpolator());//此处为减速
-
         return set;
+    }
+
+    /**
+     * 补间动画group使用，ViewGroup.setLayoutAnimation(lac);
+     */
+    public static LayoutAnimationController getAnimationGroup(AnimationSet set, float delay) {
+        LayoutAnimationController lac = new LayoutAnimationController(set);
+        lac.setDelay(delay); // 开始延迟时间
+        lac.setOrder(LayoutAnimationController.ORDER_NORMAL); // 正常顺序
+        lac.setInterpolator(new LinearInterpolator()); // 正常速率
+        return lac;
     }
 
     /**
@@ -188,61 +192,44 @@ public class AnimUtils {
     }
 
     /**
-     * 监听开始, 结束, 重复
-     */
-    public static void setListener(Animation animation, Animation.AnimationListener listener) {
-
-        animation.setAnimationListener(listener);
-    }
-
-    /**
-     * 补间动画group使用，ViewGroup.setLayoutAnimation(lac);
-     */
-    public static LayoutAnimationController getGroupAnimation(AnimationSet set, float delay) {
-
-        LayoutAnimationController lac = new LayoutAnimationController(set);
-        lac.setDelay(delay); // 开始延迟时间
-        lac.setOrder(LayoutAnimationController.ORDER_NORMAL); // 正常顺序
-        lac.setInterpolator(new LinearInterpolator()); // 正常速率
-
-        return lac;
-    }
-
-    /**
      * ViewGroup启动当时不一样
      */
-    public static void startLayoutAnimation(ViewGroup group,
-                                            LayoutAnimationController controller) {
+    public static void startAnimationLayout(ViewGroup group, LayoutAnimationController controller) {
         group.setLayoutAnimation(controller);
         group.startLayoutAnimation();
     }
 
     /**
+     * 监听开始, 结束, 重复
+     */
+    public static void setAnimationListener(Animation animation, Animation.AnimationListener listener) {
+        animation.setAnimationListener(listener);
+    }
+
+    /**
      * 监听开始, 结束, 重复, 看清楚和view的加载不一样，调用者不一样
      */
-    public static void setLayoutAnimationListener(ViewGroup group,
-                                                  Animation.AnimationListener listener) {
+    public static void setAnimationLayoutListener(ViewGroup group, Animation.AnimationListener listener) {
         group.setLayoutAnimationListener(listener);
     }
 
     /**
-     * >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>属性动画<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+     * **********************************属性动画**********************************
      *
      * @param view     执行动画的view，补间动画可以最后设置view
      * @param property 看上面的标志
      * @param values   除了起始值和终点值之外，还可以有过渡值
      */
-    public static ObjectAnimator getObject(View view, String property, float... values) {
+    public static ObjectAnimator getAnimator(View view, String property, float... values) {
         return ObjectAnimator.ofFloat(view, property, values);
     }
 
     /**
      * set.start(); set.pause(); set.cancel(); set.end(); ...
      */
-    public static AnimatorSet getObjectSet(boolean together, long startDelay,
-                                           long duration, Animator... items) {
+    public static AnimatorSet getAnimatorSet(boolean together, long startDelay,
+                                             long duration, Animator... items) {
         AnimatorSet set = new AnimatorSet();
-
         set.setStartDelay(startDelay); // 开始延迟时间
         set.setDuration(duration); // 持续时间
         set.setInterpolator(new DecelerateInterpolator());//此处为减速
@@ -257,10 +244,8 @@ public class AnimUtils {
     /**
      * 属性动画group使用，ViewGroup.setLayoutTransition(transition);
      */
-    public static LayoutTransition getGroupAnimator(long duration, Animator appear,
-                                                    Animator disappear) {
+    public static LayoutTransition getAnimatorGroup(long duration, Animator appear, Animator disappear) {
         LayoutTransition transition = new LayoutTransition();
-
         transition.setDuration(duration);
         transition.setAnimator(LayoutTransition.APPEARING, appear);
         transition.setAnimator(LayoutTransition.DISAPPEARING, disappear);
@@ -282,18 +267,17 @@ public class AnimUtils {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static Animator getCircular(View view, int centerX, int centerY,
                                        float startRadius, float endRadius) {
-        return ViewAnimationUtils.createCircularReveal(view,
-                centerX, centerY, startRadius, endRadius);
+        return ViewAnimationUtils.createCircularReveal(view, centerX, centerY, startRadius, endRadius);
     }
 
     /**
      * 监听开始，结束，取消，重复
      */
-    public static void addListener(ValueAnimator animator, Animator.AnimatorListener listener) {
+    public static void addAnimatorListener(ValueAnimator animator, Animator.AnimatorListener listener) {
         animator.addListener(listener);
     }
 
-    public static void removeListeners(ValueAnimator animator) {
+    public static void removeAnimatorListeners(ValueAnimator animator) {
         animator.removeAllListeners();
     }
 
@@ -301,17 +285,16 @@ public class AnimUtils {
      * ObjectAnimator继承自ValueAnimator吧，但ValueAnimator没有操作view四大属性的方法
      * 看看底下这个方法，就是给ValueAnimator用的，可以更灵活的操作view的各种属性
      */
-    public static void addUpdateListener(ValueAnimator animator,
-                                         ValueAnimator.AnimatorUpdateListener listener) {
+    public static void addAnimatorUpdateListener(ValueAnimator animator, ValueAnimator.AnimatorUpdateListener listener) {
         animator.addUpdateListener(listener);
     }
 
-    public static void removeUpdateListeners(ValueAnimator animator) {
+    public static void removeAnimatorUpdateListeners(ValueAnimator animator) {
         animator.removeAllUpdateListeners();
     }
 
     /**
-     * >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>切换动画<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+     * **********************************切换动画**********************************
      * <p>
      * 除了可以xml里添加切换的view之外，还可以代码中动态添加
      */
@@ -329,16 +312,6 @@ public class AnimUtils {
         // 也可以AnimationUtils.load创建动画
         flipper.setInAnimation(AnimationUtils.makeInAnimation(context, true));
         flipper.setOutAnimation(AnimationUtils.makeOutAnimation(context, true));
-
-//        flipper.setInAnimation(context, android.R.anim.fade_in);
-
-//        AlphaAnimation alphaIn = getAlpha(0, 1);
-//        alphaIn.setDuration(1000);
-//        flipper.setInAnimation(alphaIn);
-//        AlphaAnimation alphaOut = getAlpha(0.2F, 0);
-//        alphaOut.setDuration(500);
-//        flipper.setOutAnimation(alphaOut);
-
         flipper.setFlipInterval(delay); // 切换时间间隔
         flipper.setAutoStart(auto); // 是否自动幻灯片
         return flipper;
@@ -353,7 +326,6 @@ public class AnimUtils {
         // 也可以AnimationUtils.load创建动画
         switcher.setInAnimation(AnimationUtils.makeInAnimation(context, true));
         switcher.setOutAnimation(AnimationUtils.makeOutAnimation(context, true));
-
         switcher.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
             public View makeView() {
@@ -387,7 +359,7 @@ public class AnimUtils {
     }
 
     /**
-     * >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>过渡动画<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+     * **********************************过渡动画**********************************
      * <p>
      * 用于切换的场景,就是布局
      */
@@ -404,19 +376,18 @@ public class AnimUtils {
         TransitionSet set = new TransitionSet();
         set.setDuration(duration);
         set.setInterpolator(new LinearInterpolator());
-
-        if (together)
+        if (together) {
             set.setOrdering(TransitionSet.ORDERING_TOGETHER);
-        else
+        } else {
             set.setOrdering(TransitionSet.ORDERING_SEQUENTIAL);
-
-        if (mode == TRANS_EXPLODE)
+        }
+        if (mode == TRANS_EXPLODE) {
             set.addTransition(new Explode());
-        else if (mode == TRANS_FADE)
+        } else if (mode == TRANS_FADE) {
             set.addTransition(new Fade(Fade.OUT)).addTransition(new Fade(Fade.IN));
-        else if (mode == TRANS_SLIDE)
+        } else if (mode == TRANS_SLIDE) {
             set.addTransition(new Slide(Gravity.BOTTOM));
-
+        }
         set.addTransition(new ChangeBounds()); // 捕捉到边界
         set.addTransition(new ChangeTransform()); // 捕捉到旋转
         set.addTransition(new ChangeImageTransform());  // 捕捉Matrix
@@ -431,7 +402,7 @@ public class AnimUtils {
      * 监听开始、结束、取消、暂停、结束
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    public static void addListener(Transition transition, Transition.TransitionListener listener) {
+    public static void addTransListener(Transition transition, Transition.TransitionListener listener) {
         transition.addListener(listener);
     }
 

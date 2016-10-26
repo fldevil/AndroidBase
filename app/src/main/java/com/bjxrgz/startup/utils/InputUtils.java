@@ -21,7 +21,7 @@ public class InputUtils {
     /**
      * 不自动遮挡弹出等
      */
-    public static void initNoAuto(Activity activity) {
+    public static void initActivity(Activity activity) {
         Window window = activity.getWindow();
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);// 键盘不会遮挡输入框
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN); // 不自动弹键盘

@@ -10,6 +10,8 @@ import android.text.TextUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -441,4 +443,33 @@ public class ConvertUtils {
         final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
         return (int) (pxValue / fontScale + 0.5f);
     }
+
+    public static boolean InputStrema2File(InputStream is, File target) {
+        FileOutputStream fileOutputStream = null;
+        try {
+            FileUtils.createOrExistsFile(target);
+            fileOutputStream = new FileOutputStream(target);
+            byte[] buffer = new byte[1024];
+            int len;
+
+            while ((len = is.read(buffer)) != -1) {
+                fileOutputStream.write(buffer, 0, len);
+            }
+            fileOutputStream.flush();
+            return true;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fileOutputStream != null) {
+                    fileOutputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
 }

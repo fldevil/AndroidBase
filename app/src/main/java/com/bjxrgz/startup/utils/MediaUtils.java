@@ -7,12 +7,15 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,31 +64,6 @@ public class MediaUtils {
     }
 
     /**
-     * 拍照 , (Bitmap) intent.getExtras().get("data");
-     * 不加保存路径的话，图片会被压缩保存
-     */
-    public static Intent getCameraIntent(File cameraFile) {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        Uri uri = Uri.fromFile(cameraFile);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-        return intent;
-    }
-
-    /**
-     * 在onActivityResult中获取拍照所得到的照片
-     */
-    public static Bitmap getCameraBitmap(File cameraFile, double maxSize) {
-        if (cameraFile == null || cameraFile.length() == 0) {
-            FileUtils.deleteFile(cameraFile); // 删除垃圾文件
-            return null;
-        } else {
-            Bitmap adjust = ImageUtils.adjustPhoto(cameraFile); // 角度
-            FileUtils.deleteFile(cameraFile); // 删除源文件
-            return ImageUtils.compressBySize(adjust, ImageUtils.FORMAT, maxSize);// 转换文件
-        }
-    }
-
-    /**
      * 相册
      */
     public static Intent getPictureIntent() {
@@ -106,11 +84,23 @@ public class MediaUtils {
     public static Bitmap getPictureBitmap(Activity activity, Intent data, double maxSize) {
         if (data == null) {
             return null;
+        } else {
+            Uri uri = getUri(activity, data);
+            InputStream stream = openInput(activity, uri);
+            return ImageUtils.getBitmap(stream, maxSize);
         }
-        Uri uri = getUri(activity, data);
-        InputStream stream = openInput(activity, uri);
-        Bitmap src = BitmapFactory.decodeStream(stream);
-        return ImageUtils.compressBySize(src, ImageUtils.FORMAT, maxSize);
+    }
+
+    /**
+     * 获取Uri的输入流, 相册选取图片时可读取 data.getData()
+     */
+    public static InputStream openInput(Context context, Uri uri) {
+        try {
+            return context.getContentResolver().openInputStream(uri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -150,15 +140,73 @@ public class MediaUtils {
     }
 
     /**
-     * 获取Uri的输入流, 相册选取图片时可读取 data.getData()
+     * 拍照 , (Bitmap) intent.getExtras().get("data");
+     * 不加保存路径的话，图片会被压缩保存
      */
-    public static InputStream openInput(Context context, Uri uri) {
+    public static Intent getCameraIntent(File cameraFile) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Uri uri = Uri.fromFile(cameraFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        return intent;
+    }
+
+    /**
+     * 在onActivityResult中获取拍照所得到的照片
+     */
+    public static Bitmap getCameraBitmap(File cameraFile, double maxSize) {
+        if (cameraFile == null || cameraFile.length() == 0) {
+            FileUtils.deleteFile(cameraFile); // 删除垃圾文件
+            return null;
+        } else {
+            Bitmap small = ImageUtils.getBitmap(cameraFile, maxSize); // File转Bitmap(压缩)
+            FileUtils.createFileByDeleteOldFile(cameraFile);// 删除源文件
+            ImageUtils.save(small, cameraFile.getAbsolutePath(), ImageUtils.FORMAT, true); // 保存图像
+            return adjust(cameraFile); // 摆正角度
+        }
+    }
+
+    /**
+     * 摆正图片旋转角度
+     */
+    public static Bitmap adjust(File file) {
+        Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+        int degree = getRotateDegree(file.getAbsolutePath());
+        if (degree != 0) {
+            Matrix m = new Matrix();
+            m.setRotate(degree);
+            return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, true);
+        } else {
+            return bitmap;
+        }
+    }
+
+    /**
+     * 获取图片旋转角度
+     */
+    private static int getRotateDegree(String filePath) {
+        int degree = 0;
         try {
-            return context.getContentResolver().openInputStream(uri);
-        } catch (FileNotFoundException e) {
+            ExifInterface exifInterface = new ExifInterface(filePath);
+            int orientation = exifInterface.getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_NORMAL);
+            if (orientation != -1) {
+                switch (orientation) {
+                    case ExifInterface.ORIENTATION_ROTATE_90:
+                        degree = 90;
+                        break;
+                    case ExifInterface.ORIENTATION_ROTATE_180:
+                        degree = 180;
+                        break;
+                    case ExifInterface.ORIENTATION_ROTATE_270:
+                        degree = 270;
+                        break;
+                }
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return degree;
     }
 
     /**

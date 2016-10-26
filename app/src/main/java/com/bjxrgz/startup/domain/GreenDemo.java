@@ -5,6 +5,6 @@ package com.bjxrgz.startup.domain;
  * describe
  */
 
-public class Red {
+public class GreenDemo {
 
 }

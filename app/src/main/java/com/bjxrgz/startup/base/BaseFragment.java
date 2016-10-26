@@ -116,7 +116,7 @@ public abstract class BaseFragment<T> extends Fragment {
             mActivity = (FragmentActivity) context;
             mFragmentManager = mActivity.getSupportFragmentManager();
         }
-        AnimUtils.initBaseFragment(this); // 过渡动画效果
+        AnimUtils.initFragment(this); // 过渡动画效果
         mFragment = this;
     }
 
@@ -241,10 +241,10 @@ public abstract class BaseFragment<T> extends Fragment {
         // 这里的做法是个onCreateView配套的
         View view = getView();
         if (view != null) {
-            ((ViewGroup) view.getParent()).removeView(view);
-        }
-        if (unbinder != null) {
-            unbinder.unbind();
+            ViewGroup parent = (ViewGroup) view.getParent();
+            if (parent != null) {
+                parent.removeView(view);
+            }
         }
         super.onDestroyView();
     }
@@ -263,6 +263,9 @@ public abstract class BaseFragment<T> extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        if (unbinder != null) {
+            unbinder.unbind();
+        }
     }
 
     /**

@@ -330,7 +330,7 @@ public class PhoneUtils {
      * 直接发送短信
      * <uses-permission android:name="android.permission.SEND_SMS"/>
      */
-    public static void senSMS(Context context, String phoneNumber, String content) {
+    public static void sendSMS(Context context, String phoneNumber, String content) {
         if (StringUtils.isEmpty(content)) return;
         PendingIntent sentIntent = PendingIntent.getBroadcast(context, 0, new Intent(), 0);
         SmsManager smsManager = SmsManager.getDefault();

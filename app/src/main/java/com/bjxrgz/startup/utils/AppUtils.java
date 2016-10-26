@@ -217,8 +217,6 @@ public class AppUtils {
 
     /**
      * 判断SD卡是否可用
-     *
-     * @return true : 可用<br>false : 不可用
      */
     private static boolean isSDCardEnable() {
         return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
@@ -256,11 +254,9 @@ public class AppUtils {
      */
     public static void clearRes() {
         String resDir = MyApp.instance.appInfo.getResDir();
-        List<File> fileList = FileUtils.listFilesInDir(resDir, true);
+        List<File> fileList = FileUtils.listFilesAndDirInDir(resDir, true);
         for (File file : fileList) {
-            if (FileUtils.isFile(file)) {
-                FileUtils.deleteFile(file);
-            }
+            FileUtils.deleteDir(file);
         }
     }
 
@@ -273,10 +269,10 @@ public class AppUtils {
         File internalFilesDir = context.getFilesDir();
         File internalCacheDir = context.getCacheDir();
 
-        FileUtils.deleteFilesInDir(externalFilesDir);
-        FileUtils.deleteFilesInDir(externalCacheDir);
-        FileUtils.deleteFilesInDir(internalFilesDir);
-        FileUtils.deleteFilesInDir(internalCacheDir);
+        FileUtils.deleteFilesAndDirInDir(externalFilesDir);
+        FileUtils.deleteFilesAndDirInDir(externalCacheDir);
+        FileUtils.deleteFilesAndDirInDir(internalFilesDir);
+        FileUtils.deleteFilesAndDirInDir(internalCacheDir);
     }
 
     /**

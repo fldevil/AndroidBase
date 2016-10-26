@@ -18,6 +18,11 @@ import android.view.WindowManager;
  */
 public class ScreenUtils {
 
+    public static void initActivity(AppCompatActivity activity){
+        requestNoTitle(activity);
+        requestPortrait(activity);
+    }
+
     /**
      * 无actionBar
      */

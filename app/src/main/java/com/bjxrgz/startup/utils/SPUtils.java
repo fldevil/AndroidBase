@@ -17,7 +17,7 @@ public class SPUtils {
      * 获取默认Preferences
      */
     public static SharedPreferences getSharedPreferences(Context context) {
-        // return ((Activity) context).getPreferences(Context.MODE_PRIVATE);
+//         return ((Activity) context).getPreferences(Context.MODE_PRIVATE);
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
 

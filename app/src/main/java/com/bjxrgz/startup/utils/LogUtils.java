@@ -99,7 +99,7 @@ public class LogUtils {
             return;
         }
         String logDir = MyApp.instance.appInfo.getLogDir();
-        String logFileName = TimeUtils.genBillTime();
+        String logFileName = TimeUtils.genBillTime() + ".txt";
         File logFile = new File(logDir, logFileName);
         FileUtils.createFileByDeleteOldFile(logFile);
         FileUtils.writeFileFromString(logFile, content, true);
