@@ -444,32 +444,4 @@ public class ConvertUtils {
         return (int) (pxValue / fontScale + 0.5f);
     }
 
-    public static boolean InputStrema2File(InputStream is, File target) {
-        FileOutputStream fileOutputStream = null;
-        try {
-            FileUtils.createOrExistsFile(target);
-            fileOutputStream = new FileOutputStream(target);
-            byte[] buffer = new byte[1024];
-            int len;
-
-            while ((len = is.read(buffer)) != -1) {
-                fileOutputStream.write(buffer, 0, len);
-            }
-            fileOutputStream.flush();
-            return true;
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (fileOutputStream != null) {
-                    fileOutputStream.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return false;
-    }
-
 }

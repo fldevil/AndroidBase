@@ -130,7 +130,7 @@ public class ImageUtils {
         String dir = MyApp.instance.appInfo.getResDir();
         String fileName = StringUtils.getRandom(8) + ".jpg";
         File file = new File(dir, fileName);
-        ConvertUtils.InputStrema2File(is, file);
+        FileUtils.writeFileFromIS(file, is, false);
         Bitmap result = getBitmap(file, maxSize);
         FileUtils.deleteFile(file);
         return result;

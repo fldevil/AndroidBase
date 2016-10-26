@@ -64,7 +64,7 @@ public class MediaUtils {
     }
 
     /**
-     * 相册
+     * 相册意图
      */
     public static Intent getPictureIntent() {
         Intent intent = new Intent();
@@ -103,9 +103,7 @@ public class MediaUtils {
         return null;
     }
 
-    /**
-     * 解决小米手机上获取图片路径为null的情况
-     */
+    /*解决小米手机上获取图片路径为null的情况*/
     private static Uri getUri(Context context, Intent intent) {
         Uri uri = intent.getData();
         String type = intent.getType(); // 小米的type不是null 其他的是
@@ -140,8 +138,7 @@ public class MediaUtils {
     }
 
     /**
-     * 拍照 , (Bitmap) intent.getExtras().get("data");
-     * 不加保存路径的话，图片会被压缩保存
+     * 拍照 , 不加保存路径的话，图片会被压缩保存
      */
     public static Intent getCameraIntent(File cameraFile) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

@@ -25,6 +25,10 @@ import retrofit2.http.QueryMap;
  */
 public interface APIManager {
 
+    /* BaseURL最好以/结尾 */
+    String HOST_DEBUG = "http://www.bjxrgz.com:808/bio/api/v1/"; // 测试
+    String HOST_RELEASE = "http://www.bjxrgz.com:808/bio/api/v1/"; // 正式
+
     @GET("home")
     Call<ResponseBody> getUser(); // 从ResponseBody里获取string
 
