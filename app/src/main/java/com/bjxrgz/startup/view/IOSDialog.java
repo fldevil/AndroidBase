@@ -1,4 +1,4 @@
-package com.bjxrgz.startup.utils;
+package com.bjxrgz.startup.view;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -17,14 +17,10 @@ import com.bjxrgz.startup.R;
  * <p/>
  * ISO风格对话框
  */
-public class CustomDialog extends Dialog {
+public class IOSDialog extends Dialog {
 
-    public CustomDialog(Context context) {
-        super(context);
-    }
-
-    public CustomDialog(Context context, int theme) {
-        super(context, theme);
+    public IOSDialog(Context context) {
+        super(context, R.style.DialogIOS);
     }
 
     public static class Builder {
@@ -83,10 +79,8 @@ public class CustomDialog extends Dialog {
         /**
          * Set the positive button resource and it's listener
          */
-        public Builder setPositiveButton(int confirm_btnText,
-                                         OnClickListener listener) {
-            this.confirm_btnText = (String) context
-                    .getText(confirm_btnText);
+        public Builder setPositiveButton(int confirm_btnText, OnClickListener listener) {
+            this.confirm_btnText = (String) context.getText(confirm_btnText);
             this.confirm_btnClickListener = listener;
             return this;
         }
@@ -94,8 +88,7 @@ public class CustomDialog extends Dialog {
         /**
          * Set the positive button and it's listener
          */
-        public Builder setPositiveButton(String confirm_btnText,
-                                         OnClickListener listener) {
+        public Builder setPositiveButton(String confirm_btnText, OnClickListener listener) {
             this.confirm_btnText = confirm_btnText;
             this.confirm_btnClickListener = listener;
             return this;
@@ -104,10 +97,8 @@ public class CustomDialog extends Dialog {
         /**
          * Set the negative button resource and it's listener
          */
-        public Builder setNegativeButton(int cancel_btnText,
-                                         OnClickListener listener) {
-            this.cancel_btnText = (String) context
-                    .getText(cancel_btnText);
+        public Builder setNegativeButton(int cancel_btnText, OnClickListener listener) {
+            this.cancel_btnText = (String) context.getText(cancel_btnText);
             this.cancel_btnClickListener = listener;
             return this;
         }
@@ -115,21 +106,18 @@ public class CustomDialog extends Dialog {
         /**
          * Set the negative button and it's listener
          */
-        public Builder setNegativeButton(String cancel_btnText,
-                                         OnClickListener listener) {
+        public Builder setNegativeButton(String cancel_btnText, OnClickListener listener) {
             this.cancel_btnText = cancel_btnText;
             this.cancel_btnClickListener = listener;
             return this;
         }
 
-        public CustomDialog create() {
-            LayoutInflater inflater = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        public IOSDialog create() {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             // instantiate the dialog with the custom Theme
-            final CustomDialog dialog = new CustomDialog(context, R.style.mCustomDialog);
-            View layout = inflater.inflate(R.layout.dialog_custom, null);
-            dialog.addContentView(layout, new LayoutParams(
-                    LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+            final IOSDialog dialog = new IOSDialog(context);
+            View layout = inflater.inflate(R.layout.dialog_ios, null);
+            dialog.addContentView(layout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             // set the dialog title
             ((TextView) layout.findViewById(R.id.title)).setText(title);
             ((TextView) layout.findViewById(R.id.title)).getPaint().setFakeBoldText(true);
@@ -139,21 +127,18 @@ public class CustomDialog extends Dialog {
             // set the confirm button
             if (confirm_btnText != null) {
                 btnCount++;
-                ((Button) layout.findViewById(R.id.confirm_btn))
-                        .setText(confirm_btnText);
+                ((Button) layout.findViewById(R.id.confirm_btn)).setText(confirm_btnText);
                 if (confirm_btnClickListener != null) {
-                    ((Button) layout.findViewById(R.id.confirm_btn))
-                            .setOnClickListener(new View.OnClickListener() {
-                                public void onClick(View v) {
-                                    confirm_btnClickListener.onClick(dialog,
-                                            DialogInterface.BUTTON_POSITIVE);
-                                }
-                            });
+                    (layout.findViewById(R.id.confirm_btn)).setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            confirm_btnClickListener.onClick(dialog,
+                                    DialogInterface.BUTTON_POSITIVE);
+                        }
+                    });
                 }
             } else {
                 // if no confirm button just set the visibility to GONE
-                layout.findViewById(R.id.confirm_btn).setVisibility(
-                        View.GONE);
+                layout.findViewById(R.id.confirm_btn).setVisibility(View.GONE);
             }
             // set the cancel button
             if (cancel_btnText != null) {
@@ -161,23 +146,20 @@ public class CustomDialog extends Dialog {
                 ((Button) layout.findViewById(R.id.cancel_btn))
                         .setText(cancel_btnText);
                 if (cancel_btnClickListener != null) {
-                    ((Button) layout.findViewById(R.id.cancel_btn))
-                            .setOnClickListener(new View.OnClickListener() {
-                                public void onClick(View v) {
-                                    cancel_btnClickListener.onClick(dialog,
-                                            DialogInterface.BUTTON_NEGATIVE);
-                                }
-                            });
+                    (layout.findViewById(R.id.cancel_btn)).setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            cancel_btnClickListener.onClick(dialog,
+                                    DialogInterface.BUTTON_NEGATIVE);
+                        }
+                    });
                 }
             } else {
                 // if no confirm button just set the visibility to GONE
-                layout.findViewById(R.id.cancel_btn).setVisibility(
-                        View.GONE);
+                layout.findViewById(R.id.cancel_btn).setVisibility(View.GONE);
             }
 
             if (btnCount < 2) {
-                layout.findViewById(R.id.btnCutLine).setVisibility(
-                        View.GONE);
+                layout.findViewById(R.id.btnCutLine).setVisibility(View.GONE);
             }
 
             // set the content message
@@ -188,10 +170,8 @@ public class CustomDialog extends Dialog {
             if (contentView != null) {
                 // if no message set
                 // add the contentView to the dialog body
-                ((LinearLayout) layout.findViewById(R.id.llContentView))
-                        .removeAllViews();
-                ((LinearLayout) layout.findViewById(R.id.llContentView)).addView(
-                        contentView);
+                ((LinearLayout) layout.findViewById(R.id.llContentView)).removeAllViews();
+                ((LinearLayout) layout.findViewById(R.id.llContentView)).addView(contentView);
             }
             dialog.setContentView(layout);
             return dialog;

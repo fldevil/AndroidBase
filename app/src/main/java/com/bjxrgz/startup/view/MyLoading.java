@@ -14,12 +14,12 @@ import com.bjxrgz.startup.R;
 public class MyLoading extends ProgressDialog {
 
     public MyLoading(Context context) {
-        super(context, R.style.CustomProgressDialog);
+        super(context, R.style.DialogMyLoading);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dialog_custom_loading);
+        setContentView(R.layout.dialog_my_loading);
     }
 }

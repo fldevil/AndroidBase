@@ -21,15 +21,15 @@ import java.util.Calendar;
 /**
  * Created by Jiang on 2016/10/13
  * <p/>
- * DialogUtils: 获取对话框 alert，progress，单选，多选，日期
+ * DialogUtils: 对话框(alert，progress)，单选，多选，日期
  */
 public class DialogUtils {
 
     /**
      * 自定义对话框
      */
-    public static Dialog createCustom(Context context, View view) {
-        final Dialog dialog = new Dialog(context, R.style.mCustomDialog);
+    public static Dialog createCustom(Context context, int theme, View view) {
+        final Dialog dialog = new Dialog(context, theme);
         if (context instanceof Activity) {
             Activity activity = (Activity) context;
             WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
@@ -43,8 +43,8 @@ public class DialogUtils {
     /**
      * 自定义对话框
      */
-    public static Dialog createCustom(Activity activity, View view, float height, float width) {
-        final Dialog dialog = new Dialog(activity, R.style.mCustomDialog);
+    public static Dialog createCustom(Activity activity, int theme, View view, float height, float width) {
+        final Dialog dialog = new Dialog(activity, theme);
         WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
         DisplayMetrics d = activity.getResources().getDisplayMetrics(); // 获取屏幕宽、高用
         if (height != 0) {
