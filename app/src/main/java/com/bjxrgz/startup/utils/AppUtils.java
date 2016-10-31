@@ -253,7 +253,7 @@ public class AppUtils {
      * 清除所有资源
      */
     public static void clearRes() {
-        String resDir = MyApp.instance.appInfo.getResDir();
+        String resDir = MyApp.appInfo.getResDir();
         List<File> fileList = FileUtils.listFilesAndDirInDir(resDir, true);
         for (File file : fileList) {
             FileUtils.deleteDir(file);
@@ -309,7 +309,7 @@ public class AppUtils {
         Intent intent = new Intent();
         intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
-        String packageName = MyApp.instance.appInfo.getPackageName();
+        String packageName = MyApp.appInfo.getPackageName();
         intent.setData(Uri.parse("package:" + packageName));
         return intent;
     }

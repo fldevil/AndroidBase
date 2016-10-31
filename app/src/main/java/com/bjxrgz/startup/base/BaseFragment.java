@@ -18,9 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 
-import com.bjxrgz.startup.R;
+import com.bjxrgz.startup.manager.ViewManager;
 import com.bjxrgz.startup.utils.AnimUtils;
-import com.bjxrgz.startup.utils.DialogUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -87,7 +86,7 @@ public abstract class BaseFragment<T> extends Fragment {
 
     protected abstract void initObject(Bundle savedInstanceState);
 
-    protected abstract int createViewRes(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
+    protected abstract int createViewId(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
 
     protected abstract void initView(View view, @Nullable Bundle savedInstanceState);
 
@@ -128,7 +127,7 @@ public abstract class BaseFragment<T> extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);// Fragment与ActionBar和MenuItem集成
-        loading = DialogUtils.createLoading(mActivity, getString(R.string.wait), true);
+        loading = ViewManager.createLoading(mActivity);
         mBundle = getArguments(); // 取出Bundle
         initObject(savedInstanceState);
     }
@@ -142,7 +141,7 @@ public abstract class BaseFragment<T> extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = getView();
         if (view == null) {
-            int rootRes = createViewRes(inflater, container, savedInstanceState);
+            int rootRes = createViewId(inflater, container, savedInstanceState);
             view = inflater.inflate(rootRes, container, false);
             unbinder = ButterKnife.bind(mFragment, view);
         }

@@ -16,7 +16,7 @@ import java.io.File;
 public class LogUtils {
 
     public static void initApp(boolean IS_LOG) {
-        String logTag = MyApp.instance.appInfo.getName();
+        String logTag = MyApp.appInfo.getName();
         Logger.Settings settings = Logger.init(logTag); // 打印tag
         settings.setMethodCount(3);// 3以上才能显示调用方法
         settings.hideThreadInfo(); // 隐藏线程显示
@@ -98,7 +98,7 @@ public class LogUtils {
         if (TextUtils.isEmpty(content)) {
             return;
         }
-        String logDir = MyApp.instance.appInfo.getLogDir();
+        String logDir = MyApp.appInfo.getLogDir();
         String logFileName = TimeUtils.genBillTime() + ".txt";
         File logFile = new File(logDir, logFileName);
         FileUtils.createFileByDeleteOldFile(logFile);

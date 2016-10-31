@@ -14,7 +14,7 @@ import butterknife.BindView;
 /**
  * Created by JiangZhiGuo on 2016/06/01
  * <p/>
- * describe 欢迎界面，启动界面
+ * describe 启动界面
  */
 public class StartActivity extends BaseViewActivity<StartActivity> {
 

@@ -42,7 +42,7 @@ public class MyWebView extends WebView {
     }
 
     private void init(Context context) {
-        String resDir = MyApp.instance.appInfo.getResDir();
+        String resDir = MyApp.appInfo.getResDir();
         cacheDir = resDir + "web_cache";
 
         // 设置监听
@@ -52,6 +52,7 @@ public class MyWebView extends WebView {
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
             }
+
             // 页面关闭时
             @Override
             public void onPageFinished(WebView view, String url) {

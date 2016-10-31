@@ -94,7 +94,7 @@ public class MediaUtils {
     /**
      * 获取Uri的输入流, 相册选取图片时可读取 data.getData()
      */
-    public static InputStream openInput(Context context, Uri uri) {
+    private static InputStream openInput(Context context, Uri uri) {
         try {
             return context.getContentResolver().openInputStream(uri);
         } catch (FileNotFoundException e) {
@@ -158,6 +158,9 @@ public class MediaUtils {
             Bitmap small = ImageUtils.getBitmap(cameraFile, maxSize); // File转Bitmap(压缩)
             FileUtils.createFileByDeleteOldFile(cameraFile);// 删除源文件
             ImageUtils.save(small, cameraFile.getAbsolutePath(), ImageUtils.FORMAT, true); // 保存图像
+            if (small != null && !small.isRecycled()) {
+                small.recycle();
+            }
             return adjust(cameraFile); // 摆正角度
         }
     }
@@ -165,13 +168,17 @@ public class MediaUtils {
     /**
      * 摆正图片旋转角度
      */
-    public static Bitmap adjust(File file) {
+    private static Bitmap adjust(File file) {
         Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
         int degree = getRotateDegree(file.getAbsolutePath());
         if (degree != 0) {
             Matrix m = new Matrix();
             m.setRotate(degree);
-            return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, true);
+            Bitmap adjust = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, true);
+            if (!bitmap.isRecycled()) {
+                bitmap.recycle();
+            }
+            return adjust;
         } else {
             return bitmap;
         }
@@ -214,7 +221,7 @@ public class MediaUtils {
      * @param orderBy    排序
      * @return 查询到的数据
      */
-    public static List<Map<String, String>> getContentProvider(Context context,
+    private static List<Map<String, String>> getContentProvider(Context context,
                                                                Uri uri,
                                                                String[] projection,
                                                                String orderBy) {

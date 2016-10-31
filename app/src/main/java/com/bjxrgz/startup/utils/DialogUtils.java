@@ -28,10 +28,15 @@ public class DialogUtils {
     /**
      * 自定义对话框
      */
-    public static Dialog createCustom(Activity activity, View view) {
-        final Dialog dialog = new Dialog(activity, R.style.mCustomDialog);
-        WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
-        dialog.setContentView(view, lp);
+    public static Dialog createCustom(Context context, View view) {
+        final Dialog dialog = new Dialog(context, R.style.mCustomDialog);
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
+            WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
+            dialog.setContentView(view, lp);
+        } else {
+            dialog.setContentView(view);
+        }
         return dialog;
     }
 
@@ -40,7 +45,6 @@ public class DialogUtils {
      */
     public static Dialog createCustom(Activity activity, View view, float height, float width) {
         final Dialog dialog = new Dialog(activity, R.style.mCustomDialog);
-
         WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
         DisplayMetrics d = activity.getResources().getDisplayMetrics(); // 获取屏幕宽、高用
         if (height != 0) {
@@ -54,31 +58,52 @@ public class DialogUtils {
     }
 
     /**
-     * 进度对话框 , 可loading可progress
+     * 等待对话框
      */
-    public static ProgressDialog createLoading(Context context, String message, boolean cancel) {
-        ProgressDialog dialog = new ProgressDialog(context);
-        dialog.setMessage(message);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(cancel);
-        return dialog;
+    public static ProgressDialog createLoading(Context context, int theme, String title,
+                                               String message, boolean cancel) {
+        ProgressDialog loading;
+        if (theme == 0) {
+            loading = new ProgressDialog(context);
+        } else {
+            loading = new ProgressDialog(context, theme);
+        }
+        if (!TextUtils.isEmpty(title)) {
+            loading.setTitle(title);
+        }
+        if (!TextUtils.isEmpty(message)) {
+            loading.setMessage(message);
+        }
+        loading.setCanceledOnTouchOutside(false);
+        loading.setCancelable(cancel);
+        return loading;
     }
 
     /**
-     * 进度对话框 , 可loading可progress
+     * 进度对话框
      */
-    public static ProgressDialog createProgress(Context context, String title, String message, boolean cancel,
+    public static ProgressDialog createProgress(Context context, int theme, String title,
+                                                String message, boolean cancel, int max, int start,
                                                 DialogInterface.OnCancelListener listener) {
-        ProgressDialog dialog = new ProgressDialog(context);
-        dialog.setTitle(title);
-        dialog.setMessage(message);
-        dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        dialog.setMax(100);
-        dialog.setProgress(0);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(cancel);
-        dialog.setOnCancelListener(listener);
-        return dialog;
+        ProgressDialog progress;
+        if (theme == 0) {
+            progress = new ProgressDialog(context);
+        } else {
+            progress = new ProgressDialog(context, theme);
+        }
+        if (!TextUtils.isEmpty(title)) {
+            progress.setTitle(title);
+        }
+        if (!TextUtils.isEmpty(message)) {
+            progress.setMessage(message);
+        }
+        progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progress.setMax(max);
+        progress.setProgress(start);
+        progress.setCanceledOnTouchOutside(false);
+        progress.setCancelable(cancel);
+        progress.setOnCancelListener(listener);
+        return progress;
     }
 
     /**

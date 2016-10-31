@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.bjxrgz.startup.R;
 import com.bjxrgz.startup.base.BaseViewActivity;
+import com.bjxrgz.startup.base.MyApp;
 import com.bjxrgz.startup.utils.ActivityUtils;
 
 /**
@@ -27,6 +28,14 @@ public class HomeActivity extends BaseViewActivity<HomeActivity> {
     @Override
     protected void initView(Bundle savedInstanceState) {
         initContentView(R.layout.activity_home);
+        loading.show();
+
+        MyApp.mainHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loading.dismiss();
+            }
+        }, 5000);
     }
 
     @Override

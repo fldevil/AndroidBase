@@ -29,9 +29,8 @@ public class MyApp extends Application {
     public static MyApp instance;  // MyApp实例
     public static Handler mainHandler;// 主线程handler
     public static ExecutorService threadPool; // 缓冲线程池
-
-    public AppUtils.AppInfo appInfo; // app信息
-    public DeviceUtils.DeviceInfo deviceInfo; // device信息
+    public static AppUtils.AppInfo appInfo; // app信息
+    public static DeviceUtils.DeviceInfo deviceInfo; // device信息
 
     @Override
     public void onCreate() {

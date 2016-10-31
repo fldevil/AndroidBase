@@ -15,11 +15,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.bjxrgz.startup.R;
 import com.bjxrgz.startup.manager.PushManager;
+import com.bjxrgz.startup.manager.ViewManager;
 import com.bjxrgz.startup.utils.ActivityUtils;
 import com.bjxrgz.startup.utils.AnimUtils;
-import com.bjxrgz.startup.utils.DialogUtils;
 import com.bjxrgz.startup.utils.InputUtils;
 import com.bjxrgz.startup.utils.NetUtils;
 import com.bjxrgz.startup.utils.ScreenUtils;
@@ -81,7 +80,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
         AnimUtils.initActivity(this);
         super.onCreate(savedInstanceState);
         mActivity = this; // 实例
-        loading = DialogUtils.createLoading(this, getString(R.string.wait), true);
+        loading = ViewManager.createLoading(this);
         mFragmentManager = getSupportFragmentManager();
         initObject(savedInstanceState);
         initView(savedInstanceState);
