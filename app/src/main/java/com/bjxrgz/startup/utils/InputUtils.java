@@ -7,8 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -18,14 +16,8 @@ import android.widget.EditText;
  */
 public class InputUtils {
 
-    /**
-     * 不自动遮挡弹出等
-     */
-    public static void initActivity(Activity activity) {
-        Window window = activity.getWindow();
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);// 键盘不会遮挡输入框
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN); // 不自动弹键盘
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN); // 总是隐藏键盘
+    private static InputMethodManager getInputManager(Context context) {
+        return (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     /**
@@ -34,9 +26,8 @@ public class InputUtils {
     public static void hideSoftInput(Activity activity) {
         View view = activity.getWindow().peekDecorView();
         if (view != null) {
-            InputMethodManager inputmanger = (InputMethodManager) activity
-                    .getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputmanger.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            InputMethodManager inputManager = getInputManager(activity);
+            inputManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
@@ -45,9 +36,8 @@ public class InputUtils {
      */
     public static void hideSoftInput(Context context, EditText edit) {
         edit.clearFocus();
-        InputMethodManager inputmanger = (InputMethodManager) context
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputmanger.hideSoftInputFromWindow(edit.getWindowToken(), 0);
+        InputMethodManager inputManager = getInputManager(context);
+        inputManager.hideSoftInputFromWindow(edit.getWindowToken(), 0);
     }
 
     /**
@@ -57,8 +47,7 @@ public class InputUtils {
         edit.setFocusable(true);
         edit.setFocusableInTouchMode(true);
         edit.requestFocus();
-        InputMethodManager inputManager = (InputMethodManager) context
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager inputManager = getInputManager(context);
         inputManager.showSoftInput(edit, 0);
     }
 
@@ -69,8 +58,7 @@ public class InputUtils {
         edit.setFocusable(true);
         edit.setFocusableInTouchMode(true);
         edit.requestFocus();
-        InputMethodManager inputManager = (InputMethodManager) context
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager inputManager = getInputManager(context);
         inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
 

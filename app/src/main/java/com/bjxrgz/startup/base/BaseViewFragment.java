@@ -1,17 +1,8 @@
 package com.bjxrgz.startup.base;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-
 /**
- * A simple {@link Fragment} subclass.
+ * Created by Fan on 2016/7/16.
+ * BaseViewFragment
  */
 public abstract class BaseViewFragment<T> extends BaseFragment<T> {
 //

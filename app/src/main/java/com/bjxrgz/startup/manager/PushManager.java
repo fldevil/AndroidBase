@@ -25,7 +25,7 @@ public class PushManager {
         // 统计应用启动数据
         mPushAgent.onAppStart();
         // 打印日志
-        mPushAgent.setDebugMode(false);
+        mPushAgent.setDebugMode(isLog);
         // 收集奔溃日志
         MobclickAgent.setScenarioType(context, MobclickAgent.EScenarioType.E_UM_NORMAL);
         MobclickAgent.setCatchUncaughtExceptions(true);

@@ -28,14 +28,6 @@ public class HomeActivity extends BaseViewActivity<HomeActivity> {
     @Override
     protected void initView(Bundle savedInstanceState) {
         initContentView(R.layout.activity_home);
-        loading.show();
-
-        MyApp.mainHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                loading.dismiss();
-            }
-        }, 5000);
     }
 
     @Override

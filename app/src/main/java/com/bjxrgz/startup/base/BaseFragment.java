@@ -19,7 +19,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 
 import com.bjxrgz.startup.manager.ViewManager;
-import com.bjxrgz.startup.utils.AnimUtils;
+import com.bjxrgz.startup.utils.FragmentUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -111,12 +111,12 @@ public abstract class BaseFragment<T> extends Fragment {
     public void onAttach(Context context) {
         logTag = getCls();
         super.onAttach(context);
+        mFragment = this;
         if (context instanceof FragmentActivity) {
             mActivity = (FragmentActivity) context;
             mFragmentManager = mActivity.getSupportFragmentManager();
         }
-        AnimUtils.initFragment(this); // 过渡动画效果
-        mFragment = this;
+        FragmentUtils.initBaseAttach(this);
     }
 
     /**

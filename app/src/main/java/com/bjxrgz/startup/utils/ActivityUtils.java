@@ -13,6 +13,9 @@ import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.Formatter;
+import android.transition.Fade;
+import android.view.Window;
+import android.view.WindowManager;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -24,15 +27,28 @@ import java.util.List;
 public class ActivityUtils {
 
     private static boolean anim = true; // 跳转动画开关
-    // 4.4版本下的跳转效果 5.0以上的在baseActivity里就设定好了
-    private static final int kitkatAnimIn = android.R.anim.fade_in;
-    private static final int kitkatAnimOut = android.R.anim.fade_out;
-    // 所有已启动的Activity
-    private static List<Activity> activities = new LinkedList<>();
+    private static final int kitkatAnimIn = android.R.anim.fade_in; // 4.4下的跳转效果
+    private static final int kitkatAnimOut = android.R.anim.fade_out; // 4.4下的跳转效果
+    private static List<Activity> activities = new LinkedList<>(); // 所有已启动的Activity
 
-    /**
-     * 内存，进程，服务，任务
-     */
+    public static void initBaseCreate(Activity activity) {
+        Window window = activity.getWindow(); // 软键盘
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);// 键盘不会遮挡输入框
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN); // 不自动弹键盘
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN); // 总是隐藏键盘
+        ScreenUtils.requestPortrait(activity); // 竖屏
+        if (activity instanceof AppCompatActivity) { // titleBar
+            AppCompatActivity appCompatActivity = (AppCompatActivity) activity;
+            ScreenUtils.requestNoTitle(appCompatActivity);
+        }
+        if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { // 动画
+            window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+            window.setEnterTransition(new Fade());
+            window.setExitTransition(new Fade());
+        }
+    }
+
+    /*内存，进程，服务，任务*/
     private static ActivityManager getActivityManager(Context context) {
         return (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
     }
@@ -154,7 +170,7 @@ public class ActivityUtils {
      * <p>
      * 获取手机内存信息
      */
-    public static ActivityManager.MemoryInfo getMemoryInfo(Context context) {
+    private static ActivityManager.MemoryInfo getMemoryInfo(Context context) {
         ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
         getActivityManager(context).getMemoryInfo(memoryInfo);
         return memoryInfo;

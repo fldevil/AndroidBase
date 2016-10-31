@@ -6,14 +6,11 @@ import android.animation.LayoutTransition;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.transition.AutoTransition;
 import android.transition.ChangeBounds;
 import android.transition.ChangeClipBounds;
 import android.transition.ChangeImageTransform;
@@ -30,7 +27,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -80,25 +76,6 @@ public class AnimUtils {
     public static final int TRANS_EXPLODE = 1;  // 随机边缘进出
     public static final int TRANS_SLIDE = 2;    // 指定边缘进出
     public static final int TRANS_FADE = 3;     // 透明度渐变进出
-
-    public static void initActivity(Activity activity) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = activity.getWindow();
-            window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-            window.setEnterTransition(new Fade());
-            window.setExitTransition(new Fade());
-        }
-    }
-
-    public static void initFragment(Fragment fragment) {
-        // 只要进的动画就好，出的有时候执行不完全会bug
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            fragment.setEnterTransition(new AutoTransition());
-//            fragment.setExitTransition(new AutoTransition());
-            fragment.setReenterTransition(new AutoTransition());
-//            fragment.setReturnTransition(new AutoTransition());
-        }
-    }
 
     /**
      * **********************************帧动画**********************************
