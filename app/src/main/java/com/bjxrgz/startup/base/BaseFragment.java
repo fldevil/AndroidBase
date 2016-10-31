@@ -20,6 +20,7 @@ import android.view.animation.Animation;
 
 import com.bjxrgz.startup.manager.ViewManager;
 import com.bjxrgz.startup.utils.FragmentUtils;
+import com.bjxrgz.startup.utils.LogUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -40,48 +41,15 @@ public abstract class BaseFragment<T> extends Fragment {
     public FragmentManager mFragmentManager;
     protected Bundle mBundle;// 接受数据的Bundle
     protected ProgressDialog loading;
+    protected boolean log = false;
     protected String logTag = "BaseFragment";// 子类的类名
     private Unbinder unbinder;
 
-    /**
-     * 子类重写类似方法 获取对象
-     */
+    /* 子类重写类似方法 获取对象 */
     public static BaseFragment newFragment() {
         Bundle bundle = new Bundle();
-        BaseFragment baseFragment = BaseFragment.newInstance(BaseFragment.class, bundle);
-        // 设置bundle的内容...
-        baseFragment.setArguments(bundle);
-        return baseFragment;
-    }
-
-    /**
-     * 反射生成对象
-     */
-    public static <T> T newInstance(Class<T> clz, Bundle args) {
-        T fragment = null;
-        try {
-            Method setArguments = clz.getMethod("setArguments", Bundle.class); // 获取Fragment内名为setArguments的函数
-            fragment = clz.newInstance();  // 走的无参构造函数
-            if (args == null) // 往Bundle里传值，这里是子类的类名
-                args = new Bundle();
-            setArguments.invoke(fragment, args); // 执行setArguments方法
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (java.lang.InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return fragment;
-    }
-
-    @SuppressWarnings("unchecked")
-    protected String getCls() {
-        Class<T> cls = (Class<T>) (((ParameterizedType) (this.getClass()
-                .getGenericSuperclass())).getActualTypeArguments()[0]);
-        return cls.getSimpleName();
+        // bundle.putData();
+        return BaseFragment.newInstance(BaseFragment.class, bundle);
     }
 
     protected abstract void initObject(Bundle savedInstanceState);
@@ -101,6 +69,7 @@ public abstract class BaseFragment<T> extends Fragment {
     public void onInflate(Context context, AttributeSet attrs, Bundle savedInstanceState) {
         logTag = getCls();
         super.onInflate(context, attrs, savedInstanceState);
+        LogUtils.lifeCycle(log, logTag);
     }
 
     /**
@@ -111,12 +80,13 @@ public abstract class BaseFragment<T> extends Fragment {
     public void onAttach(Context context) {
         logTag = getCls();
         super.onAttach(context);
+        LogUtils.lifeCycle(log, logTag);
+        FragmentUtils.initBaseAttach(this);
         mFragment = this;
         if (context instanceof FragmentActivity) {
             mActivity = (FragmentActivity) context;
             mFragmentManager = mActivity.getSupportFragmentManager();
         }
-        FragmentUtils.initBaseAttach(this);
     }
 
     /**
@@ -126,7 +96,8 @@ public abstract class BaseFragment<T> extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);// Fragment与ActionBar和MenuItem集成
+        LogUtils.lifeCycle(log, logTag);
+        FragmentUtils.initBaseCreate(this);
         loading = ViewManager.createLoading(mActivity);
         mBundle = getArguments(); // 取出Bundle
         initObject(savedInstanceState);
@@ -139,6 +110,7 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        LogUtils.lifeCycle(log, logTag);
         View view = getView();
         if (view == null) {
             int rootRes = createViewId(inflater, container, savedInstanceState);
@@ -150,6 +122,7 @@ public abstract class BaseFragment<T> extends Fragment {
 
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        LogUtils.lifeCycle(log, logTag);
         return super.onCreateAnimation(transit, enter, nextAnim);
     }
 
@@ -159,6 +132,7 @@ public abstract class BaseFragment<T> extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        LogUtils.lifeCycle(log, logTag);
         initView(view, savedInstanceState);
     }
 
@@ -169,6 +143,7 @@ public abstract class BaseFragment<T> extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        LogUtils.lifeCycle(log, logTag);
         initData(savedInstanceState);
     }
 
@@ -178,6 +153,7 @@ public abstract class BaseFragment<T> extends Fragment {
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
+        LogUtils.lifeCycle(log, logTag);
     }
 
     /**
@@ -186,6 +162,16 @@ public abstract class BaseFragment<T> extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        LogUtils.lifeCycle(log, logTag);
+    }
+
+    /**
+     * 第二层的fragment，想要返回值的话，需要特殊的启动技巧
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        LogUtils.lifeCycle(log, logTag);
     }
 
     /**
@@ -194,6 +180,16 @@ public abstract class BaseFragment<T> extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        LogUtils.lifeCycle(log, logTag);
+    }
+
+    /**
+     * 捕获是否hide的状态，可以做更新操作
+     */
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        LogUtils.lifeCycle(log, logTag);
     }
 
     /**
@@ -203,6 +199,7 @@ public abstract class BaseFragment<T> extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        LogUtils.lifeCycle(log, logTag);
     }
 
     /**
@@ -211,6 +208,7 @@ public abstract class BaseFragment<T> extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        LogUtils.lifeCycle(log, logTag);
     }
 
     /**
@@ -219,6 +217,7 @@ public abstract class BaseFragment<T> extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        LogUtils.lifeCycle(log, logTag);
     }
 
     /**
@@ -227,6 +226,7 @@ public abstract class BaseFragment<T> extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+        LogUtils.lifeCycle(log, logTag);
     }
 
     /**
@@ -246,6 +246,7 @@ public abstract class BaseFragment<T> extends Fragment {
             }
         }
         super.onDestroyView();
+        LogUtils.lifeCycle(log, logTag);
     }
 
     /**
@@ -254,6 +255,7 @@ public abstract class BaseFragment<T> extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        LogUtils.lifeCycle(log, logTag);
     }
 
     /**
@@ -262,6 +264,7 @@ public abstract class BaseFragment<T> extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        LogUtils.lifeCycle(log, logTag);
         if (unbinder != null) {
             unbinder.unbind();
         }
@@ -270,19 +273,38 @@ public abstract class BaseFragment<T> extends Fragment {
     /**
      * **************************************以上是生命周期**************************************
      * <p/>
-     * 捕获是否hide的状态，可以做更新操作
+     * 反射生成对象
      */
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
+    private static <T> T newInstance(Class<T> clz, Bundle args) {
+        T fragment = null;
+        try {
+            // 获取Fragment内名为setArguments的函数
+            Method setArguments = clz.getMethod("setArguments", Bundle.class);
+            fragment = clz.newInstance();  // 走的无参构造函数
+            if (args == null) { // 往Bundle里传值，这里是子类的类名
+                args = new Bundle();
+            }
+            setArguments.invoke(fragment, args); // 执行setArguments方法
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (java.lang.InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return fragment;
     }
 
     /**
-     * 第二层的fragment，想要返回值的话，需要特殊的启动技巧
+     * logTag获取
      */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    @SuppressWarnings("unchecked")
+    protected String getCls() {
+        Class<T> cls = (Class<T>) (((ParameterizedType) (this.getClass()
+                .getGenericSuperclass())).getActualTypeArguments()[0]);
+        return cls.getSimpleName();
     }
 
     /**

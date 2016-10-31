@@ -25,6 +25,10 @@ public class FragmentUtils {
         }
     }
 
+    public static void initBaseCreate(Fragment fragment) {
+        fragment.setHasOptionsMenu(true);// Fragment与ActionBar和MenuItem集成
+    }
+
     /**
      * 通过tag发现存在的fragment
      */

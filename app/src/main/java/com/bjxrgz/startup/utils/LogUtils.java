@@ -92,6 +92,15 @@ public class LogUtils {
     }
 
     /**
+     * 生命周期
+     */
+    public static void lifeCycle(boolean open, String tag) {
+        if (open) {
+            Logger.e(tag, tag);
+        }
+    }
+
+    /**
      * 记录日志
      */
     public static void writeLogFile(String content) {

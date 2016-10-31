@@ -18,6 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.bjxrgz.startup.manager.PushManager;
 import com.bjxrgz.startup.manager.ViewManager;
 import com.bjxrgz.startup.utils.ActivityUtils;
+import com.bjxrgz.startup.utils.LogUtils;
 import com.bjxrgz.startup.utils.NetUtils;
 
 import java.lang.reflect.ParameterizedType;
@@ -34,22 +35,14 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     protected Activity mActivity;
     protected FragmentManager mFragmentManager;
     protected ProgressDialog loading;
+    protected boolean log = false;
     protected String logTag = "BaseActivity";
 
-    /**
-     * 子类重写类似方法 实现跳转
-     */
-    public static void goActivity(Activity activity) {
-        Intent intent = new Intent();
-        // intent.setClass
-        ActivityUtils.startActivity(activity, intent);
-    }
-
-    @SuppressWarnings("unchecked")
-    protected String getCls() {
-        Class<T> cls = (Class<T>) (((ParameterizedType) (this.getClass()
-                .getGenericSuperclass())).getActualTypeArguments()[0]);
-        return cls.getSimpleName();
+    /* 子类重写类似方法 实现跳转 */
+    public static void goActivity(Activity from) {
+        Intent intent = new Intent(from, BaseActivity.class);
+        // intent.putData();
+        ActivityUtils.startActivity(from, intent);
     }
 
     /* 相当于setContentView 在initView()里调用 */
@@ -74,6 +67,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
         logTag = getCls();
         ActivityUtils.initBaseCreate(this);
         super.onCreate(savedInstanceState);
+        LogUtils.lifeCycle(log, logTag);
         mActivity = this; // 实例
         loading = ViewManager.createLoading(this);
         mFragmentManager = getSupportFragmentManager();
@@ -88,6 +82,16 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
+        LogUtils.lifeCycle(log, logTag);
+    }
+
+    /**
+     * 在window执行动画的时候activity不能draw，所以就有了下面的方法
+     */
+    @Override
+    public void onEnterAnimationComplete() {
+        super.onEnterAnimationComplete();
+        LogUtils.lifeCycle(log, logTag);
     }
 
     /**
@@ -102,6 +106,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     public void onContentChanged() {
         super.onContentChanged();
+        LogUtils.lifeCycle(log, logTag);
         initData();
     }
 
@@ -111,6 +116,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        LogUtils.lifeCycle(log, logTag);
     }
 
     /**
@@ -119,6 +125,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
+        LogUtils.lifeCycle(log, logTag);
     }
 
     /**
@@ -127,7 +134,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-//        AsyncUtils.register(this);
+        LogUtils.lifeCycle(log, logTag);
     }
 
     /**
@@ -136,6 +143,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        LogUtils.lifeCycle(log, logTag);
     }
 
     /**
@@ -145,6 +153,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        LogUtils.lifeCycle(log, logTag);
     }
 
     /**
@@ -153,6 +162,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+        LogUtils.lifeCycle(log, logTag);
     }
 
     /**
@@ -161,8 +171,19 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        LogUtils.lifeCycle(log, logTag);
         PushManager.analysisOnResume(this);
         NetUtils.isAvailable(this);
+    }
+
+    /**
+     * 有attach的fragment时，当fragment也Resume时被回调
+     * 最好在这里执行已经存在的fragment的translate操作
+     */
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        LogUtils.lifeCycle(log, logTag);
     }
 
     /**
@@ -171,6 +192,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
+        LogUtils.lifeCycle(log, logTag);
     }
 
     /**
@@ -181,6 +203,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
+        LogUtils.lifeCycle(log, logTag);
         // View decorView = getWindow().getDecorView();
         // 控制DecorView的大小来控制activity的大小，可做窗口activity
         // setFinishOnTouchOutside(true);
@@ -194,6 +217,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        LogUtils.lifeCycle(log, logTag);
         // 也引入menu的layout，也可动态add(记得每次先clear)
         // getMenuInflater().inflate(res,menu);
         // 内部调用onCreateOptionsMenu(Menu menu) ,用于动态变换menu选项
@@ -207,6 +231,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        LogUtils.lifeCycle(log, logTag);
         PushManager.analysisOnPause(this);
     }
 
@@ -217,6 +242,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        LogUtils.lifeCycle(log, logTag);
     }
 
     /**
@@ -225,6 +251,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        LogUtils.lifeCycle(log, logTag);
     }
 
     /**
@@ -233,6 +260,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        LogUtils.lifeCycle(log, logTag);
     }
 
     /**
@@ -241,19 +269,24 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        LogUtils.lifeCycle(log, logTag);
     }
 
     /**
      * ***********************************以上是生命周期***********************************
      * <p/>
-     * 有attach的fragment时，当fragment也Resume时被回调
-     * 最好在这里执行已经存在的fragment的translate操作
+     * logTag获取
      */
-    @Override
-    protected void onResumeFragments() {
-        super.onResumeFragments();
+    @SuppressWarnings("unchecked")
+    private String getCls() {
+        Class<T> cls = (Class<T>) (((ParameterizedType) (this.getClass()
+                .getGenericSuperclass())).getActualTypeArguments()[0]);
+        return cls.getSimpleName();
     }
 
+    /**
+     * 触摸拦截
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (null != this.getCurrentFocus()) { // 点击屏幕空白区域隐藏软键盘
@@ -261,14 +294,6 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
             return mInputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
         }
         return super.onTouchEvent(event);
-    }
-
-    /**
-     * 在window执行动画的时候activity不能draw，所以就有了下面的方法
-     */
-    @Override
-    public void onEnterAnimationComplete() {
-        super.onEnterAnimationComplete();
     }
 
     /**
