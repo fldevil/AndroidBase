@@ -69,11 +69,11 @@ public class MediaUtils {
         Intent intent = new Intent();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
         } else {
             intent.setAction(Intent.ACTION_GET_CONTENT);
         }
         intent.setType("image/*");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
         return intent;
     }
 
@@ -126,50 +126,40 @@ public class MediaUtils {
         return intent;
     }
 
-//    public static Intent buildImageGetIntent(Uri saveTo, int outputX, int outputY, boolean returnData) {
-//        return buildImageGetIntent(saveTo, 1, 1, outputX, outputY, returnData);
-//    }
-//
-//    public static Intent buildImageGetIntent(Uri saveTo, int aspectX, int aspectY,
-//                                             int outputX, int outputY, boolean returnData) {
-//        Intent intent = new Intent();
-//        if (Build.VERSION.SDK_INT < 19) {
-//            intent.setAction(Intent.ACTION_GET_CONTENT);
-//        } else {
-//            intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
-//            intent.addCategory(Intent.CATEGORY_OPENABLE);
-//        }
-//        intent.setType("image*//*");
-//        intent.putExtra("output", saveTo);
-//        intent.putExtra("aspectX", aspectX);
-//        intent.putExtra("aspectY", aspectY);
-//        intent.putExtra("outputX", outputX);
-//        intent.putExtra("outputY", outputY);
-//        intent.putExtra("scale", true);
-//        intent.putExtra("return-data", returnData);
-//        intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString());
-//        return intent;
-//    }
-//
-//    public static Intent buildImageCropIntent(Uri uriFrom, Uri uriTo, int outputX, int outputY, boolean returnData) {
-//        return buildImageCropIntent(uriFrom, uriTo, 1, 1, outputX, outputY, returnData);
-//    }
-//
-//    public static Intent buildImageCropIntent(Uri uriFrom, Uri uriTo, int aspectX, int aspectY,
-//                                              int outputX, int outputY, boolean returnData) {
-//        Intent intent = new Intent("com.android.camera.action.CROP");
-//        intent.setDataAndType(uriFrom, "image*//*");
-//        intent.putExtra("crop", "true");
-//        intent.putExtra("output", uriTo);
-//        intent.putExtra("aspectX", aspectX);
-//        intent.putExtra("aspectY", aspectY);
-//        intent.putExtra("outputX", outputX);
-//        intent.putExtra("outputY", outputY);
-//        intent.putExtra("scale", true);
-//        intent.putExtra("return-data", returnData);
-//        intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString());
-//        return intent;
-//    }
+    public static Intent getPictureCropIntent(File save, int outputX, int outputY) {
+        Intent intent = new Intent();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+        } else {
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+        }
+        intent.setType("image*//*");
+        intent.putExtra("output", Uri.fromFile(save));
+        intent.putExtra("aspectX", 1); // 裁剪框比例
+        intent.putExtra("aspectY", 1);
+        intent.putExtra("outputX", outputX); // 输出图片大小
+        intent.putExtra("outputY", outputY);
+        intent.putExtra("scale", true);
+        intent.putExtra("return-data", true);
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        return intent;
+    }
+
+    public static Intent getCameraCropIntent(File from, File save, int outputX, int outputY) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(Uri.fromFile(from), "image*//*");
+        intent.putExtra("crop", "true");
+        intent.putExtra("output", Uri.fromFile(save));
+        intent.putExtra("aspectX", 1); // 裁剪框比例
+        intent.putExtra("aspectY", 1);
+        intent.putExtra("outputX", outputX); // 输出图片大小
+        intent.putExtra("outputY", outputY);
+        intent.putExtra("scale", true);
+        intent.putExtra("return-data", true);
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        return intent;
+    }
 
     /**
      * 照片: 在onActivityResult中执行

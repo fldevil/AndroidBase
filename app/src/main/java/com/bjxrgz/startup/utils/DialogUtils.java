@@ -113,17 +113,8 @@ public class DialogUtils {
                                           String positive, String negative,
                                           final DialogInterface.OnClickListener positiveListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        if (TextUtils.isEmpty(title)) {
-            title = context.getString(R.string.prompt);
-        }
         builder.setTitle(title);
         builder.setMessage(message);
-        if (TextUtils.isEmpty(positive)) {
-            positive = context.getString(R.string.confirm);
-        }
-        if (TextUtils.isEmpty(negative)) {
-            negative = context.getString(R.string.cancel);
-        }
         builder.setPositiveButton(positive, positiveListener);
         builder.setNegativeButton(negative, null);
         return builder.create();
@@ -153,9 +144,6 @@ public class DialogUtils {
                                           DialogInterface.OnClickListener positiveListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title);
-        if (TextUtils.isEmpty(positive)) {
-            positive = context.getString(R.string.confirm);
-        }
         builder.setMultiChoiceItems(items, checkedState, choiceListener);
         builder.setPositiveButton(positive, positiveListener);
         builder.setNegativeButton(R.string.cancel, null);

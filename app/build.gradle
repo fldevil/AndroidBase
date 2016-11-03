@@ -34,10 +34,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
+//        jnidebug { // debug的一个扩展
+//            initWith debug // 复制debug的属性和签名配置
+//            applicationIdSuffix ".jnidebug"
+//            jniDebuggable true //开启Jni调试
+//        }
+
         release {
+            signingConfig signingConfigs.bjxrgz_debug // 可以只用一个签名信息
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    productFlavors { // 发布渠道
     }
 
     sourceSets { // 源码设置
@@ -49,14 +59,19 @@ android {
         release.setRoot('build-types/release') // 指定release模式的路径
     }
 
-    productFlavors { // 发布渠道
+    tasks.withType(JavaCompile) { // 环境编码格式
+        options.encoding = "UTF-8"
+    }
+
+    compileOptions { // 编码格式等
+        encoding "UTF-8"
+//        sourceCompatibility JavaVersion.VERSION_1_8
+//        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     lintOptions { // 编译的lint检查
-        // 防止在发布的时候出现因MissingTranslation导致Build Failed!
-        disable 'MissingTranslation'
-        // 移除lint检查的error
-        abortOnError false
+        disable 'MissingTranslation' // 防止在发布的时候出现因MissingTranslation导致Build Failed!
+        abortOnError false // 移除lint检查的error
     }
 
     packagingOptions { // 解决jar包冲突
@@ -76,13 +91,10 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
+    compile fileTree(include: ['*.jar'], dir: 'libs') // 编译本地 jar 包
+    testCompile 'junit:junit:4.12' // 仅仅针对单元测试的代码编译打包
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     compile project(':PushSDK')
-    compile files('libs/AMap_2DMap_V2.9.0_20160525.jar')
-    compile files('libs/AMap_Location_V2.6.0_20160628.jar')
-    compile files('libs/AMap_Search_V3.3.0_20160616.jar')
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:support-v4:24.2.1'

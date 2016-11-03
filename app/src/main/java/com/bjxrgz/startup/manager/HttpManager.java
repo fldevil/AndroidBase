@@ -36,7 +36,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  */
 public class HttpManager {
 
-    private static String BASE_URL; // 当前使用的HOST
+    public static String BASE_URL; // 当前使用的HOST
     private static APIManager APITokenGson;
     private static APIManager APITokenString;
     private static APIManager APIEmptyGson;
@@ -142,7 +142,7 @@ public class HttpManager {
         if (APIEmptyGson == null) {
             synchronized (HttpManager.class) {
                 if (APIEmptyGson == null) {
-                    APIEmptyGson = getService(getHeaderToken(), getStringFactory());
+                    APIEmptyGson = getService(getHeaderEmpty(), getGsonFactory());
                 }
             }
         }
@@ -153,7 +153,7 @@ public class HttpManager {
         if (APIEmptyString == null) {
             synchronized (HttpManager.class) {
                 if (APIEmptyString == null) {
-                    APIEmptyString = getService(getHeaderToken(), getStringFactory());
+                    APIEmptyString = getService(getHeaderEmpty(), getStringFactory());
                 }
             }
         }

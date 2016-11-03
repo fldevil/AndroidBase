@@ -1,5 +1,6 @@
 package com.bjxrgz.startup.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 
@@ -7,6 +8,7 @@ import com.bjxrgz.startup.R;
 import com.bjxrgz.startup.base.BaseViewActivity;
 import com.bjxrgz.startup.base.MyApp;
 import com.bjxrgz.startup.manager.PushManager;
+import com.bjxrgz.startup.service.UpdateService;
 import com.bjxrgz.startup.utils.ScreenUtils;
 
 import butterknife.BindView;
@@ -34,12 +36,17 @@ public class StartActivity extends BaseViewActivity<StartActivity> {
 
     @Override
     protected void initData() {
+        update();
         goHome();
     }
 
-    /**
-     * 跳转主页
-     */
+    /* 检查更新 */
+    private void update() {
+        Intent intent = new Intent(this, UpdateService.class);
+        startService(intent);
+    }
+
+    /* 跳转主页 */
     private void goHome() {
         MyApp.mainHandler.postDelayed(new Runnable() {
             @Override
