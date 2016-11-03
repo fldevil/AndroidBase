@@ -7,11 +7,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -394,6 +394,16 @@ public class ConvertUtils {
      */
     public static Drawable bytes2Drawable(Resources res, byte[] bytes) {
         return bitmap2Drawable(res, bytes2Bitmap(bytes));
+    }
+
+    /**
+     * 将value转化成px(没算四舍五入)
+     *
+     * @param type eg: TypedValue.COMPLEX_UNIT_DIP
+     */
+    public static int getpx(Context context, int type, float value) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        return (int) TypedValue.applyDimension(type, value, metrics);
     }
 
     /**
