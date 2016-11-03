@@ -19,14 +19,17 @@ public class MyWrapView extends ViewGroup {
     private static int MARGIN_LEFT = 20;
     private static int MARGIN_TOP = 20;
 
+    /* java构造时调用 */
     public MyWrapView(Context context) {
         super(context);
     }
 
+    /* xml构造时调用 */
     public MyWrapView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
+    /* xml构造，并有自定义attrs时调用 */
     public MyWrapView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }

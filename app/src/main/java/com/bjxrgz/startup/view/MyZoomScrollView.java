@@ -3,11 +3,15 @@ package com.bjxrgz.startup.view;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
+
+import com.bjxrgz.startup.R;
 
 /**
  * Created by JiangZhiGuo on 2016-11-3.
@@ -16,22 +20,42 @@ import android.widget.ScrollView;
 
 public class MyZoomScrollView extends ScrollView implements View.OnTouchListener {
 
+    private int layoutIndex = 2; // 第几层view的顶视图需要伸缩
     private float mFirstPosition = 0; // 记录首次按下位置
     private Boolean mScaling = false; // 是否正在放大
     private View dropZoomView; // 伸缩的view
     private int dropZoomViewWidth;
     private int dropZoomViewHeight;
 
+    /* java构造时调用 */
     public MyZoomScrollView(Context context) {
         super(context);
     }
 
-    public MyZoomScrollView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    /* xml构造时调用 */
+    public MyZoomScrollView(Context context, AttributeSet set) {
+        super(context, set, 0); // 有必要
     }
 
-    public MyZoomScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+    /* xml构造，并有自定义attrs时调用 */
+    public MyZoomScrollView(Context context, AttributeSet set, int defStyleAttr) {
+        super(context, set, defStyleAttr);
+        Resources.Theme theme = context.getTheme();
+        int[] attrs = R.styleable.MyZoomScrollView;
+        TypedArray typedArray = theme.obtainStyledAttributes(set, attrs, defStyleAttr, 0);
+        int indexCount = typedArray.getIndexCount(); // 自定义属性的数量
+        for (int i = 0; i < indexCount; i++) { // 循环遍历所有的属性
+            int type = typedArray.getIndex(i);
+            switch (type) { // 找到自己定义的属性(如果是dimen的话 需要dp转px)
+                case R.styleable.MyZoomScrollView_layout_index: // 默认是第二层子view
+                    layoutIndex = typedArray.getInteger(type, 2); // 赋值
+                    if (layoutIndex < 2) {
+                        layoutIndex = 2;
+                    }
+                    break;
+            }
+        }
+        typedArray.recycle();
     }
 
     /* onInflate之后执行 初始化 */
@@ -39,11 +63,12 @@ public class MyZoomScrollView extends ScrollView implements View.OnTouchListener
     protected void onFinishInflate() {
         super.onFinishInflate();
         setOverScrollMode(OVER_SCROLL_NEVER); // 不允许滚动超出边界
-        ViewGroup vg1 = (ViewGroup) getChildAt(0); // 1层
-        if (vg1 != null) {
-            ViewGroup vg2 = (ViewGroup) vg1.getChildAt(0); // 2层
-            if (vg2 != null) {
-                dropZoomView = vg2; // 要拉伸的view
+        ViewGroup group = (ViewGroup) getChildAt(0);
+        for (int i = 2; i < Integer.MAX_VALUE; i++) {
+            if (i < layoutIndex) { // 继续递归
+                group = (ViewGroup) group.getChildAt(0);
+            } else { // 当前这层viewGroup的顶View需要伸缩
+                dropZoomView = group.getChildAt(0);
                 setOnTouchListener(this);
             }
         }
