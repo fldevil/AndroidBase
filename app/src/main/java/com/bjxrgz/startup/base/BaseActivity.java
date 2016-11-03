@@ -35,7 +35,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     protected Activity mActivity;
     protected FragmentManager mFragmentManager;
     protected ProgressDialog loading;
-    protected boolean log = false;
+    protected boolean log = false; // 是否打印生命周期
     protected String logTag = "BaseActivity";
 
     /* 子类重写类似方法 实现跳转 */

@@ -41,9 +41,9 @@ public abstract class BaseFragment<T> extends Fragment {
     public FragmentManager mFragmentManager;
     protected Bundle mBundle;// 接受数据的Bundle
     protected ProgressDialog loading;
-    protected boolean log = false;
-    protected String logTag = "BaseFragment";// 子类的类名
-    private Unbinder unbinder;
+    protected boolean log = false; // 是否打印生命周期
+    protected String logTag = "BaseFragment";
+    private Unbinder unbinder; // ButterKnife
 
     /* 子类重写类似方法 获取对象 */
     public static BaseFragment newFragment() {
@@ -54,7 +54,7 @@ public abstract class BaseFragment<T> extends Fragment {
 
     protected abstract void initObject(Bundle savedInstanceState);
 
-    protected abstract int createViewId(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
+    protected abstract int createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
 
     protected abstract void initView(View view, @Nullable Bundle savedInstanceState);
 
@@ -113,7 +113,7 @@ public abstract class BaseFragment<T> extends Fragment {
         LogUtils.lifeCycle(log, logTag);
         View view = getView();
         if (view == null) {
-            int rootRes = createViewId(inflater, container, savedInstanceState);
+            int rootRes = createView(inflater, container, savedInstanceState);
             view = inflater.inflate(rootRes, container, false);
             unbinder = ButterKnife.bind(mFragment, view);
         }

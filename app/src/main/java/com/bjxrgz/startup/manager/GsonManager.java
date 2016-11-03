@@ -17,24 +17,38 @@ import java.util.List;
  */
 public class GsonManager {
 
-    private static final Gson GSON = new Gson();
-    private static final Gson GSON_BUILDER = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
-        @Override
-        public boolean shouldSkipField(FieldAttributes f) {
-            return f.getName().contains("outputData");
-        }
-
-        @Override
-        public boolean shouldSkipClass(Class<?> clazz) {
-            return false;
-        }
-    }).create();
+    private static Gson GSON;
+    private static Gson GSON_BUILDER;
 
     public static Gson getInstance() {
+        if (GSON == null) {
+            synchronized (GsonManager.class) {
+                if (GSON == null) {
+                    GSON = new Gson();
+                }
+            }
+        }
         return GSON;
     }
 
     public static Gson getNoDataInstance() {
+        if (GSON_BUILDER == null) {
+            synchronized (GsonManager.class) {
+                if (GSON_BUILDER == null) {
+                    GSON_BUILDER = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
+                        @Override
+                        public boolean shouldSkipField(FieldAttributes f) {
+                            return f.getName().contains("outputData");
+                        }
+
+                        @Override
+                        public boolean shouldSkipClass(Class<?> clazz) {
+                            return false;
+                        }
+                    }).create();
+                }
+            }
+        }
         return GSON_BUILDER;
     }
 

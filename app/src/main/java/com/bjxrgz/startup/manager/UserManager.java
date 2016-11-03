@@ -15,21 +15,18 @@ public class UserManager {
     /**
      * 保存Preference的name
      */
-    private static final String PREFERENCE_NAME = "userInfo";
     private static UserManager userManager;
     private static SharedPreferences preferences;
-    private static SharedPreferences.Editor editor;
 
     /**
      * 用户信息
      **/
-    public static final String USER_USER_ID = "userID";
-    public static final String USER_USER_TOKEN = "userToken";
+    private static final String USER_USER_ID = "userID";
+    private static final String USER_USER_TOKEN = "userToken";
 
 
     private UserManager(Context context) {
-        preferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
-        editor = preferences.edit();
+        preferences = context.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
     }
 
     /**
@@ -53,9 +50,11 @@ public class UserManager {
 
     public void setUser(User user) {
         LogUtils.json("setUser", GsonManager.getInstance().toJson(user));
+        SharedPreferences.Editor editor = preferences.edit();
         editor.putString(USER_USER_ID, user.getId());
         editor.putString(USER_USER_TOKEN, user.getUserToken());
-        editor.commit();
+//        editor.commit();
+        editor.apply();
     }
 
     public User getUser() {
@@ -70,6 +69,6 @@ public class UserManager {
      * 清除用户信息
      */
     public void RemoveInfo() {
-        editor.clear().apply();
+        preferences.edit().clear().apply();
     }
 }
