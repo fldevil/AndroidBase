@@ -63,7 +63,17 @@ public class MediaUtils {
     }
 
     /**
-     * 相册意图
+     * 拍照 , 不加保存路径的话，图片会被压缩保存
+     */
+    public static Intent getCameraIntent(File cameraFile) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Uri uri = Uri.fromFile(cameraFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        return intent;
+    }
+
+    /**
+     * 相册
      */
     public static Intent getPictureIntent() {
         Intent intent = new Intent();
@@ -78,86 +88,44 @@ public class MediaUtils {
     }
 
     /**
-     * 照片: 在onActivityResult中执行
+     * 裁剪 ,需要有被裁剪的源文件才能调用，相机拍照需在onActivityForResult里调用
      */
-    public static Bitmap getPictureBitmap(Context context, Intent data) {
-        if (data == null) {
-            return null;
-        } else {
-            Uri uri = getUri(context, data);
-            InputStream stream = openInput(context, uri);
-            return BitmapFactory.decodeStream(stream);
-        }
-    }
-
-    /**
-     * 压缩后的照片: 在onActivityResult中执行
-     */
-    public static Bitmap getPictureBitmap(Context context, Intent data, double maxSize) {
-        if (data == null) {
-            return null;
-        } else {
-            Uri uri = getUri(context, data);
-            InputStream stream = openInput(context, uri);
-            return ImageUtils.getBitmap(stream, maxSize);
-        }
-    }
-
-    /**
-     * 压缩后的照片: 在onActivityResult中执行
-     */
-    public static Bitmap getPictureBitmap(Context context, Intent data, int maxWidth, int maxHeight) {
-        if (data == null) {
-            return null;
-        } else {
-            Uri uri = getUri(context, data);
-            InputStream stream = openInput(context, uri);
-            return ImageUtils.getBitmap(stream, maxWidth, maxHeight);
-        }
-    }
-
-    /**
-     * 拍照 , 不加保存路径的话，图片会被压缩保存
-     */
-    public static Intent getCameraIntent(File cameraFile) {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        Uri uri = Uri.fromFile(cameraFile);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-        return intent;
-    }
-
-    public static Intent getPictureCropIntent(File save, int outputX, int outputY) {
+    public static Intent getCropIntent(File from, File save, int aspectX,
+                                       int aspectY, int outputX, int outputY) {
         Intent intent = new Intent();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-        } else {
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-        }
-        intent.setType("image*//*");
-        intent.putExtra("output", Uri.fromFile(save));
-        intent.putExtra("aspectX", 1); // 裁剪框比例
-        intent.putExtra("aspectY", 1);
+        intent.setAction("com.android.camera.action.CROP");
+        intent.setDataAndType(Uri.fromFile(from), "image/*");
+        intent.putExtra("crop", "true");
+        intent.putExtra("aspectX", aspectX); // 裁剪框比例
+        intent.putExtra("aspectY", aspectY);
         intent.putExtra("outputX", outputX); // 输出图片大小
         intent.putExtra("outputY", outputY);
-        intent.putExtra("scale", true);
-        intent.putExtra("return-data", true);
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        intent.putExtra("scale", true); // 缩放
+        intent.putExtra("noFaceDetection", true); // 取消人脸识别功能
+        intent.putExtra("return-data", true); // 返回数据
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(save)); // 返回数据路径
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString()); // 返回数据格式
         return intent;
     }
 
-    public static Intent getCameraCropIntent(File from, File save, int outputX, int outputY) {
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(Uri.fromFile(from), "image*//*");
+    /**
+     * 相册 裁剪 ,可以直接调用  开启相册并裁减
+     */
+    public static Intent getPictureCropIntent(File save, int aspectX, int aspectY,
+                                              int outputX, int outputY) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
         intent.putExtra("crop", "true");
-        intent.putExtra("output", Uri.fromFile(save));
-        intent.putExtra("aspectX", 1); // 裁剪框比例
-        intent.putExtra("aspectY", 1);
+        intent.putExtra("aspectX", aspectX); // 裁剪框比例 1:1
+        intent.putExtra("aspectY", aspectY);
         intent.putExtra("outputX", outputX); // 输出图片大小
         intent.putExtra("outputY", outputY);
-        intent.putExtra("scale", true);
-        intent.putExtra("return-data", true);
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        intent.putExtra("scale", true); // 缩放
+        intent.putExtra("noFaceDetection", true); // 取消人脸识别功能
+        intent.putExtra("return-data", true); // 返回数据
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(save)); // 返回数据路径
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString()); // 返回数据格式
         return intent;
     }
 
@@ -215,48 +183,43 @@ public class MediaUtils {
         }
     }
 
-    /*获取Uri的输入流, 相册选取图片时可读取 data.getData()*/
-    private static InputStream openInput(Context context, Uri uri) {
-        try {
-            return context.getContentResolver().openInputStream(uri);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+    /**
+     * 照片: 在onActivityResult中执行
+     */
+    public static Bitmap getPictureBitmap(Context context, Intent data) {
+        if (data == null) {
+            return null;
+        } else {
+            Uri uri = getUri(context, data);
+            InputStream stream = openInput(context, uri);
+            return BitmapFactory.decodeStream(stream);
         }
-        return null;
     }
 
-    /*解决小米手机上获取图片路径为null的情况*/
-    private static Uri getUri(Context context, Intent intent) {
-        Uri uri = intent.getData();
-        String type = intent.getType(); // 小米的type不是null 其他的是
-        if (uri.getScheme().equals("file") && (type.contains("image/"))) {
-            String path = uri.getEncodedPath();
-            if (path != null) {
-                path = Uri.decode(path);
-                ContentResolver cr = context.getContentResolver();
-                StringBuilder buff = new StringBuilder();
-                buff.append("(").append(MediaStore.Images.ImageColumns.DATA).append("=")
-                        .append("'" + path + "'").append(")");
-                Cursor cur = cr.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        new String[]{MediaStore.Images.ImageColumns._ID},
-                        buff.toString(), null, null);
-                int index = 0;
-                if (cur != null) {
-                    for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()) {
-                        index = cur.getColumnIndex(MediaStore.Images.ImageColumns._ID);
-                        index = cur.getInt(index);
-                    }
-                    cur.close();
-                }
-                if (index > 0) {
-                    Uri uri_temp = Uri.parse("content://media/external/images/media/" + index);
-                    if (uri_temp != null) {
-                        uri = uri_temp;
-                    }
-                }
-            }
+    /**
+     * 压缩后的照片: 在onActivityResult中执行
+     */
+    public static Bitmap getPictureBitmap(Context context, Intent data, double maxSize) {
+        if (data == null) {
+            return null;
+        } else {
+            Uri uri = getUri(context, data);
+            InputStream stream = openInput(context, uri);
+            return ImageUtils.getBitmap(stream, maxSize);
         }
-        return uri;
+    }
+
+    /**
+     * 压缩后的照片: 在onActivityResult中执行
+     */
+    public static Bitmap getPictureBitmap(Context context, Intent data, int maxWidth, int maxHeight) {
+        if (data == null) {
+            return null;
+        } else {
+            Uri uri = getUri(context, data);
+            InputStream stream = openInput(context, uri);
+            return ImageUtils.getBitmap(stream, maxWidth, maxHeight);
+        }
     }
 
     /*摆正图片旋转角度*/
@@ -301,6 +264,50 @@ public class MediaUtils {
             e.printStackTrace();
         }
         return degree;
+    }
+
+    /*获取Uri的输入流, 相册选取图片时可读取 data.getData()*/
+    private static InputStream openInput(Context context, Uri uri) {
+        try {
+            return context.getContentResolver().openInputStream(uri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /*解决小米手机上获取图片路径为null的情况*/
+    private static Uri getUri(Context context, Intent intent) {
+        Uri uri = intent.getData();
+        String type = intent.getType(); // 小米的type不是null 其他的是
+        if (uri != null && uri.getScheme().equals("file") && (type.contains("image/"))) {
+            String path = uri.getEncodedPath();
+            if (path != null) {
+                path = Uri.decode(path);
+                ContentResolver cr = context.getContentResolver();
+                StringBuilder buff = new StringBuilder();
+                buff.append("(").append(MediaStore.Images.ImageColumns.DATA).append("=")
+                        .append("'" + path + "'").append(")");
+                Cursor cur = cr.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        new String[]{MediaStore.Images.ImageColumns._ID},
+                        buff.toString(), null, null);
+                int index = 0;
+                if (cur != null) {
+                    for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()) {
+                        index = cur.getColumnIndex(MediaStore.Images.ImageColumns._ID);
+                        index = cur.getInt(index);
+                    }
+                    cur.close();
+                }
+                if (index > 0) {
+                    Uri uri_temp = Uri.parse("content://media/external/images/media/" + index);
+                    if (uri_temp != null) {
+                        uri = uri_temp;
+                    }
+                }
+            }
+        }
+        return uri;
     }
 
     /**
