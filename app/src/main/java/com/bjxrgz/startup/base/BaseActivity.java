@@ -3,6 +3,8 @@ package com.bjxrgz.startup.base;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -282,6 +284,40 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
         Class<T> cls = (Class<T>) (((ParameterizedType) (this.getClass()
                 .getGenericSuperclass())).getActualTypeArguments()[0]);
         return cls.getSimpleName();
+    }
+
+    /* 响应系统设置的事件 */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        StringBuilder status = new StringBuilder();
+        Configuration cfg = getResources().getConfiguration();
+        status.append("fontScale:").append(cfg.fontScale).append("\n");
+        status.append("hardKeyboardHidden:").append(cfg.hardKeyboardHidden).append("\n");
+        status.append("keyboard:").append(cfg.keyboard).append("\n");
+        status.append("keyboardHidden:").append(cfg.keyboardHidden).append("\n");
+        status.append("locale:").append(cfg.locale).append("\n");
+        status.append("mcc:").append(cfg.mcc).append("\n");
+        status.append("mnc:").append(cfg.mnc).append("\n");
+        status.append("navigation:").append(cfg.navigation).append("\n");
+        status.append("navigationHidden:").append(cfg.navigationHidden).append("\n");
+        status.append("orientation:").append(cfg.orientation).append("\n");
+        status.append("screenHeightDp:").append(cfg.screenHeightDp).append("\n");
+        status.append("screenWidthDp:").append(cfg.screenWidthDp).append("\n");
+        status.append("screenLayout:").append(cfg.screenLayout).append("\n");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            status.append("densityDpi:").append(cfg.densityDpi).append("\n");
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            status.append("smallestScreenWidthDp:").append(cfg.densityDpi).append("\n");
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            status.append("touchscreen:").append(cfg.densityDpi).append("\n");
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            status.append("uiMode:").append(cfg.densityDpi).append("\n");
+        }
+        LogUtils.e(status.toString());
     }
 
     /**
