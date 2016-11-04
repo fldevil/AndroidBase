@@ -3,7 +3,6 @@ package com.bjxrgz.startup.view;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -37,28 +36,19 @@ public class MyZoomScrollView extends ScrollView implements View.OnTouchListener
         super(context, set, 0); // 有必要
     }
 
-    /* xml构造，并有自定义attrs时调用 */
+    /* xml构造，并有自定义style时调用 */
     public MyZoomScrollView(Context context, AttributeSet set, int defStyleAttr) {
         super(context, set, defStyleAttr);
-        Resources.Theme theme = context.getTheme();
         int[] attrs = R.styleable.MyZoomScrollView;
-        TypedArray typedArray = theme.obtainStyledAttributes(set, attrs, defStyleAttr, 0);
-        int indexCount = typedArray.getIndexCount(); // 自定义属性的数量
-        for (int i = 0; i < indexCount; i++) { // 循环遍历所有的属性
-            int type = typedArray.getIndex(i);
-            switch (type) { // 找到自己定义的属性(如果是dimen的话 需要dp转px)
-                case R.styleable.MyZoomScrollView_layout_index: // 默认是第二层子view
-                    layoutIndex = typedArray.getInteger(type, 2); // 赋值
-                    if (layoutIndex < 2) {
-                        layoutIndex = 2;
-                    }
-                    break;
-            }
+        TypedArray typedArray = context.obtainStyledAttributes(set, attrs, defStyleAttr, 0);
+        layoutIndex = typedArray.getInteger(R.styleable.MyZoomScrollView_layout_index, 2);
+        if (layoutIndex < 2) { // 最少为2
+            layoutIndex = 2;
         }
         typedArray.recycle();
     }
 
-    /* onInflate之后执行 初始化 */
+    /* 当View中所有的子控件 均被映射成xml后触发 在onLayout之前执行 */
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();

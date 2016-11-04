@@ -30,7 +30,7 @@ public class StartActivity extends BaseViewActivity<StartActivity> {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        ScreenUtils.requestFullScreen(mActivity);
+        ScreenUtils.hideStatusBar(mActivity);
         initContentView(R.layout.activity_start);
     }
 

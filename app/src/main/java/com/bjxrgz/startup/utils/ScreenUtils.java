@@ -1,10 +1,12 @@
 package com.bjxrgz.startup.utils;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
@@ -19,6 +21,13 @@ import android.view.WindowManager;
 public class ScreenUtils {
 
     /**
+     * 设置屏幕为竖屏
+     */
+    public static void requestPortrait(Activity activity) {
+        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
+    /**
      * 无actionBar
      */
     public static void requestNoTitle(AppCompatActivity activity) {
@@ -26,17 +35,15 @@ public class ScreenUtils {
     }
 
     /**
-     * 全屏
+     * 隐藏状态栏
+     * <p>也就是设置全屏，一定要在setContentView之前调用，否则报错</p>
+     * <p>此方法Activity可以继承AppCompatActivity</p>
+     * <p>启动的时候状态栏会显示一下再隐藏，比如QQ的欢迎界面</p>
+     * <p>在配置文件中Activity加属性android:theme="@android:style/Theme.NoTitleBar.Fullscreen"</p>
+     * <p>如加了以上配置Activity不能继承AppCompatActivity，会报错</p>
      */
-    public static void requestFullScreen(Activity activity) {
+    public static void hideStatusBar(Activity activity) {
         activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    }
-
-    /**
-     * 设置屏幕为竖屏
-     */
-    public static void requestPortrait(Activity activity) {
-        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     /**
@@ -82,29 +89,50 @@ public class ScreenUtils {
      *
      * @param activity activity
      */
-    public static void setTransparentStatusBar(Activity activity) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            //透明状态栏
-            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //透明导航栏
-            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        }
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public static void setTransparentStatusBarAndNavigation(Activity activity) {
+        //透明状态栏
+        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        //透明导航栏
+        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
     }
 
     /**
-     * 隐藏状态栏
-     * <p>也就是设置全屏，一定要在setContentView之前调用，否则报错</p>
-     * <p>此方法Activity可以继承AppCompatActivity</p>
-     * <p>启动的时候状态栏会显示一下再隐藏，比如QQ的欢迎界面</p>
-     * <p>在配置文件中Activity加属性android:theme="@android:style/Theme.NoTitleBar.Fullscreen"</p>
-     * <p>如加了以上配置Activity不能继承AppCompatActivity，会报错</p>
-     *
-     * @param activity activity
+     * 着色模式: 为status着色 必须是16进制 ,Status底部为白色,所以这个不能全屏模式
      */
-    public static void hideStatusBar(Activity activity) {
-        activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public static void setStatusColor(Activity activity, int statusColor) {
+        // 清除Status透明的状态
+        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        // 添加Status可以着色的状态
+        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        // 开始着色Status
+        activity.getWindow().setStatusBarColor(statusColor);
+    }
+
+    /**
+     * 全屏模式：这里只负责status的透明 ,并且最顶部view要设置 fitsSystemWindows="true"
+     * 动态显示 view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+     * 动态显示 遮挡top布局 view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+     * 动态隐藏 view.setSystemUiVisibility(View.INVISIBLE);
+     */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public static void setStatusTrans(Activity activity) {
+        Window window = activity.getWindow();
+        // 清除Status和navigation透明的状态
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+                | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        // 让DecorView填充Status和Navigation，这样他们的底色就不是白色，而是我们的Layout的背景色
+        // setSystemUiVisibility就是用来操作Status的方法
+        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        // 添加Status可以着色的状态
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        // 开始着色Status
+        window.setStatusBarColor(Color.TRANSPARENT);
+        // 开始着色Navigation
+        window.setNavigationBarColor(Color.TRANSPARENT);
     }
 
     /**

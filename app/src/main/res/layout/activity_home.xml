@@ -6,5 +6,9 @@
     android:orientation="vertical"
     tools:context=".activity.HomeActivity">
 
+    <com.bjxrgz.startup.view.MyWebView
+        android:id="@+id/mwv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </LinearLayout>
