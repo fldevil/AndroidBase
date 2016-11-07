@@ -7,7 +7,6 @@ import android.os.Bundle;
 import com.bjxrgz.startup.R;
 import com.bjxrgz.startup.base.BaseViewActivity;
 import com.bjxrgz.startup.utils.ActivityUtils;
-import com.bjxrgz.startup.utils.ToastUtils;
 import com.bjxrgz.startup.view.MyWebView;
 
 import butterknife.BindView;

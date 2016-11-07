@@ -2,6 +2,7 @@ package com.bjxrgz.startup.manager;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.bjxrgz.startup.utils.LogUtils;
 import com.umeng.analytics.MobclickAgent;
@@ -9,6 +10,12 @@ import com.umeng.message.IUmengCallback;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.MsgConstant;
 import com.umeng.message.PushAgent;
+import com.umeng.message.UmengNotificationClickHandler;
+import com.umeng.message.entity.UMessage;
+
+import org.json.JSONObject;
+
+import java.util.Map;
 
 /**
  * Created by JiangZhiGuo on 2016/8/5.
@@ -26,9 +33,19 @@ public class PushManager {
         mPushAgent.onAppStart();
         // 打印日志
         mPushAgent.setDebugMode(isLog);
+        // 检查配置文件
+        mPushAgent.setPushCheck(isLog);
         // 收集奔溃日志
         MobclickAgent.setScenarioType(context, MobclickAgent.EScenarioType.E_UM_NORMAL);
         MobclickAgent.setCatchUncaughtExceptions(true);
+        // 应用在前台时否显示通知
+        mPushAgent.setNotificaitonOnForeground(true);
+        // 通知栏按数量显示
+        mPushAgent.setDisplayNotificationNumber(10);
+        // 设置重复提醒的最小间隔秒数
+        mPushAgent.setMuteDurationSeconds(1);
+        // 开启免打扰模式 “23:00”到“6:00”
+        mPushAgent.setNoDisturbMode(23, 0, 6, 0);
         // 注册推送服务，每次调用register方法都会回调该接口
         mPushAgent.register(new IUmengRegisterCallback() {
             @Override
@@ -100,25 +117,6 @@ public class PushManager {
     }
 
     /**
-     * 账号的统计
-     *
-     * @param provider 账号来源。如果用户通过第三方账号登陆，可以调用此接口进行统计。
-     *                 支持自定义，不能以下划线"_"开头，使用大写字母和数字标识，长度小于32 字节
-     * @param id       用户账号ID，长度小于64字节
-     */
-    public static void userIn(String provider, String id) {
-        MobclickAgent.onProfileSignIn(provider, id);
-    }
-
-    public static void userIn(String id) {
-        MobclickAgent.onProfileSignIn(id);
-    }
-
-    public static void userOut() {
-        MobclickAgent.onProfileSignOff();
-    }
-
-    /**
      * 设置声音
      */
     public static void setAudio(boolean open) {
@@ -138,6 +136,25 @@ public class PushManager {
         } else { // 不震动
             mPushAgent.setNotificationPlayVibrate(MsgConstant.NOTIFICATION_PLAY_SDK_DISABLE);
         }
+    }
+
+    /**
+     * 自定义通知打开动作
+     * 1.只能在MyApp中调用 ,如果在Activity中调用此接口，若应用进程关闭，则设置的接口会无效
+     * 2.UmengNotificationClickHandler是在BroadcastReceiver中被调用，因此若需启动Activity，
+     * 需为Intent添加Flag：Intent.FLAG_ACTIVITY_NEW_TASK，否则无法启动Activity。
+     */
+    public static void initCustomAction() {
+        UmengNotificationClickHandler notificationClickHandler = new UmengNotificationClickHandler() {
+            @Override
+            public void dealWithCustomAction(Context context, UMessage msg) {
+                JSONObject raw = msg.getRaw();
+                Map<String, String> extra = msg.extra;
+                String custom = msg.custom;
+                Toast.makeText(context, custom, Toast.LENGTH_LONG).show();
+            }
+        };
+        mPushAgent.setNotificationClickHandler(notificationClickHandler);
     }
 
 }
