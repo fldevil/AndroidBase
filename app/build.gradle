@@ -21,8 +21,8 @@ android {
             keyAlias 'Bjxrgz'
             keyPassword 'Bjxrgz998'
 //            storeFile file('/Users/mengfd/Documents/projects/kaola/launch/android/bjxrgz_android_debug.jks')
-//            storeFile file('E:/android_key/bjxrgz_android_debug.jks')
-            storeFile file('D:/gitRep/Android/key/bjxrgz_android_debug.jks')
+            storeFile file('E:/android_key/bjxrgz_android_debug.jks')
+//            storeFile file('D:/gitRep/Android/key/bjxrgz_android_debug.jks')
             storePassword 'Bjxrgz998'
         }
     }
@@ -91,6 +91,12 @@ android {
     aaptOptions.useNewCruncher = false
 }
 
+greendao {
+    schemaVersion 1
+    daoPackage 'com.bjxrgz.startup.db'
+    targetGenDir 'src/main/java'
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs') // 编译本地 jar 包
     testCompile 'junit:junit:4.12' // 仅仅针对单元测试的代码编译打包
@@ -113,7 +119,10 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-scalars:2.1.0'
     // retrofit2 end
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:v2.0.0'
+    // greendao 数据库 start
     compile 'org.greenrobot:greendao:3.2.0'
+    compile 'org.greenrobot:greendao-generator:3.2.0'
+    // greendao 数据库 end
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.1.6'
     compile 'org.greenrobot:eventbus:3.0.0'
