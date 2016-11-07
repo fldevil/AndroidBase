@@ -48,14 +48,14 @@ public class StartActivity extends BaseViewActivity<StartActivity> {
 
     /* 跳转主页 */
     private void goHome() {
-        MyApp.mainHandler.postDelayed(new Runnable() {
+        MyApp.getInstance().getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 HomeActivity.goActivity(mActivity);
             }
         }, 1500);
         // 立刻关闭当前页面会出现空白缝隙
-        MyApp.mainHandler.postDelayed(new Runnable() {
+        MyApp.getInstance().getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 mActivity.finish();

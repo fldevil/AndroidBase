@@ -2,6 +2,7 @@ package com.bjxrgz.startup.utils;
 
 import android.text.TextUtils;
 
+import com.bjxrgz.startup.R;
 import com.bjxrgz.startup.base.MyApp;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
@@ -16,7 +17,7 @@ import java.io.File;
 public class LogUtils {
 
     public static void initApp(boolean IS_LOG) {
-        String logTag = MyApp.appInfo.getName();
+        String logTag = MyApp.getInstance().getString(R.string.app_name);
         Logger.Settings settings = Logger.init(logTag); // 打印tag
         settings.setMethodCount(3);// 3以上才能显示调用方法
         settings.hideThreadInfo(); // 隐藏线程显示
@@ -107,7 +108,7 @@ public class LogUtils {
         if (TextUtils.isEmpty(content)) {
             return;
         }
-        String logDir = MyApp.appInfo.getLogDir();
+        String logDir = MyApp.getInstance().getAppInfo().getLogDir();
         String logFileName = TimeUtils.genBillTime() + ".txt";
         File logFile = new File(logDir, logFileName);
         FileUtils.createFileByDeleteOldFile(logFile);

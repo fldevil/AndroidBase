@@ -26,20 +26,17 @@ public class MyApp extends Application {
     public static final boolean DEBUG = true; // 测试模式(上线为false)
     public static final boolean LOG = true; // 打印日志(上线为false)
 
-    public static MyApp instance;  // MyApp实例
-    public static Handler mainHandler;// 主线程handler
-    public static ExecutorService threadPool; // 缓冲线程池
-    public static AppUtils.AppInfo appInfo; // app信息
-    public static DeviceUtils.DeviceInfo deviceInfo; // device信息
+    private static MyApp instance;  // MyApp实例
+
+    private Handler mainHandler;// 主线程handler
+    private ExecutorService threadPool; // 缓冲线程池
+    private AppUtils.AppInfo appInfo; // app信息
+    private DeviceUtils.DeviceInfo deviceInfo; // device信息
 
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
-        mainHandler = new Handler(Looper.getMainLooper());
-        threadPool = Executors.newCachedThreadPool();
-        appInfo = AppUtils.getAppInfo(this);
-        deviceInfo = DeviceUtils.getDeviceInfo(this);
 
         LogUtils.initApp(LOG);
         ButterKnife.setDebug(LOG);
@@ -48,6 +45,38 @@ public class MyApp extends Application {
         PushManager.initAPP(this, LOG);
 
         initListener();
+    }
+
+    public static MyApp getInstance() {
+        return instance;
+    }
+
+    public Handler getHandler() {
+        if (null == mainHandler) {
+            mainHandler = new Handler(Looper.getMainLooper());
+        }
+        return mainHandler;
+    }
+
+    public ExecutorService getThread() {
+        if (null == threadPool) {
+            threadPool = Executors.newCachedThreadPool();
+        }
+        return threadPool;
+    }
+
+    public AppUtils.AppInfo getAppInfo() {
+        if (null == appInfo) {
+            appInfo = AppUtils.getAppInfo(this);
+        }
+        return appInfo;
+    }
+
+    public DeviceUtils.DeviceInfo getDeviceInfo() {
+        if (null == deviceInfo) {
+            deviceInfo = DeviceUtils.getDeviceInfo(this);
+        }
+        return deviceInfo;
     }
 
     private void initListener() {

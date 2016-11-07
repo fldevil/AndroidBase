@@ -17,6 +17,21 @@ import com.bjxrgz.startup.base.MyApp;
 public class ToastUtils {
 
     /**
+     * 显示默认的的toast
+     */
+    public static void show(CharSequence message) {
+        if (!TextUtils.isEmpty(message)) {
+            Toast.makeText(MyApp.getInstance(), message, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public static void show(int message) {
+        if (0 != message) {
+            Toast.makeText(MyApp.getInstance(), message, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
      * 显示自定义view的toast
      */
     public static void show(View view, int bgColor, int gravity, int duration) {
@@ -56,7 +71,7 @@ public class ToastUtils {
      * @param duration eg:Toast.LENGTH_SHORT
      */
     private static Toast getToast(int bgColor, int gravity, int duration) {
-        Toast toast = new Toast(MyApp.instance);
+        Toast toast = new Toast(MyApp.getInstance());
         if (0 != bgColor) {
             LinearLayout layout = (LinearLayout) toast.getView();
             layout.setBackgroundColor(bgColor);

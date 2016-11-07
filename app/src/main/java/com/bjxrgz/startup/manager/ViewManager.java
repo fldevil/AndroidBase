@@ -2,10 +2,9 @@ package com.bjxrgz.startup.manager;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.text.TextUtils;
-import android.widget.Toast;
 
 import com.bjxrgz.startup.base.MyApp;
+import com.bjxrgz.startup.utils.ToastUtils;
 import com.bjxrgz.startup.view.MyLoading;
 
 /**
@@ -28,16 +27,12 @@ public class ViewManager {
     /**
      * Toast 也可以ToastUtils来构造
      */
-    public static void showToast(String message) {
-        if (!TextUtils.isEmpty(message)) {
-            Toast.makeText(MyApp.instance, message, Toast.LENGTH_SHORT).show();
-        }
+    public static void showToast(CharSequence message) {
+        ToastUtils.show(message);
     }
 
     public static void showToast(int message) {
-        if (0 != message) {
-            Toast.makeText(MyApp.instance, message, Toast.LENGTH_SHORT).show();
-        }
+        ToastUtils.show(message);
     }
 
 }

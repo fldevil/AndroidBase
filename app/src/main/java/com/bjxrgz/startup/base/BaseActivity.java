@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -146,6 +147,20 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         LogUtils.lifeCycle(log, logTag);
+    }
+
+    /**
+     * 权限处理回调
+     *
+     * @param requestCode  自己传的
+     * @param permissions  对应的权限
+     * @param grantResults grantResults[0] == PackageManager.PERMISSION_GRANTED 为拒绝
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        LogUtils.lifeCycle(log, logTag);
+//        MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
     /**

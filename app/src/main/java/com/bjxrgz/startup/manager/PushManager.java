@@ -2,8 +2,8 @@ package com.bjxrgz.startup.manager;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.widget.Toast;
 
+import com.bjxrgz.startup.utils.AppUtils;
 import com.bjxrgz.startup.utils.LogUtils;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.IUmengCallback;
@@ -12,10 +12,6 @@ import com.umeng.message.MsgConstant;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengNotificationClickHandler;
 import com.umeng.message.entity.UMessage;
-
-import org.json.JSONObject;
-
-import java.util.Map;
 
 /**
  * Created by JiangZhiGuo on 2016/8/5.
@@ -146,12 +142,25 @@ public class PushManager {
      */
     public static void initCustomAction() {
         UmengNotificationClickHandler notificationClickHandler = new UmengNotificationClickHandler() {
+            // 后台发送自定义消息时，回调这个方法
             @Override
             public void dealWithCustomAction(Context context, UMessage msg) {
-                JSONObject raw = msg.getRaw();
-                Map<String, String> extra = msg.extra;
-                String custom = msg.custom;
-                Toast.makeText(context, custom, Toast.LENGTH_LONG).show();
+                // 如果回调这个方法,数据是放在msg.custom里的
+                // 处理过程参照下面回调方法
+            }
+
+            // 后台发送正常消息时，回调这个方法
+            @Override
+            public void launchApp(Context context, UMessage uMessage) {
+                // 一般这里会先进行判断  是正常打开app，还是跳转到指定的页面
+                boolean appBackground = AppUtils.isAppBackground(context);
+                if (appBackground) {
+                    // 如果数据在uMessage.extra里，那么友盟会自动把这些数据封装带启动的intent里
+                    // 如果数据不在extra里，那么需要额外的处理
+                    super.launchApp(context, uMessage);
+                } else {
+                    // 直接打开Activity操作
+                }
             }
         };
         mPushAgent.setNotificationClickHandler(notificationClickHandler);

@@ -15,14 +15,14 @@ public class FileManager {
 
     public static File createBitmapFile() {
         String fileName = StringUtils.getRandom(8) + ".jpg";
-        File jpgFile = new File(MyApp.appInfo.getResDir(), fileName);
+        File jpgFile = new File(MyApp.getInstance().getAppInfo().getResDir(), fileName);
         FileUtils.createOrExistsFile(jpgFile);
         return jpgFile;
     }
 
     public static File createAPKFile(String versionName) {
         String fileName = versionName + ".apk";
-        File apkFile = new File(MyApp.appInfo.getResDir(), fileName);
+        File apkFile = new File(MyApp.getInstance().getAppInfo().getResDir(), fileName);
         FileUtils.createOrExistsFile(apkFile);
         return apkFile;
     }

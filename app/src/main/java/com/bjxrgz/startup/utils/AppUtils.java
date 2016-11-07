@@ -253,7 +253,7 @@ public class AppUtils {
      * 清除所有资源
      */
     public static void clearRes() {
-        String resDir = MyApp.appInfo.getResDir();
+        String resDir = MyApp.getInstance().getAppInfo().getResDir();
         List<File> fileList = FileUtils.listFilesAndDirInDir(resDir, true);
         for (File file : fileList) {
             FileUtils.deleteDir(file);
@@ -309,7 +309,7 @@ public class AppUtils {
         Intent intent = new Intent();
         intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
-        String packageName = MyApp.appInfo.getPackageName();
+        String packageName = MyApp.getInstance().getAppInfo().getPackageName();
         intent.setData(Uri.parse("package:" + packageName));
         return intent;
     }
@@ -348,18 +348,18 @@ public class AppUtils {
     }
 
     /**
-     * 获取打开App的意图
-     */
-    public static Intent getOpenIntent(Context context, String packageName) {
-        return getIntentByPackageName(context, packageName);
-    }
-
-    /**
      * 获取App信息的意图
      */
     public static Intent getInfoIntent(String packageName) {
         Intent intent = new Intent("android.settings.APPLICATION_DETAILS_SETTINGS");
         return intent.setData(Uri.parse("package:" + packageName));
+    }
+
+    /**
+     * 获取打开当前App的意图
+     */
+    public static Intent getOpenIntent(Context context) {
+        return getIntentByPackageName(context, context.getPackageName());
     }
 
     /**

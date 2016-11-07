@@ -14,7 +14,7 @@ import android.widget.PopupWindow;
 /**
  * Created by Jiang on 2016/06/01
  * <p/>
- * 处理   popWindow管理类
+ * 处理   popWindow,popMenu管理类
  */
 public class PopUtils {
 
