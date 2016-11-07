@@ -7,7 +7,6 @@ import com.bjxrgz.startup.R;
 import com.bjxrgz.startup.base.MyApp;
 import com.bjxrgz.startup.utils.ActivityUtils;
 import com.bjxrgz.startup.utils.LogUtils;
-import com.bjxrgz.startup.utils.WidgetUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -239,12 +238,12 @@ public class HttpManager {
 
         } else { // 弹出提示
             if (!TextUtils.isEmpty(message)) { // 有错误信息
-                WidgetUtils.showToast(MyApp.instance, message);
+                ViewManager.showToast(message);
             } else { // 无错误信息
                 if (code == 404) {
-                    WidgetUtils.showToast(MyApp.instance, R.string.http_error_404);
+                    ViewManager.showToast(R.string.http_error_404);
                 } else if (code == 500) {
-                    WidgetUtils.showToast(MyApp.instance, R.string.http_error_500);
+                    ViewManager.showToast(R.string.http_error_500);
                 }
             }
         }
@@ -256,10 +255,10 @@ public class HttpManager {
     private static void responseError(Throwable ex) {
         Class<? extends Throwable> aClass = ex.getClass();
         if (aClass.equals(java.net.ConnectException.class)) { // 网络环境
-            WidgetUtils.showToast(MyApp.instance, R.string.http_error_connect);
+            ViewManager.showToast(R.string.http_error_connect);
 
         } else if (aClass.equals(java.net.SocketTimeoutException.class)) { // 超时错误
-            WidgetUtils.showToast(MyApp.instance, R.string.http_error_time);
+            ViewManager.showToast(R.string.http_error_time);
 
         } else {
             LogUtils.e(ex.toString());

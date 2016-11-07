@@ -29,7 +29,7 @@ public class MyWrapView extends ViewGroup {
         super(context, attrs);
     }
 
-    /* xml构造，并有自定义attrs时调用 */
+    /* xml构造，并有自定义style时调用 */
     public MyWrapView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }

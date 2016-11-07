@@ -12,10 +12,10 @@ import com.bjxrgz.startup.domain.Version;
 import com.bjxrgz.startup.manager.APIManager;
 import com.bjxrgz.startup.manager.FileManager;
 import com.bjxrgz.startup.manager.HttpManager;
+import com.bjxrgz.startup.manager.ViewManager;
 import com.bjxrgz.startup.utils.AppUtils;
 import com.bjxrgz.startup.utils.DialogUtils;
 import com.bjxrgz.startup.utils.FileUtils;
-import com.bjxrgz.startup.utils.WidgetUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -107,7 +107,7 @@ public class UpdateService extends Service {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                WidgetUtils.showToast(UpdateService.this, "下载失败");
+                ViewManager.showToast("下载失败");
             }
         });
     }

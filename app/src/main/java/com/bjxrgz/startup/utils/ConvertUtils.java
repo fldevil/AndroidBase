@@ -6,9 +6,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+
+import com.bjxrgz.startup.base.MyApp;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -29,7 +32,14 @@ import static com.bjxrgz.startup.utils.ConstUtils.MB;
  */
 public class ConvertUtils {
 
-    static final char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+    /**
+     * setStatusColor(int)的参数不是资源文件的索引，所以要转换
+     */
+    private static int get0xColor(int colorID) {
+        return ContextCompat.getColor(MyApp.instance.getBaseContext(), colorID);
+    }
+
+    private static final char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
     /**
      * byteArr转hexString
