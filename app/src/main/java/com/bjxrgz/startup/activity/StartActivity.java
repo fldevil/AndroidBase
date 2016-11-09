@@ -36,7 +36,7 @@ public class StartActivity extends BaseViewActivity<StartActivity> {
 
     @Override
     protected void initData() {
-        update();
+//        update();
         goHome();
     }
 

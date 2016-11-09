@@ -275,7 +275,7 @@ public abstract class BaseFragment<T> extends Fragment {
      * <p/>
      * 反射生成对象
      */
-    private static <T> T newInstance(Class<T> clz, Bundle args) {
+    protected static <T> T newInstance(Class<T> clz, Bundle args) {
         T fragment = null;
         try {
             // 获取Fragment内名为setArguments的函数

@@ -1,5 +1,6 @@
 package com.bjxrgz.startup.manager;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.text.TextUtils;
 
@@ -35,11 +36,12 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  */
 public class HttpManager {
 
-    public static String BASE_URL; // 当前使用的HOST
+    private static String BASE_URL; // 当前使用的HOST
     private static APIManager APITokenGson;
     private static APIManager APITokenString;
     private static APIManager APIEmptyGson;
     private static APIManager APIEmptyString;
+    private static APIManager APINullGson;
 
     public static void initAPP() {
         if (MyApp.DEBUG) {
@@ -159,17 +161,45 @@ public class HttpManager {
         return APIEmptyString;
     }
 
+    public static APIManager getAPINullGson() {
+        if (APINullGson == null) {
+            synchronized (HttpManager.class) {
+                if (APINullGson == null) {
+                    APINullGson = getService(null, getGsonFactory());
+                }
+            }
+        }
+        return APINullGson;
+    }
+
+    public interface CallBack<T> {
+        void onSuccess(T result);
+
+        void onFailure();
+    }
+
+    public static <T> void enqueue(Call<T> call, final CallBack<T> callBack) {
+        enqueue(null, call, callBack);
+    }
+
     /**
-     * 异步执行
-     *
+     * @param dialog   等待loading（内部自动show/dismiss）
      * @param call     APIService接口调用
      * @param callBack 回调接口
      * @param <T>      返回实体类
      */
-    public static <T> void enqueue(Call<T> call, final CallBack<T> callBack) {
+    public static <T> void enqueue(final Dialog dialog, Call<T> call, final CallBack<T> callBack) {
+        if (dialog != null) {
+            dialog.show();
+        }
         call.enqueue(new Callback<T>() {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
+                if (dialog != null) {
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                }
                 int code = response.code();
                 Headers headers = response.headers();
                 if (code == 200) { // 200成功
@@ -206,17 +236,16 @@ public class HttpManager {
             @Override
             public void onFailure(Call<T> call, Throwable t) {
                 responseError(t);
+                if (dialog != null) {
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                }
                 if (callBack != null) {
                     callBack.onFailure();
                 }
             }
         });
-    }
-
-    public interface CallBack<T> {
-        void onSuccess(T result);
-
-        void onFailure();
     }
 
     /**

@@ -12,11 +12,15 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.HeaderMap;
 import retrofit2.http.Multipart;
 import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
+import retrofit2.http.Url;
 
 /**
  * Created by Jiang on 2016/10/14.
@@ -25,23 +29,25 @@ import retrofit2.http.QueryMap;
 public interface APIManager {
 
     /* BaseURL最好以/结尾 */
-    String HOST_DEBUG = "http://www.bjxrgz.com:808/bio/api/v1/"; // 测试
-    String HOST_RELEASE = "http://www.bjxrgz.com:808/bio/api/v1/"; // 正式
+    String HOST_DEBUG = ""; // 测试
+    String HOST_RELEASE = ""; // 正式
 
     String CHECK_UPDATE = "http://www.bjxrgz.com:808/bio/api/v1/";
     String DOWNLOAD_APK = "/getapp?file={name}";
+
+    @Multipart // 上传文件
+    @GET("demo/{path}")
+    Call<List<User>> demo(@Url String url, @Path("path") String path,
+                          @Header("key") String key, @HeaderMap Map<String, String> headers,
+                          @Query("limit") String limit, @QueryMap Map<String, String> options,
+                          @Part MultipartBody.Part file, @PartMap Map<String, RequestBody> params,
+                          @Part("fileName") String description, @Part("file") RequestBody imgs,
+                          @Body User user, @Body String requestBody);
 
     @GET(CHECK_UPDATE)
     Call<Version> checkUpdate();
 
     @GET(DOWNLOAD_APK)
     Call<ResponseBody> downloadAPK(@Path("name") String name);
-
-    @Multipart // 上传文件
-    @GET("demo/{path}")
-    Call<List<User>> demo(@Path("path") String path, @Part MultipartBody.Part file,
-                          @Part("fileName") String description, @Part("file") RequestBody imgs,
-                          @Query("limit") String limit, @QueryMap Map<String, String> options,
-                          @Body User user, @Body String requestBody);
 
 }

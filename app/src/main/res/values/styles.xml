@@ -18,6 +18,8 @@
         <item name="colorButtonNormal">@color/button_color</item>
         <!-- 字体颜色 -->
         <item name="android:textColor">@color/text_color</item>
+        <!-- 标题文字的颜色 -->
+        <item name="android:textColorPrimary">@color/text_color</item>
         <!-- 背景颜色 -->
         <item name="android:windowBackground">@color/window_color</item>
         <!-- 字体允许小写 -->
@@ -35,10 +37,10 @@
     </style>
 
     <!-- AppBarLayout-->
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="appBarStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <!-- ToolBarLayout -->
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="toolBarStyle" parent="ThemeOverlay.AppCompat.Light" />
 
     <!-- 自定义对话框样式 -->
     <style name="DialogIOS" parent="@android:style/Theme.Dialog">

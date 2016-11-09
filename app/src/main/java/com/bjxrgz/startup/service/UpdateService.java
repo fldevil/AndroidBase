@@ -22,9 +22,6 @@ import java.io.InputStream;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class UpdateService extends Service {
 
@@ -40,7 +37,7 @@ public class UpdateService extends Service {
 
     @Override
     public void onCreate() {
-//        checkUpdate();
+        checkUpdate();
     }
 
     private void checkUpdate() {
@@ -85,15 +82,11 @@ public class UpdateService extends Service {
     }
 
     private void downloadApk() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(HttpManager.BASE_URL)
-                .build();
-        APIManager service = retrofit.create(APIManager.class);
-        Call<ResponseBody> call = service.downloadAPK(version.getUpdateUrl());
-        call.enqueue(new Callback<ResponseBody>() {
+        APIManager apiNullGson = HttpManager.getAPINullGson();
+        Call<ResponseBody> downCall = apiNullGson.downloadAPK(version.getUpdateUrl());
+        HttpManager.enqueue(downCall, new HttpManager.CallBack<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                ResponseBody body = response.body();
+            public void onSuccess(ResponseBody body) {
                 if (body != null) {
                     InputStream inputStream = body.byteStream();
                     if (null != inputStream) {
@@ -106,7 +99,7 @@ public class UpdateService extends Service {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure() {
                 ViewManager.showToast("下载失败");
             }
         });

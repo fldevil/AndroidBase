@@ -8,9 +8,7 @@ import android.os.Bundle;
 import com.bjxrgz.startup.R;
 import com.bjxrgz.startup.base.BaseViewActivity;
 import com.bjxrgz.startup.utils.ActivityUtils;
-import com.bjxrgz.startup.view.MyWebView;
 
-import butterknife.BindView;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnNeverAskAgain;
 import permissions.dispatcher.OnPermissionDenied;
@@ -26,12 +24,10 @@ import permissions.dispatcher.RuntimePermissions;
 @RuntimePermissions
 public class HomeActivity extends BaseViewActivity<HomeActivity> {
 
-    @BindView(R.id.mwv)
-    MyWebView mwv;
 
-    public static void goActivity(Activity activity) {
-        Intent intent = new Intent(activity, HomeActivity.class);
-        ActivityUtils.startActivity(activity, intent);
+    public static void goActivity(Activity from) {
+        Intent intent = new Intent(from, HomeActivity.class);
+        ActivityUtils.startActivity(from, intent);
     }
 
     @Override
@@ -41,19 +37,11 @@ public class HomeActivity extends BaseViewActivity<HomeActivity> {
     @Override
     protected void initView(Bundle savedInstanceState) {
         initContentView(R.layout.activity_home);
-        mwv.load("http://www.hao123.com");
 
     }
 
     @Override
     protected void initData() {
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mwv.canFinish()) {
-            super.onBackPressed();
-        }
     }
 
     @NeedsPermission(Manifest.permission.CAMERA)
