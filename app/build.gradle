@@ -4,14 +4,14 @@ apply plugin: 'org.greenrobot.greendao' // greenDao
 
 android {
 
-    compileSdkVersion 25
     buildToolsVersion "23.0.3"
+    compileSdkVersion 25
 
     defaultConfig {
-        applicationId "com.bjxrgz.startup"
+        targetSdkVersion 22 // 再高就动态权限
+        minSdkVersion 14 // 包括4.0以上
         multiDexEnabled true // 解决jar包冲突
-        minSdkVersion 15
-        targetSdkVersion 25
+        applicationId "com.bjxrgz.startup" // 要和manifest一致
         versionCode 1
         versionName "1.0.0"
     }

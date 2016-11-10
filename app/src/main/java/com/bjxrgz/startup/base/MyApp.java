@@ -28,7 +28,7 @@ public class MyApp extends Application {
 
     private static MyApp instance;  // MyApp实例
 
-    private Handler mainHandler;// 主线程handler
+    private Handler mainHandler; // 主线程handler
     private ExecutorService threadPool; // 缓冲线程池
     private AppUtils.AppInfo appInfo; // app信息
     private DeviceUtils.DeviceInfo deviceInfo; // device信息
