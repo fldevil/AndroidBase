@@ -70,7 +70,6 @@ public class FragmentUtils {
         if (fragment.isAdded()) {
             return;
         }
-        // fragment事务，被忘了commit
         FragmentTransaction transaction = manager.beginTransaction();
         if (TextUtils.isEmpty(tag)) {
             transaction.add(addId, fragment);
@@ -92,7 +91,9 @@ public class FragmentUtils {
         if (fragment.isVisible()) {
             return;
         }
-        // fragment事务，被忘了commit
+        if (fragment.isAdded()) { // 如果存在 但没显示 则去掉也存在的
+            remove(manager, fragment, false);
+        }
         FragmentTransaction transaction = manager.beginTransaction();
         if (TextUtils.isEmpty(tag)) {
             transaction.replace(replaceId, fragment);
@@ -106,10 +107,9 @@ public class FragmentUtils {
      * remove会执行到detach
      */
     public static void remove(FragmentManager manager, Fragment fragment, boolean stack) {
-        if (fragment.isDetached()) {
+        if (!fragment.isAdded()) {
             return;
         }
-        // fragment事务，被忘了commit
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.remove(fragment);
         commonTrans(transaction, stack);
@@ -123,7 +123,6 @@ public class FragmentUtils {
         if (fragment.isHidden()) {
             return;
         }
-        // fragment事务，被忘了commit
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.hide(fragment);
         commonTrans(transaction, stack);
@@ -137,7 +136,6 @@ public class FragmentUtils {
         if (!fragment.isHidden()) {
             return;
         }
-        // fragment事务，被忘了commit
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.show(fragment);
         commonTrans(transaction, stack);
@@ -147,6 +145,7 @@ public class FragmentUtils {
         if (stack) {
             transaction.addToBackStack(null);
         }
+        // 事务最后要commit
         // commit方法一定要在onSaveInstance()之前调用，或者以下方法，或者handler.post
         transaction.commitAllowingStateLoss();
         // 异步执行,立即执行commit()提供的transaction。

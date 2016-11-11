@@ -12,6 +12,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 
+import com.bjxrgz.startup.base.MyApp;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -82,6 +84,13 @@ public class MediaUtils {
             intent.addCategory(Intent.CATEGORY_OPENABLE);
         } else {
             intent.setAction(Intent.ACTION_GET_CONTENT);
+        }
+        if (intent.resolveActivity(MyApp.getInstance().getPackageManager()) == null) {
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+        }
+        if (intent.resolveActivity(MyApp.getInstance().getPackageManager()) == null) {
+            intent = new Intent(Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         }
         intent.setType("image/*");
         return intent;

@@ -86,7 +86,13 @@ public class ActivityUtils {
         if (from instanceof Activity) {
             Activity activity = (Activity) from;
             if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                activity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
+                try { // 有些机型会报错
+                    activity.startActivity(intent,
+                            ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    activity.startActivity(intent);
+                }
             } else {
                 activity.startActivity(intent);
                 if (anim) { // 4.4跳转效果
@@ -104,7 +110,12 @@ public class ActivityUtils {
      */
     public static void startActivity(Fragment from, Activity to, Intent intent) {
         if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            from.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(to).toBundle());
+            try { // 有些机型会报错
+                from.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(to).toBundle());
+            } catch (Exception e) {
+                e.printStackTrace();
+                from.startActivity(intent);
+            }
         } else {
             from.startActivity(intent);
         }
@@ -115,7 +126,13 @@ public class ActivityUtils {
      */
     public static void startActivity(Activity from, Intent intent, int requestCode) {
         if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            from.startActivityForResult(intent, requestCode, ActivityOptions.makeSceneTransitionAnimation(from).toBundle());
+            try { // 有些机型会报错
+                from.startActivityForResult(intent, requestCode,
+                        ActivityOptions.makeSceneTransitionAnimation(from).toBundle());
+            } catch (Exception e) {
+                e.printStackTrace();
+                from.startActivityForResult(intent, requestCode);
+            }
         } else {
             from.startActivityForResult(intent, requestCode);
             if (anim) { // 4.4跳转效果
@@ -129,7 +146,13 @@ public class ActivityUtils {
      */
     public static void startActivity(Fragment from, Activity to, Intent intent, int requestCode) {
         if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            from.startActivityForResult(intent, requestCode, ActivityOptions.makeSceneTransitionAnimation(to).toBundle());
+            try { // 有些机型会报错
+                from.startActivityForResult(intent, requestCode,
+                        ActivityOptions.makeSceneTransitionAnimation(to).toBundle());
+            } catch (Exception e) {
+                e.printStackTrace();
+                from.startActivityForResult(intent, requestCode);
+            }
         } else {
             from.startActivityForResult(intent, requestCode);
             if (anim) { // 4.4跳转效果
@@ -143,8 +166,13 @@ public class ActivityUtils {
      */
     public static void startActivityForFragment(AppCompatActivity activity, Fragment fragment, Intent intent, int requestCode) {
         if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            activity.startActivityFromFragment(fragment, intent, requestCode,
-                    ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
+            try {
+                activity.startActivityFromFragment(fragment, intent, requestCode,
+                        ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
+            } catch (Exception e) {
+                e.printStackTrace();
+                activity.startActivityFromFragment(fragment, intent, requestCode);
+            }
         } else {
             activity.startActivityFromFragment(fragment, intent, requestCode);
             if (anim) // 4.4跳转效果
