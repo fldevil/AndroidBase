@@ -314,6 +314,34 @@ public class AppUtils {
     }
 
     /**
+     * 如果SD卡存在，则获取
+     * SDCard/Android/data/你的应用的包名/files/
+     * 如果不存在，则获取
+     * /data/data/<application package>/files
+     */
+    public static String getExternalFilesDir(Context context,String path){
+        if (isSDCardEnable()){
+            return context.getExternalFilesDir(path).getAbsolutePath();
+        }else {
+            return context.getFilesDir().getAbsolutePath();
+        }
+    }
+
+    /**
+     * 如果SD卡存在，则获取
+     * SDCard/Android/data/你的应用包名/cache/
+     * 如果不存在，则获取
+     * /data/data/<application package>/cache
+     */
+    public static String getExternalCacheDir(Context context){
+        if (isSDCardEnable()){
+            return context.getExternalCacheDir().getAbsolutePath();
+        }else {
+            return context.getCacheDir().getAbsolutePath();
+        }
+    }
+
+    /**
      * 外存总共空间
      */
     public static String getExternalTotal() {
