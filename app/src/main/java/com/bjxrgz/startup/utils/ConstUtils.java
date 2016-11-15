@@ -1,7 +1,5 @@
 package com.bjxrgz.startup.utils;
 
-import com.bjxrgz.startup.base.MyApp;
-
 /**
  * Created by JiangZhiGuo on 2016/10/11.
  * describe 常量工具类
@@ -14,17 +12,15 @@ public class ConstUtils {
     public static final String FORMAT_CHINA_Y_M_D_H_M = "yyyy年MM月dd日 HH:mm";
     public static final String FORMAT_LINE_Y_M_D_H_M_S = "yyyy-MM-dd HH:mm:ss";
     public static final String FORMAT_LINE_M_D_H_M = "MM-dd HH:mm";
-
     public static final String FORMAT_LINE_Y_M_D = "yyyy-MM-dd";
     public static final String FORMAT_POINT_Y_M_D = "yyyy.MM.dd";
     public static final String FORMAT_CHINA_Y_M_D = "yyyy年MM月dd日";
-
     public static final String FORMAT_LINE_M_D = "MM-dd";
     public static final String FORMAT_POINT_M_D = "yyyy.MM";
-
     public static final String FORMAT_H_M_S = "HH:mm:ss";
     public static final String FORMAT_H_M = "HH:mm";
     public static final String FORMAT_M_S = "mm:ss";
+    public static final String FORMAT_12_A = "hh:mm a"; // 12小时制
 
     /**
      * ****************************** 存储 **********************************

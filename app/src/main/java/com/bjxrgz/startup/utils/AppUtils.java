@@ -21,6 +21,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import static anetwork.channel.http.NetworkSdkSetting.context;
+
 /**
  * Created by JiangZhiGuo on 2016/10/12.
  * describe  App相关工具类
@@ -41,8 +43,26 @@ public class AppUtils {
         private Signature[] signature; // 签名
         private String SHA1; // 签名的SHA1值
         private boolean isSystem; // 是否是用户级别
-        private String resDir; // SDCard/AppName/(这里是咱们自己存放文件的文件夹)
-        private String logDir; // SDCard/AppName/log/(这里是咱们自己存放log的文件夹)
+        private String resDir; // SDCard/AppName/
+        private String logDir; // SDCard/AppName/log/
+        private String FileDir; // SDCard/Android/data/包名/files/
+        private String CacheDir; // SDCard/Android/data/包名/cache/
+
+        public String getFileDir() {
+            return FileDir;
+        }
+
+        public void setFileDir(String fileDir) {
+            FileDir = fileDir;
+        }
+
+        public String getCacheDir() {
+            return CacheDir;
+        }
+
+        public void setCacheDir(String cacheDir) {
+            CacheDir = cacheDir;
+        }
 
         public String getResDir() {
             return resDir;
@@ -146,6 +166,8 @@ public class AppUtils {
                     ", isSystem=" + isSystem +
                     ", resDir='" + resDir + '\'' +
                     ", logDir='" + logDir + '\'' +
+                    ", FileDir='" + FileDir + '\'' +
+                    ", CacheDir='" + CacheDir + '\'' +
                     '}';
         }
     }
@@ -176,16 +198,30 @@ public class AppUtils {
      * @return AppInfo类
      */
     private static AppInfo getBean(PackageManager pm, PackageInfo pi) {
+        String packageName = pi.packageName;
+        Signature[] signatures = pi.signatures;
         ApplicationInfo ai = pi.applicationInfo;
+        String versionName = pi.versionName;
+        int versionCode = pi.versionCode;
         String appName = ai.loadLabel(pm).toString();
         Drawable appIcon = ai.loadIcon(pm);
-        Signature[] signatures = pi.signatures;
+        String sourceDir = ai.sourceDir;
         String sha1 = "";
         if (signatures != null && signatures.length > 0) {
             sha1 = EncryptUtils.encryptSHA1ToString(signatures[0].toByteArray()).replaceAll("(?<=[0-9A-F]{2})[0-9A-F]{2}", ":$0");
         }
         boolean isSystem = (ApplicationInfo.FLAG_SYSTEM & ai.flags) == ApplicationInfo.FLAG_SYSTEM;
-        String resDir = getResDir(StringUtils.getPingYin(appName));
+        File filesDir = MyApp.getInstance().getExternalFilesDir("");
+        String filesDirPath = "";
+        if (FileUtils.isFileExists(filesDir)){
+            filesDirPath = filesDir.getAbsolutePath();
+        }
+        File cacheDir =  MyApp.getInstance().getExternalCacheDir();
+        String cacheDirPath = "";
+        if (FileUtils.isFileExists(cacheDir)){
+            cacheDirPath = cacheDir.getAbsolutePath();
+        }
+        String resDir = getResDir(packageName);
         FileUtils.createOrExistsDir(resDir); // 并创建
         String logDir = getLogDir(resDir);
         FileUtils.createOrExistsDir(logDir); // 并创建
@@ -193,15 +229,17 @@ public class AppUtils {
         AppInfo appInfo = new AppInfo();
         appInfo.setName(appName);
         appInfo.setIcon(appIcon);
-        appInfo.setPackageName(pi.packageName);
-        appInfo.setPackagePath(ai.sourceDir);
-        appInfo.setVersionName(pi.versionName);
-        appInfo.setVersionCode(pi.versionCode);
+        appInfo.setPackageName(packageName);
+        appInfo.setPackagePath(sourceDir);
+        appInfo.setVersionName(versionName);
+        appInfo.setVersionCode(versionCode);
         appInfo.setSignature(signatures);
         appInfo.setSHA1(sha1);
         appInfo.setSystem(isSystem);
         appInfo.setResDir(resDir);
         appInfo.setLogDir(logDir);
+        appInfo.setFileDir(filesDirPath);
+        appInfo.setCacheDir(cacheDirPath);
         return appInfo;
     }
 

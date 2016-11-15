@@ -25,12 +25,6 @@ public class ToastUtils {
         }
     }
 
-    public static void show(int message) {
-        if (0 != message) {
-            Toast.makeText(MyApp.getInstance(), message, Toast.LENGTH_SHORT).show();
-        }
-    }
-
     /**
      * 显示自定义view的toast
      */

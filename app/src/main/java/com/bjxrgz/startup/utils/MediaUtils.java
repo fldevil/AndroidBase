@@ -99,6 +99,10 @@ public class MediaUtils {
     /**
      * 裁剪 ,需要有被裁剪的源文件才能调用，相机拍照需在onActivityForResult里调用
      */
+    public static Intent getCropIntent(File from, File save) {
+        return getCropIntent(from, save, 1, 1, 300, 300);
+    }
+
     public static Intent getCropIntent(File from, File save, int aspectX,
                                        int aspectY, int outputX, int outputY) {
         Intent intent = new Intent();
@@ -107,7 +111,7 @@ public class MediaUtils {
         intent.putExtra("crop", "true");
         intent.putExtra("aspectX", aspectX); // 裁剪框比例
         intent.putExtra("aspectY", aspectY);
-        intent.putExtra("outputX", outputX); // 输出图片大小
+        intent.putExtra("outputX", outputX); // 输出图片大小(太大会传输失败)
         intent.putExtra("outputY", outputY);
         intent.putExtra("scale", true); // 缩放
         intent.putExtra("noFaceDetection", true); // 取消人脸识别功能
@@ -120,6 +124,10 @@ public class MediaUtils {
     /**
      * 相册 裁剪 ,可以直接调用  开启相册并裁减
      */
+    public static Intent getPictureCropIntent(File save) {
+        return getPictureCropIntent(save, 1, 1, 300, 300);
+    }
+
     public static Intent getPictureCropIntent(File save, int aspectX, int aspectY,
                                               int outputX, int outputY) {
         Intent intent = new Intent();
@@ -128,7 +136,7 @@ public class MediaUtils {
         intent.putExtra("crop", "true");
         intent.putExtra("aspectX", aspectX); // 裁剪框比例 1:1
         intent.putExtra("aspectY", aspectY);
-        intent.putExtra("outputX", outputX); // 输出图片大小
+        intent.putExtra("outputX", outputX); // 输出图片大小(太大会传输失败)
         intent.putExtra("outputY", outputY);
         intent.putExtra("scale", true); // 缩放
         intent.putExtra("noFaceDetection", true); // 取消人脸识别功能
@@ -195,11 +203,11 @@ public class MediaUtils {
     /**
      * 照片: 在onActivityResult中执行
      */
-    public static Bitmap getPictureBitmap(Context context, Intent data) {
-        if (data == null) {
+    public static Bitmap getPictureBitmap(Context context, Intent picture) {
+        if (picture == null) {
             return null;
         } else {
-            Uri uri = getUri(context, data);
+            Uri uri = getUri(context, picture);
             InputStream stream = openInput(context, uri);
             return BitmapFactory.decodeStream(stream);
         }
@@ -208,11 +216,11 @@ public class MediaUtils {
     /**
      * 压缩后的照片: 在onActivityResult中执行
      */
-    public static Bitmap getPictureBitmap(Context context, Intent data, double maxSize) {
-        if (data == null) {
+    public static Bitmap getPictureBitmap(Context context, Intent picture, double maxSize) {
+        if (picture == null) {
             return null;
         } else {
-            Uri uri = getUri(context, data);
+            Uri uri = getUri(context, picture);
             InputStream stream = openInput(context, uri);
             return ImageUtils.getBitmap(stream, maxSize);
         }
@@ -221,11 +229,11 @@ public class MediaUtils {
     /**
      * 压缩后的照片: 在onActivityResult中执行
      */
-    public static Bitmap getPictureBitmap(Context context, Intent data, int maxWidth, int maxHeight) {
-        if (data == null) {
+    public static Bitmap getPictureBitmap(Context context, Intent picture, int maxWidth, int maxHeight) {
+        if (picture == null) {
             return null;
         } else {
-            Uri uri = getUri(context, data);
+            Uri uri = getUri(context, picture);
             InputStream stream = openInput(context, uri);
             return ImageUtils.getBitmap(stream, maxWidth, maxHeight);
         }
@@ -275,18 +283,11 @@ public class MediaUtils {
         return degree;
     }
 
-    /*获取Uri的输入流, 相册选取图片时可读取 data.getData()*/
-    private static InputStream openInput(Context context, Uri uri) {
-        try {
-            return context.getContentResolver().openInputStream(uri);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     /*解决小米手机上获取图片路径为null的情况*/
     private static Uri getUri(Context context, Intent intent) {
+        if (intent == null) {
+            return null;
+        }
         Uri uri = intent.getData();
         String type = intent.getType(); // 小米的type不是null 其他的是
         if (uri != null && uri.getScheme().equals("file") && (type.contains("image/"))) {
@@ -317,6 +318,18 @@ public class MediaUtils {
             }
         }
         return uri;
+    }
+
+    /*获取Uri的输入流, 相册选取图片时可读取 data.getData()*/
+    private static InputStream openInput(Context context, Uri uri) {
+        if (uri != null) {
+            try {
+                return context.getContentResolver().openInputStream(uri);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     /**

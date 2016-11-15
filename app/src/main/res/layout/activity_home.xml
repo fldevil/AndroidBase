@@ -6,4 +6,6 @@
     android:orientation="vertical"
     tools:context=".activity.HomeActivity">
 
+    <include layout="@layout/view_tob_bar" />
+
 </LinearLayout>
