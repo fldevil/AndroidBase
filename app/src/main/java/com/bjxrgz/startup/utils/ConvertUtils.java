@@ -23,10 +23,10 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
-import static com.bjxrgz.startup.utils.ConstUtils.BYTE;
-import static com.bjxrgz.startup.utils.ConstUtils.GB;
-import static com.bjxrgz.startup.utils.ConstUtils.KB;
-import static com.bjxrgz.startup.utils.ConstUtils.MB;
+import static com.bjxrgz.startup.utils.ConstantUtils.BYTE;
+import static com.bjxrgz.startup.utils.ConstantUtils.GB;
+import static com.bjxrgz.startup.utils.ConstantUtils.KB;
+import static com.bjxrgz.startup.utils.ConstantUtils.MB;
 
 /**
  * Created by JiangZhiGuo on 2016/10/12.
@@ -130,7 +130,7 @@ public class ConvertUtils {
     /**
      * 字节数转以unit为单位的size
      */
-    public static double byte2Size(long byteNum, ConstUtils.MemoryUnit unit) {
+    public static double byte2Size(long byteNum, ConstantUtils.MemoryUnit unit) {
         if (byteNum < 0) return -1;
         switch (unit) {
             default:
@@ -150,7 +150,7 @@ public class ConvertUtils {
      *
      * @param size 大小
      */
-    public static long size2Byte(long size, ConstUtils.MemoryUnit unit) {
+    public static long size2Byte(long size, ConstantUtils.MemoryUnit unit) {
         if (size < 0) return -1;
         switch (unit) {
             default:

@@ -9,13 +9,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import static com.bjxrgz.startup.utils.ConstUtils.DAY;
-import static com.bjxrgz.startup.utils.ConstUtils.HOUR;
-import static com.bjxrgz.startup.utils.ConstUtils.MIN;
-import static com.bjxrgz.startup.utils.ConstUtils.MONTH;
-import static com.bjxrgz.startup.utils.ConstUtils.MSEC;
-import static com.bjxrgz.startup.utils.ConstUtils.SEC;
-import static com.bjxrgz.startup.utils.ConstUtils.YEAR;
+import static com.bjxrgz.startup.utils.ConstantUtils.DAY;
+import static com.bjxrgz.startup.utils.ConstantUtils.HOUR;
+import static com.bjxrgz.startup.utils.ConstantUtils.MIN;
+import static com.bjxrgz.startup.utils.ConstantUtils.MONTH;
+import static com.bjxrgz.startup.utils.ConstantUtils.MSEC;
+import static com.bjxrgz.startup.utils.ConstantUtils.SEC;
+import static com.bjxrgz.startup.utils.ConstantUtils.YEAR;
 
 /**
  * Created by fd.meng on 2014/03/30
@@ -144,7 +144,7 @@ public class TimeUtils {
     /**
      * 毫秒时间戳单位转换（单位：unit）
      */
-    private static long milliseconds2Unit(long milliseconds, ConstUtils.TimeUnit unit) {
+    private static long milliseconds2Unit(long milliseconds, ConstantUtils.TimeUnit unit) {
         switch (unit) {
             case MSEC:
                 return milliseconds / MSEC;

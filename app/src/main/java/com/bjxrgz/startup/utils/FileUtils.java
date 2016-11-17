@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.bjxrgz.startup.utils.ConstUtils.KB;
+import static com.bjxrgz.startup.utils.ConstantUtils.KB;
 
 /**
  * Created by Jiang on 2016/10/12

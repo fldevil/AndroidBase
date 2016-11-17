@@ -4,7 +4,7 @@ package com.bjxrgz.startup.utils;
  * Created by JiangZhiGuo on 2016/10/11.
  * describe 常量工具类
  */
-public class ConstUtils {
+public class ConstantUtils {
 
     /**
      * ****************************** 时间 **********************************
