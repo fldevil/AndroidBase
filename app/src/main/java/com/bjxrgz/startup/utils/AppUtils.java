@@ -21,8 +21,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import static anetwork.channel.http.NetworkSdkSetting.context;
-
 /**
  * Created by JiangZhiGuo on 2016/10/12.
  * describe  App相关工具类
@@ -45,15 +43,15 @@ public class AppUtils {
         private boolean isSystem; // 是否是用户级别
         private String resDir; // SDCard/AppName/
         private String logDir; // SDCard/AppName/log/
-        private String FileDir; // SDCard/Android/data/包名/files/
+        private String FilesDir; // SDCard/Android/data/包名/files/
         private String CacheDir; // SDCard/Android/data/包名/cache/
 
-        public String getFileDir() {
-            return FileDir;
+        public String getFilesDir() {
+            return FilesDir;
         }
 
-        public void setFileDir(String fileDir) {
-            FileDir = fileDir;
+        public void setFilesDir(String fileDir) {
+            FilesDir = fileDir;
         }
 
         public String getCacheDir() {
@@ -166,7 +164,7 @@ public class AppUtils {
                     ", isSystem=" + isSystem +
                     ", resDir='" + resDir + '\'' +
                     ", logDir='" + logDir + '\'' +
-                    ", FileDir='" + FileDir + '\'' +
+                    ", FileDir='" + FilesDir + '\'' +
                     ", CacheDir='" + CacheDir + '\'' +
                     '}';
         }
@@ -211,16 +209,8 @@ public class AppUtils {
             sha1 = EncryptUtils.encryptSHA1ToString(signatures[0].toByteArray()).replaceAll("(?<=[0-9A-F]{2})[0-9A-F]{2}", ":$0");
         }
         boolean isSystem = (ApplicationInfo.FLAG_SYSTEM & ai.flags) == ApplicationInfo.FLAG_SYSTEM;
-        File filesDir = MyApp.getInstance().getExternalFilesDir("");
-        String filesDirPath = "";
-        if (FileUtils.isFileExists(filesDir)){
-            filesDirPath = filesDir.getAbsolutePath();
-        }
-        File cacheDir =  MyApp.getInstance().getExternalCacheDir();
-        String cacheDirPath = "";
-        if (FileUtils.isFileExists(cacheDir)){
-            cacheDirPath = cacheDir.getAbsolutePath();
-        }
+        String filesDir = getFilesDir(MyApp.getInstance(), "");
+        String cacheDir = getCacheDir(MyApp.getInstance());
         String resDir = getResDir(packageName);
         FileUtils.createOrExistsDir(resDir); // 并创建
         String logDir = getLogDir(resDir);
@@ -238,8 +228,8 @@ public class AppUtils {
         appInfo.setSystem(isSystem);
         appInfo.setResDir(resDir);
         appInfo.setLogDir(logDir);
-        appInfo.setFileDir(filesDirPath);
-        appInfo.setCacheDir(cacheDirPath);
+        appInfo.setFilesDir(filesDir);
+        appInfo.setCacheDir(cacheDir);
         return appInfo;
     }
 
@@ -288,6 +278,38 @@ public class AppUtils {
     }
 
     /**
+     * 如果SD卡存在，则获取
+     * SDCard/Android/data/你的应用的包名/files/
+     * 如果不存在，则获取
+     * /data/data/<application package>/files
+     */
+    private static String getFilesDir(Context context, String path) {
+        if (isSDCardEnable()) {
+            File filesDir = context.getExternalFilesDir(path);
+            if (filesDir != null) {
+                return filesDir.getAbsolutePath();
+            }
+        }
+        return context.getFilesDir().getAbsolutePath();
+    }
+
+    /**
+     * 如果SD卡存在，则获取
+     * SDCard/Android/data/你的应用包名/cache/
+     * 如果不存在，则获取
+     * /data/data/<application package>/cache
+     */
+    private static String getCacheDir(Context context) {
+        if (isSDCardEnable()) {
+            File cacheDir = context.getExternalCacheDir();
+            if (cacheDir != null) {
+                return cacheDir.getAbsolutePath();
+            }
+        }
+        return context.getCacheDir().getAbsolutePath();
+    }
+
+    /**
      * 清除所有资源
      */
     public static void clearRes() {
@@ -311,34 +333,6 @@ public class AppUtils {
         FileUtils.deleteFilesAndDirInDir(externalCacheDir);
         FileUtils.deleteFilesAndDirInDir(internalFilesDir);
         FileUtils.deleteFilesAndDirInDir(internalCacheDir);
-    }
-
-    /**
-     * 如果SD卡存在，则获取
-     * SDCard/Android/data/你的应用的包名/files/
-     * 如果不存在，则获取
-     * /data/data/<application package>/files
-     */
-    public static String getExternalFilesDir(Context context,String path){
-        if (isSDCardEnable()){
-            return context.getExternalFilesDir(path).getAbsolutePath();
-        }else {
-            return context.getFilesDir().getAbsolutePath();
-        }
-    }
-
-    /**
-     * 如果SD卡存在，则获取
-     * SDCard/Android/data/你的应用包名/cache/
-     * 如果不存在，则获取
-     * /data/data/<application package>/cache
-     */
-    public static String getExternalCacheDir(Context context){
-        if (isSDCardEnable()){
-            return context.getExternalCacheDir().getAbsolutePath();
-        }else {
-            return context.getCacheDir().getAbsolutePath();
-        }
     }
 
     /**
