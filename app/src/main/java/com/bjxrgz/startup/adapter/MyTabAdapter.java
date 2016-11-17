@@ -12,10 +12,10 @@ import java.util.List;
  * describe 通用tab适配器
  */
 
-public class MyTabAdapter extends FragmentPagerAdapter {
+public class MyTabAdapter<T extends Fragment> extends FragmentPagerAdapter {
 
     private List<String> titleList;
-    private List<Fragment> fragmentList;
+    private List<T> fragmentList;
 
     public MyTabAdapter(FragmentManager fm) {
         super(fm);
@@ -23,20 +23,17 @@ public class MyTabAdapter extends FragmentPagerAdapter {
         fragmentList = new ArrayList<>();
     }
 
-    public void setData(List data) {
-        if (data == null || data.size() == 0) {
-            return;
-        }
+    public void setData(List<String> titles, List<T> fragments) {
         // fragment
         fragmentList.clear();
-        // ... 1. newFragment  2. addFragment
+        fragmentList.addAll(fragments);
         // 标题
         titleList.clear();
-        // ... 1. getTitle  2. addTitle
+        titleList.addAll(titles);
         notifyDataSetChanged();
     }
 
-    public List<Fragment> getFragmentList() {
+    public List<T> getFragmentList() {
         return fragmentList;
     }
 

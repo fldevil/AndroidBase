@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center" >
+    android:layout_gravity="center">
 
     <LinearLayout
         android:id="@+id/layout"
@@ -11,14 +11,14 @@
         android:layout_gravity="center"
         android:minWidth="200dp"
         android:orientation="vertical"
-        android:scrollbars="vertical" >
+        android:scrollbars="vertical">
 
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_marginTop="10dp"
+            android:gravity="center"
             android:text="@string/prompt"
             android:textColor="@android:color/black"
             android:textSize="18sp" />
@@ -26,19 +26,19 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_marginBottom="10dp"
+            android:gravity="center"
             android:minHeight="40dp"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/message"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
+                android:layout_marginBottom="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp"
+                android:gravity="center"
                 android:text="@string/exit_app"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
@@ -47,11 +47,11 @@
         <LinearLayout
             android:id="@+id/llContentView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" 
-            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:gravity="center"
-            android:layout_marginBottom="10dp"/>
-        
+            android:orientation="vertical" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="1dip"
@@ -61,7 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="50dp"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/cancel_btn"
@@ -70,14 +70,15 @@
                 android:layout_weight="1"
                 android:background="@drawable/selector_dialog_custom_btn_left"
                 android:text="@string/cancel"
-                android:textSize="20sp"
-                android:textColor="@color/dialog_custom_text_color" />
+                android:textColor="@color/dialog_custom_text_color"
+                android:textSize="20sp" />
 
             <LinearLayout
                 android:id="@+id/btnCutLine"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="#D1D1D1" android:orientation="horizontal" />
+                android:background="#D1D1D1"
+                android:orientation="horizontal" />
 
             <Button
                 android:id="@+id/confirm_btn"
@@ -86,9 +87,9 @@
                 android:layout_weight="1"
                 android:background="@drawable/selector_dialog_custom_btn_right"
                 android:text="@string/confirm"
+                android:textColor="@color/dialog_custom_text_color"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@color/dialog_custom_text_color" />
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 
