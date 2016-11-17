@@ -44,6 +44,23 @@ public class StringUtils {
     }
 
     /**
+     * demo (num,4,3,*) 1860*********241
+     */
+    public static String replace(String old, int start, int end, CharSequence replace) {
+        StringBuilder result = new StringBuilder(old);
+        int length = result.length();
+        if (length > start + end) { // 填充
+            StringBuilder beReplace = new StringBuilder();
+            for (int i = 0; i < length - start + end; i++) {
+                beReplace.append(replace);
+            }
+            result.replace(start, result.length() - end, beReplace.toString());
+            return result.toString();
+        }
+        return old;
+    }
+
+    /**
      * 获取字符串的长度，如果有中文，则每个中文字符计为2位
      */
     public static int getLength(String validateStr) {

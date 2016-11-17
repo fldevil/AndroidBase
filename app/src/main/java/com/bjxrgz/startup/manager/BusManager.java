@@ -37,8 +37,17 @@ public class BusManager {
     }
 
     public static class Event {
+
         private int type;
         private Object object;
+
+        public Event() {
+        }
+
+        public Event(int type, Object object) {
+            this.type = type;
+            this.object = object;
+        }
 
         public int getType() {
             return type;

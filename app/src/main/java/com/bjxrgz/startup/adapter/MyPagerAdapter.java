@@ -26,15 +26,15 @@ public class MyPagerAdapter<T> extends PagerAdapter {
 
     private Context context;
     private List<T> data;
-    private int layoutId;
+    private int itemLayoutId;
 
     public MyPagerAdapter(Context context) {
         this.context = context;
         data = new ArrayList<>();
     }
 
-    public void setData(int layoutId, List<T> data) {
-        this.layoutId = layoutId;
+    public void setData(int itemLayoutId, List<T> data) {
+        this.itemLayoutId = itemLayoutId;
         this.data.clear();
         this.data.addAll(data);
         notifyDataSetChanged();
@@ -65,7 +65,7 @@ public class MyPagerAdapter<T> extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        ImageView view = (ImageView) View.inflate(context, layoutId, null);
+        ImageView view = (ImageView) View.inflate(context, itemLayoutId, null);
         T item = data.get(position);
 
         if (item instanceof String) {

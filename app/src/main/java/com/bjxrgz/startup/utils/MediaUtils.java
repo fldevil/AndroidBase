@@ -33,24 +33,14 @@ public class MediaUtils {
     /**
      * ********************************意图*********************************
      * 获取分享文本的意图
-     *
-     * @param content 分享信息
-     * @return 意图
      */
     public static Intent getShareIntent(String content) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, content);
+        intent.putExtra(Intent.EXTRA_TEXT, content); // 设置分享信息
         return intent;
     }
 
-    /**
-     * 获取分享图片的意图
-     *
-     * @param content 文本
-     * @param image   图片文件
-     * @return intent
-     */
     public static Intent getShareIntent(String content, File image) {
         if (!FileUtils.isFileExists(image)) return null;
         return getShareIntent(content, Uri.fromFile(image));
@@ -65,7 +55,7 @@ public class MediaUtils {
     }
 
     /**
-     * 拍照 , 不加保存路径的话，图片会被压缩保存
+     * 拍照 ,不加保存路径，图片会被压缩
      */
     public static Intent getCameraIntent(File cameraFile) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -97,7 +87,10 @@ public class MediaUtils {
     }
 
     /**
-     * 裁剪 ,需要有被裁剪的源文件才能调用，相机拍照需在onActivityForResult里调用
+     * 裁剪(通用)
+     * 1.启动拍照
+     * 2.在onActivityForResult里调用此方法，启动裁剪功能
+     * 3.再次在onActivityForResult里先删除(File from) ,再调用getCameraBitmap(save)处理
      */
     public static Intent getCropIntent(File from, File save) {
         return getCropIntent(from, save, 1, 1, 300, 300);
@@ -122,7 +115,9 @@ public class MediaUtils {
     }
 
     /**
-     * 相册 裁剪 ,可以直接调用  开启相册并裁减
+     * 裁剪(相册)
+     * 1.直接调用此方法
+     * 2.在onActivityForResult里调用getCameraBitmap(save)处理
      */
     public static Intent getPictureCropIntent(File save) {
         return getPictureCropIntent(save, 1, 1, 300, 300);
@@ -147,7 +142,7 @@ public class MediaUtils {
     }
 
     /**
-     * 照片: 在onActivityResult中执行
+     * 获取拍照图片: 在onActivityResult中执行,源文件会删除
      */
     public static Bitmap getCameraBitmap(File cameraFile) {
         if (cameraFile == null || cameraFile.length() == 0) {
@@ -160,9 +155,6 @@ public class MediaUtils {
         }
     }
 
-    /**
-     * 压缩后的照片: 在onActivityResult中执行
-     */
     public static Bitmap getCameraBitmap(File cameraFile, double maxSize) {
         if (cameraFile == null || cameraFile.length() == 0) {
             FileUtils.deleteFile(cameraFile); // 删除垃圾文件
@@ -174,15 +166,10 @@ public class MediaUtils {
             if (small != null && !small.isRecycled()) {
                 small.recycle();
             }
-            Bitmap adjust = adjust(cameraFile); // 摆正角度
-            FileUtils.deleteFile(cameraFile);
-            return adjust;
+            return getCameraBitmap(cameraFile);
         }
     }
 
-    /**
-     * 压缩后的照片: 在onActivityResult中执行
-     */
     public static Bitmap getCameraBitmap(File cameraFile, int maxWidth, int maxHeight) {
         if (cameraFile == null || cameraFile.length() == 0) {
             FileUtils.deleteFile(cameraFile); // 删除垃圾文件
@@ -194,49 +181,35 @@ public class MediaUtils {
             if (small != null && !small.isRecycled()) {
                 small.recycle();
             }
-            Bitmap adjust = adjust(cameraFile); // 摆正角度
-            FileUtils.deleteFile(cameraFile);
-            return adjust;
+            return getCameraBitmap(cameraFile);
         }
     }
 
     /**
-     * 照片: 在onActivityResult中执行
+     * 获取相册图片: 在onActivityResult中执行 data.getData()
      */
     public static Bitmap getPictureBitmap(Context context, Intent picture) {
-        if (picture == null) {
-            return null;
-        } else {
-            Uri uri = getUri(context, picture);
-            InputStream stream = openInput(context, uri);
+        InputStream stream = getPictureStream(context, picture);
+        if (stream != null) {
             return BitmapFactory.decodeStream(stream);
         }
+        return null;
     }
 
-    /**
-     * 压缩后的照片: 在onActivityResult中执行
-     */
     public static Bitmap getPictureBitmap(Context context, Intent picture, double maxSize) {
-        if (picture == null) {
-            return null;
-        } else {
-            Uri uri = getUri(context, picture);
-            InputStream stream = openInput(context, uri);
+        InputStream stream = getPictureStream(context, picture);
+        if (stream != null) {
             return ImageUtils.getBitmap(stream, maxSize);
         }
+        return null;
     }
 
-    /**
-     * 压缩后的照片: 在onActivityResult中执行
-     */
     public static Bitmap getPictureBitmap(Context context, Intent picture, int maxWidth, int maxHeight) {
-        if (picture == null) {
-            return null;
-        } else {
-            Uri uri = getUri(context, picture);
-            InputStream stream = openInput(context, uri);
+        InputStream stream = getPictureStream(context, picture);
+        if (stream != null) {
             return ImageUtils.getBitmap(stream, maxWidth, maxHeight);
         }
+        return null;
     }
 
     /*摆正图片旋转角度*/
@@ -256,7 +229,7 @@ public class MediaUtils {
         }
     }
 
-    /*获取图片旋转角度*/
+    /* 获取图片旋转角度 */
     private static int getRotateDegree(String filePath) {
         int degree = 0;
         try {
@@ -283,7 +256,7 @@ public class MediaUtils {
         return degree;
     }
 
-    /*解决小米手机上获取图片路径为null的情况*/
+    /* 解决小米手机上获取图片路径为null的情况 */
     private static Uri getUri(Context context, Intent intent) {
         if (intent == null) {
             return null;
@@ -320,13 +293,16 @@ public class MediaUtils {
         return uri;
     }
 
-    /*获取Uri的输入流, 相册选取图片时可读取 data.getData()*/
-    private static InputStream openInput(Context context, Uri uri) {
-        if (uri != null) {
-            try {
-                return context.getContentResolver().openInputStream(uri);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+    /* 相册返回流 data.getData()*/
+    private static InputStream getPictureStream(Context context, Intent picture) {
+        if (picture != null) {
+            Uri uri = getUri(context, picture);
+            if (uri != null) {
+                try {
+                    return context.getContentResolver().openInputStream(uri);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return null;
