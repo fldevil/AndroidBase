@@ -38,7 +38,6 @@ public class HomeActivity extends BaseViewActivity<HomeActivity> {
 
         ViewManager.initTopLeft(mActivity, "这里是");
 
-        iv.setImageResource(R.mipmap.ic_launcher);
     }
 
     @Override

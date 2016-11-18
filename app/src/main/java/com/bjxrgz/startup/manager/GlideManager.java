@@ -25,7 +25,7 @@ import java.io.File;
  */
 public class GlideManager {
 
-    public static final String FORE_URL = "";
+    private static final String FORE_URL = "";
 
     public static final int ERROR_HEAD = R.mipmap.ic_launcher; // 错误头像
     public static final int ERROR_IMG = R.mipmap.ic_launcher; // 错误图片
@@ -52,7 +52,10 @@ public class GlideManager {
 
     private static void load(RequestManager requestManager, int errorRes, String url,
                              ImageView view, final CompleteListener completeListener) {
-        DrawableTypeRequest<String> load = requestManager.load(FORE_URL + url);
+        if (!url.startsWith("http")) {
+            url = FORE_URL + url;
+        }
+        DrawableTypeRequest<String> load = requestManager.load(url);
         if (errorRes != 0) { //设置错误图片
             load.error(errorRes);
         }
