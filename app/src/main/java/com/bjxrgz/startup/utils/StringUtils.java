@@ -1,5 +1,7 @@
 package com.bjxrgz.startup.utils;
 
+import android.text.TextUtils;
+
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
@@ -47,6 +49,9 @@ public class StringUtils {
      * demo (num,4,3,*) 1860*********241
      */
     public static String replace(String old, int start, int end, CharSequence replace) {
+        if (isEmpty(old)) {
+            return "";
+        }
         StringBuilder result = new StringBuilder(old);
         int length = result.length();
         if (length > start + end) { // 填充
