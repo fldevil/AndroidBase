@@ -1,5 +1,6 @@
 package com.bjxrgz.startup.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.widget.ImageView;
 
 import com.bjxrgz.startup.R;
 import com.bjxrgz.startup.base.BaseViewActivity;
+import com.bjxrgz.startup.manager.PermissionsManager;
 import com.bjxrgz.startup.manager.ViewManager;
 import com.bjxrgz.startup.utils.ActivityUtils;
 
@@ -29,7 +31,7 @@ public class HomeActivity extends BaseViewActivity<HomeActivity> {
 
     @Override
     protected void initObject(Bundle savedInstanceState) {
-
+        PermissionsManager.requestEach(this,null, Manifest.permission.READ_PHONE_STATE);
     }
 
     @Override
