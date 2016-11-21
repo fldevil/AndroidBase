@@ -213,12 +213,12 @@ public class MyWebView extends WebView {
     }
 
     /* 外部调用  返回键监听 */
-    public boolean canFinish() {
+    public boolean goFinish() {
         if (canGoBack()) {
             goBack();
-            return false;
-        } else {
             return true;
+        } else {
+            return false;
         }
     }
 }

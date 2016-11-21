@@ -38,6 +38,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     protected Activity mActivity;
     protected FragmentManager mFragmentManager;
     protected ProgressDialog loading;
+    protected boolean anim = true; // 跳转动画开关
     protected boolean log = false; // 是否打印生命周期
     protected String logTag = "BaseActivity";
 
@@ -68,7 +69,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         logTag = getCls();
-        ActivityUtils.initBaseCreate(this);
+        ActivityUtils.initBaseCreate(this, anim);
         super.onCreate(savedInstanceState);
         LogUtils.lifeCycle(log, logTag);
         mActivity = this; // 实例
@@ -160,7 +161,6 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         LogUtils.lifeCycle(log, logTag);
-//        MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
     /**

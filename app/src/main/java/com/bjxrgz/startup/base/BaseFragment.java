@@ -41,6 +41,7 @@ public abstract class BaseFragment<T> extends Fragment {
     public FragmentManager mFragmentManager;
     protected Bundle mBundle;// 接受数据的Bundle
     protected ProgressDialog loading;
+    protected boolean anim = true; // 跳转动画开关
     protected boolean log = false; // 是否打印生命周期
     protected String logTag = "BaseFragment";
     private Unbinder unbinder; // ButterKnife
@@ -81,7 +82,7 @@ public abstract class BaseFragment<T> extends Fragment {
         logTag = getCls();
         super.onAttach(context);
         LogUtils.lifeCycle(log, logTag);
-        FragmentUtils.initBaseAttach(this);
+        FragmentUtils.initBaseAttach(this, anim);
         mFragment = this;
         if (context instanceof FragmentActivity) {
             mActivity = (FragmentActivity) context;
