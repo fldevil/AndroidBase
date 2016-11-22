@@ -21,15 +21,15 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import static u.aly.av.F;
+
 /**
  * Created by JiangZhiGuo on 2016/10/12.
  * describe  App相关工具类
  */
 public class AppUtils {
 
-    /**
-     * 封装App信息的Bean类
-     */
+    /* 封装App信息的Bean类 */
     public static class AppInfo {
 
         private String name; // APP名称
@@ -41,8 +41,8 @@ public class AppUtils {
         private Signature[] signature; // 签名
         private String SHA1; // 签名的SHA1值
         private boolean isSystem; // 是否是用户级别
-        private String resDir; // SDCard/AppName/
-        private String logDir; // SDCard/AppName/log/
+        private String resDir; // SDCard/包名/
+        private String logDir; // SDCard/包名/log/
         private String FilesDir; // SDCard/Android/data/包名/files/
         private String CacheDir; // SDCard/Android/data/包名/cache/
 
@@ -260,12 +260,12 @@ public class AppUtils {
     /**
      * 自定义资源路径(部分手机有差别)
      */
-    private static String getResDir(String appName) {
+    private static String getResDir(String name) {
         String resDir;
         if (isSDCardEnable()) {
-            resDir = getSDCardPath() + appName + File.separator;
+            resDir = getSDCardPath() + name + File.separator;
         } else {
-            resDir = getRootPath() + appName + File.separator;
+            resDir = getRootPath() + name + File.separator;
         }
         return resDir;
     }
@@ -324,8 +324,10 @@ public class AppUtils {
      * 清除缓存(Glide手动清)
      */
     public static void clearSys(Context context) {
-        File externalFilesDir = context.getExternalFilesDir("");
-        File externalCacheDir = context.getExternalCacheDir();
+        String filesDir = MyApp.getInstance().getAppInfo().getFilesDir();
+        String cacheDir = MyApp.getInstance().getAppInfo().getCacheDir();
+        File externalFilesDir = new File(filesDir);
+        File externalCacheDir = new File(cacheDir);
         File internalFilesDir = context.getFilesDir();
         File internalCacheDir = context.getCacheDir();
 

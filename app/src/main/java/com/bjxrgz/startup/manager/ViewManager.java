@@ -8,10 +8,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bjxrgz.startup.R;
 import com.bjxrgz.startup.base.MyApp;
-import com.bjxrgz.startup.utils.ToastUtils;
 import com.bjxrgz.startup.view.MyLoading;
 
 /**
@@ -21,6 +21,8 @@ import com.bjxrgz.startup.view.MyLoading;
 
 public class ViewManager {
 
+    private static Toast toast;
+
     /* 等待对话框 默认DialogUtils.createLoading(); */
     public static ProgressDialog createLoading(Context context) {
         ProgressDialog loading = new MyLoading(context);
@@ -29,15 +31,21 @@ public class ViewManager {
         return loading;
     }
 
-    /* Toast 也可以ToastUtils来构造 */
+    /* Toast 单例 可覆盖 */
     public static void showToast(CharSequence message) {
-        ToastUtils.show(message);
+        if (toast == null) {
+            toast = Toast.makeText(MyApp.getInstance(), message, Toast.LENGTH_SHORT);
+        } else {
+            TextView tv = (TextView) toast.getView().findViewById(android.R.id.message);
+            tv.setText(message);
+        }
+        toast.show();
     }
 
     /* Toast 也可以ToastUtils来构造 */
     public static void showToast(int message) {
         String show = MyApp.getInstance().getString(message);
-        ToastUtils.show(show);
+        showToast(show);
     }
 
     /* 顶部标题栏 */

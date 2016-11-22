@@ -315,40 +315,37 @@ public class MediaUtils {
 
     /* 解决小米手机上获取图片路径为null的情况 */
     private static Uri getUri(Context context, Intent intent) {
-        if (intent != null) {
-            Uri uri = intent.getData();
-            if (uri != null && uri.getScheme().equals("file")) {
-                String type = intent.getType(); // 小米的type不是null 其他的是
-                if ((type.contains("image/"))) {
-                    String path = uri.getEncodedPath();
-                    if (path != null) {
-                        path = Uri.decode(path);
-                        ContentResolver cr = context.getContentResolver();
-                        String buff = "(" + MediaStore.Images.ImageColumns.DATA + "=" +
-                                "'" + path + "'" + ")";
-                        Cursor cur = cr.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                                new String[]{MediaStore.Images.ImageColumns._ID},
-                                buff, null, null);
-                        int index = 0;
-                        if (cur != null) {
-                            for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()) {
-                                index = cur.getColumnIndex(MediaStore.Images.ImageColumns._ID);
-                                index = cur.getInt(index);
-                            }
-                            cur.close();
+        Uri uri = intent.getData();
+        if (uri != null && uri.getScheme().equals("file")) {
+            String type = intent.getType(); // 小米的type不是null 其他的是
+            if ((type.contains("image/"))) {
+                String path = uri.getEncodedPath();
+                if (path != null) {
+                    path = Uri.decode(path);
+                    ContentResolver cr = context.getContentResolver();
+                    String buff = "(" + MediaStore.Images.ImageColumns.DATA + "=" +
+                            "'" + path + "'" + ")";
+                    Cursor cur = cr.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                            new String[]{MediaStore.Images.ImageColumns._ID},
+                            buff, null, null);
+                    int index = 0;
+                    if (cur != null) {
+                        for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()) {
+                            index = cur.getColumnIndex(MediaStore.Images.ImageColumns._ID);
+                            index = cur.getInt(index);
                         }
-                        if (index > 0) {
-                            Uri uri_temp = Uri.parse("content://media/external/images/media/" + index);
-                            if (uri_temp != null) {
-                                uri = uri_temp;
-                            }
+                        cur.close();
+                    }
+                    if (index > 0) {
+                        Uri uri_temp = Uri.parse("content://media/external/images/media/" + index);
+                        if (uri_temp != null) {
+                            uri = uri_temp;
                         }
                     }
                 }
             }
-            return uri;
         }
-        return null;
+        return uri;
     }
 
     /**

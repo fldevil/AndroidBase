@@ -36,18 +36,17 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  */
 public class HttpManager {
 
-    private static String BASE_URL; // 当前使用的HOST
     private static APIManager APITokenGson;
     private static APIManager APITokenString;
     private static APIManager APIEmptyGson;
     private static APIManager APIEmptyString;
     private static APIManager APINullGson;
 
-    public static void initAPP() {
+    private static String getBase() {
         if (MyApp.DEBUG) {
-            BASE_URL = APIManager.HOST_DEBUG;
+            return APIManager.HOST_DEBUG;
         } else {
-            BASE_URL = APIManager.HOST_RELEASE;
+            return  APIManager.HOST_RELEASE;
         }
     }
 
@@ -79,7 +78,7 @@ public class HttpManager {
         options.put("API_KEY", "330892d73e5f1171be4d8df7550bc2f3");
         options.put("Content-Type", "application/json;charset=utf-8");
         options.put("Accept", "application/json");
-        String userToken = UserManager.getInstance().getUser().getUserToken();
+        String userToken = UserManager.getUser().getUserToken();
         options.put("userToken", userToken);
         return getHeader(options);
     }
@@ -105,7 +104,7 @@ public class HttpManager {
     /*获取Retrofit实例*/
     private static Retrofit getRetrofit(Interceptor header, Converter.Factory factory) {
         Retrofit.Builder builder = new Retrofit.Builder();
-        builder.baseUrl(BASE_URL); // host
+        builder.baseUrl(getBase()); // host
         builder.addConverterFactory(factory); //解析构造器
         builder.client(getClient(header)); // client
         return builder.build();

@@ -52,15 +52,16 @@ public class GlideManager {
 
     private static void load(RequestManager requestManager, int errorRes, String url,
                              ImageView view, final CompleteListener completeListener) {
-        if (!url.startsWith("http")) {
-            url = FORE_URL + url;
+        String imgUrl;
+        if (url.startsWith("http")) {
+            imgUrl = url;
+        } else {
+            imgUrl = FORE_URL + url;
         }
-        DrawableTypeRequest<String> load = requestManager.load(url);
+        DrawableTypeRequest<String> load = requestManager.load(imgUrl);
         if (errorRes != 0) { //设置错误图片
             load.error(errorRes);
         }
-//        load.animate(); // 在异步加载资源完成时会执行该动画
-//        load.override(1, 1); // 设置宽高
         load.thumbnail(0.1f); // 先加载缩略图，再加载完整的
         load.crossFade(100); // 设置淡入淡出效果，默认300ms(load.dontAnimate();取消效果)
         load.skipMemoryCache(false); // 不跳过内存缓存
@@ -96,18 +97,6 @@ public class GlideManager {
         load(with, errorRes, url, view, completeListener);
     }
 
-    public static void load(Context context, String url, ImageView view, int errorRes) {
-        load(context, url, view, errorRes, null);
-    }
-
-    public static void load(FragmentActivity activity, String url, ImageView view, int errorRes) {
-        load(activity, url, view, errorRes, null);
-    }
-
-    public static void load(Fragment fragment, String url, ImageView view, int errorRes) {
-        load(fragment, url, view, errorRes, null);
-    }
-
     public static void load(Context context, String url, ImageView view, CompleteListener completeListener) {
         load(context, url, view, 0, completeListener);
     }
@@ -118,6 +107,18 @@ public class GlideManager {
 
     public static void load(Fragment fragment, String url, ImageView view, CompleteListener completeListener) {
         load(fragment, url, view, 0, completeListener);
+    }
+
+    public static void load(Context context, String url, ImageView view, int errorRes) {
+        load(context, url, view, errorRes, null);
+    }
+
+    public static void load(FragmentActivity activity, String url, ImageView view, int errorRes) {
+        load(activity, url, view, errorRes, null);
+    }
+
+    public static void load(Fragment fragment, String url, ImageView view, int errorRes) {
+        load(fragment, url, view, errorRes, null);
     }
 
     public static void load(Context context, String url, ImageView view) {
