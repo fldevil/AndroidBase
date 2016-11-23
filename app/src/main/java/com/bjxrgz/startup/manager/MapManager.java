@@ -1,5 +1,6 @@
 package com.bjxrgz.startup.manager;
 
+import android.Manifest;
 import android.content.Context;
 import android.graphics.Color;
 import android.location.Location;
@@ -41,6 +42,11 @@ public class MapManager {
         AMapLocationClient mapClient = new AMapLocationClient(context);
         mapClient.setLocationOption(clientOption);
         return mapClient;
+    }
+
+    public static void requestMap(Context context, PermissionsManager.PermissionListener listener) {
+        PermissionsManager.request(context, listener, Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION);
     }
 
     /**

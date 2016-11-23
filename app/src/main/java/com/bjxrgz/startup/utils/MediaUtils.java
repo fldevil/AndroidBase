@@ -1,5 +1,6 @@
 package com.bjxrgz.startup.utils;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.os.Build;
 import android.provider.MediaStore;
 
 import com.bjxrgz.startup.base.MyApp;
+import com.bjxrgz.startup.manager.PermissionsManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -55,6 +57,11 @@ public class MediaUtils {
         intent.putExtra(Intent.EXTRA_STREAM, uri);
         intent.setType("image/*");
         return intent;
+    }
+
+    /* 拍照权限 */
+    public static void requestCamera(Context context, PermissionsManager.PermissionListener listener) {
+        PermissionsManager.request(context, listener, Manifest.permission.CAMERA);
     }
 
     /**

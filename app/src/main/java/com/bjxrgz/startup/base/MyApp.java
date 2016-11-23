@@ -1,5 +1,6 @@
 package com.bjxrgz.startup.base;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.os.Looper;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
+import com.bjxrgz.startup.manager.PermissionsManager;
 import com.bjxrgz.startup.manager.PushManager;
 import com.bjxrgz.startup.manager.ShareManager;
 import com.bjxrgz.startup.utils.ActivityUtils;
@@ -75,14 +77,45 @@ public class MyApp extends MultiDexApplication {
 
     public AppUtils.AppInfo getAppInfo() {
         if (null == appInfo) {
+            PermissionsManager.request(instance, new PermissionsManager.PermissionListener() {
+                @Override
+                public void onAgree() {
+
+                }
+
+                @Override
+                public void onRefuse() {
+
+                }
+
+                @Override
+                public void onRefuseAndNotAsk() {
+
+                }
+            }, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS);
             appInfo = AppUtils.getAppInfo(this);
         }
         return appInfo;
     }
 
     public DeviceUtils.DeviceInfo getDeviceInfo() {
-        if (null == deviceInfo) {
-            deviceInfo = DeviceUtils.getDeviceInfo(this);
+        if (null == deviceInfo) { // 需要动态权限
+            PermissionsManager.request(instance, new PermissionsManager.PermissionListener() {
+                @Override
+                public void onAgree() {
+                    deviceInfo = DeviceUtils.getDeviceInfo(instance);
+                }
+
+                @Override
+                public void onRefuse() {
+
+                }
+
+                @Override
+                public void onRefuseAndNotAsk() {
+
+                }
+            }, Manifest.permission.READ_PHONE_STATE);
         }
         return deviceInfo;
     }
