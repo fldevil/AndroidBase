@@ -1,17 +1,16 @@
 package com.bjxrgz.startup.manager;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bjxrgz.startup.R;
 import com.bjxrgz.startup.base.MyApp;
+import com.bjxrgz.startup.utils.TopUtils;
 import com.bjxrgz.startup.view.MyLoading;
 
 /**
@@ -42,47 +41,25 @@ public class ViewManager {
         toast.show();
     }
 
-    /* Toast 也可以ToastUtils来构造 */
     public static void showToast(int message) {
         String show = MyApp.getInstance().getString(message);
         showToast(show);
     }
 
-    /* 顶部标题栏 */
-    public static void initTopTitle(Activity activity, String title) {
-        Toolbar tbTop = (Toolbar) activity.findViewById(R.id.tbTop);
-        TextView tvCenter = (TextView) activity.findViewById(R.id.tvCenter);
-        if (activity instanceof AppCompatActivity) {
-            ((AppCompatActivity) activity).setSupportActionBar(tbTop);
-        }
-        tvCenter.setVisibility(View.VISIBLE);
-        tvCenter.setText(title);
+    public static void initTop(final AppCompatActivity activity, String title) {
+        TopUtils.Builder builder = new TopUtils.Builder(activity);
+        builder.setTitleCenter(title, Color.WHITE);
     }
 
-    public static void initTopLeft(Activity activity, String title, String left) {
-        initTopTitle(activity, title);
-        TextView tvLeft = (TextView) activity.findViewById(R.id.tvLeft);
-        tvLeft.setVisibility(View.VISIBLE);
-        tvLeft.setText(left);
-    }
-
-    public static void initTopLeft(Activity activity, String title) {
-        initTopTitle(activity, title);
-        ImageView ivLeft = (ImageView) activity.findViewById(R.id.ivLeft);
-        ivLeft.setVisibility(View.VISIBLE);
-    }
-
-    public static void initTopRight(Activity activity, String title, String right) {
-        initTopTitle(activity, title);
-        TextView tvRight = (TextView) activity.findViewById(R.id.tvRight);
-        tvRight.setVisibility(View.VISIBLE);
-        tvRight.setText(right);
-    }
-
-    public static void initTopRight(Activity activity, String title) {
-        initTopTitle(activity, title);
-        ImageView ivRight = (ImageView) activity.findViewById(R.id.ivRight);
-        ivRight.setVisibility(View.VISIBLE);
+    public static void initTopBack(final AppCompatActivity activity, String title) {
+        TopUtils.Builder builder = new TopUtils.Builder(activity);
+        builder.setTitleCenter(title, Color.WHITE);
+        builder.setNavigateLeft(R.mipmap.ic_launcher, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activity.finish();
+            }
+        });
     }
 
 }

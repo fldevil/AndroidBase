@@ -2,7 +2,7 @@ package com.bjxrgz.startup.domain;
 
 /**
  * Created by Fan on 2016/9/13.
- * 版本实体类
+ * describe 版本实体类
  */
 public class Version {
 

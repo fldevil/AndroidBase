@@ -80,20 +80,14 @@ public class MyApp extends MultiDexApplication {
             PermissionsManager.request(instance, new PermissionsManager.PermissionListener() {
                 @Override
                 public void onAgree() {
-
+                    appInfo = AppUtils.getAppInfo(instance);
                 }
 
                 @Override
                 public void onRefuse() {
-
-                }
-
-                @Override
-                public void onRefuseAndNotAsk() {
-
+//                    getAppInfo(); // 拒绝，不再提醒，就是死循环
                 }
             }, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS);
-            appInfo = AppUtils.getAppInfo(this);
         }
         return appInfo;
     }
@@ -108,12 +102,7 @@ public class MyApp extends MultiDexApplication {
 
                 @Override
                 public void onRefuse() {
-
-                }
-
-                @Override
-                public void onRefuseAndNotAsk() {
-
+//                    getDeviceInfo(); // 拒绝，不再提醒，就是死循环
                 }
             }, Manifest.permission.READ_PHONE_STATE);
         }

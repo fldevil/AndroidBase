@@ -122,11 +122,4 @@ dependencies {
     // 事件总线
     compile 'com.tbruyelle.rxpermissions:rxpermissions:0.8.2@aar'
     // 权限验证框架
-    compile files('libs/SocialSDK_umengqq.jar')
-    compile files('libs/SocialSDK_umengsina.jar')
-    compile files('libs/SocialSDK_umengwx.jar')
-    compile files('libs/umeng_integrate_tool.jar')
-    compile files('libs/umeng_social_api.jar')
-    compile files('libs/umeng_social_net.jar')
-    compile files('libs/umeng_social_view.jar')
 }

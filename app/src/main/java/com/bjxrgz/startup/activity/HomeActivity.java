@@ -7,8 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.bjxrgz.startup.R;
-import com.bjxrgz.startup.base.BaseViewActivity;
-import com.bjxrgz.startup.base.MyApp;
+import com.bjxrgz.startup.base.BaseActivity;
 import com.bjxrgz.startup.manager.ViewManager;
 import com.bjxrgz.startup.utils.ActivityUtils;
 
@@ -20,7 +19,7 @@ import butterknife.OnClick;
  * <p>
  * describe 主界面
  */
-public class HomeActivity extends BaseViewActivity<HomeActivity> {
+public class HomeActivity extends BaseActivity<HomeActivity> {
 
     @BindView(R.id.btn1)
     Button btn1;
@@ -39,16 +38,13 @@ public class HomeActivity extends BaseViewActivity<HomeActivity> {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        initContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_home);
+        ViewManager.initTop(mActivity, "标题");
 
-        ViewManager.initTopLeft(mActivity, "这里是");
-
-        MyApp.getInstance().getDeviceInfo();
     }
 
     @Override
     protected void initData() {
-
     }
 
     @OnClick({R.id.btn1, R.id.btn2})

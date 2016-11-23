@@ -6,6 +6,7 @@ import com.bjxrgz.startup.utils.LogUtils;
 import com.tbruyelle.rxpermissions.Permission;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
+import rx.Observable;
 import rx.functions.Action0;
 import rx.functions.Action1;
 
@@ -17,58 +18,84 @@ import rx.functions.Action1;
 public class PermissionsManager {
 
     public interface PermissionListener {
-        /**
-         * 同意使用权限
-         */
+        /* 同意使用权限 */
         void onAgree();
 
-        /**
-         * 拒绝使用权限
-         */
+        /* 拒绝使用权限 */
         void onRefuse();
-
-        /**
-         * 拒绝使用权限，且不再询问
-         */
-        void onRefuseAndNotAsk();
     }
 
     /**
-     * 请求权限
+     * 请求权限,返回结果一起处理
      */
     public static void request(Context context, final PermissionListener listener, final String... permissions) {
-        RxPermissions.getInstance(context)
-                .requestEach(permissions)
-                .subscribe(new Action1<Permission>() {
-                    @Override
-                    public void call(Permission permission) {
-                        if (permission.granted) {
-                            LogUtils.d("同意使用" + permission.name + "权限");
-                            if (listener != null) {
-                                listener.onAgree();
-                            }
-                        } else if (permission.shouldShowRequestPermissionRationale) {
-                            LogUtils.d("拒绝使用" + permission.name + "权限");
-                            if (listener != null) {
-                                listener.onRefuse();
-                            }
-                        } else {
-                            LogUtils.d("拒绝使用" + permission.name + "权限，且不再询问");
-                            if (listener != null) {
-                                listener.onRefuseAndNotAsk();
-                            }
-                        }
+        RxPermissions rxPermissions = RxPermissions.getInstance(context);
+        Observable<Boolean> request = rxPermissions.request(permissions);
+        request.subscribe(new Action1<Boolean>() {
+            @Override
+            public void call(Boolean aBoolean) {
+                if (aBoolean) {
+                    LogUtils.d("同意使用权限");
+                    if (listener != null) {
+                        listener.onAgree();
                     }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        LogUtils.e("请求权限抛出异常");
+                } else {
+                    LogUtils.d("拒绝使用权限");
+                    if (listener != null) {
+                        listener.onRefuse();
                     }
-                }, new Action0() {
-                    @Override
-                    public void call() {
-                        LogUtils.e("请求权限完成");
-                    }
-                });
+                }
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                LogUtils.e("请求权限抛出异常");
+            }
+        }, new Action0() {
+            @Override
+            public void call() {
+                LogUtils.d("请求权限完成");
+            }
+        });
     }
+
+    /**
+     * 请求权限,分别获取每一个权限请求的结果。
+     */
+    public static void requestEach(Context context, final PermissionListener listener, final String... permissions) {
+        RxPermissions rxPermissions = RxPermissions.getInstance(context);
+        Observable<Permission> requestEach = rxPermissions.requestEach(permissions);
+        requestEach.subscribe(new Action1<Permission>() {
+            @Override
+            public void call(Permission permission) {
+                if (permission.granted) {
+                    LogUtils.d("同意使用" + permission.name + "权限");
+                    if (listener != null) {
+                        listener.onAgree();
+                    }
+                } else if (permission.shouldShowRequestPermissionRationale) {
+                    LogUtils.d("拒绝使用" + permission.name + "权限");
+                    if (listener != null) {
+                        listener.onRefuse();
+                    }
+                } else {
+                    LogUtils.d("拒绝使用" + permission.name + "权限，且不再询问");
+                    if (listener != null) {
+                        listener.onRefuse();
+                    }
+                }
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                LogUtils.e("请求权限抛出异常");
+            }
+        }, new Action0() {
+            @Override
+            public void call() {
+                LogUtils.e("请求权限完成");
+            }
+        });
+    }
+
 }

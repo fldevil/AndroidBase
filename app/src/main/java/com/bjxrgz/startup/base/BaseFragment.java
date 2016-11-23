@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -36,7 +37,7 @@ import butterknife.Unbinder;
  */
 public abstract class BaseFragment<T> extends Fragment {
 
-    public FragmentActivity mActivity;
+    public AppCompatActivity mActivity;
     public BaseFragment mFragment;
     public FragmentManager mFragmentManager;
     protected Bundle mBundle;// 接受数据的Bundle
@@ -85,7 +86,7 @@ public abstract class BaseFragment<T> extends Fragment {
         FragmentUtils.initBaseAttach(this, anim);
         mFragment = this;
         if (context instanceof FragmentActivity) {
-            mActivity = (FragmentActivity) context;
+            mActivity = (AppCompatActivity) context;
             mFragmentManager = mActivity.getSupportFragmentManager();
         }
     }

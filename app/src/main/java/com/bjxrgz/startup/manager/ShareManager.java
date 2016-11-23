@@ -84,12 +84,6 @@ public class ShareManager {
 
             @Override
             public void onRefuse() {
-
-            }
-
-            @Override
-            public void onRefuseAndNotAsk() {
-
             }
         });
     }
@@ -157,12 +151,6 @@ public class ShareManager {
 
             @Override
             public void onRefuse() {
-
-            }
-
-            @Override
-            public void onRefuseAndNotAsk() {
-
             }
         });
     }

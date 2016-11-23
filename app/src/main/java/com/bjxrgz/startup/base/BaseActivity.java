@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -35,7 +36,7 @@ import butterknife.ButterKnife;
  */
 public abstract class BaseActivity<T> extends AppCompatActivity {
 
-    protected Activity mActivity;
+    protected AppCompatActivity mActivity;
     protected FragmentManager mFragmentManager;
     protected ProgressDialog loading;
     protected boolean anim = true; // 跳转动画开关
@@ -49,9 +50,10 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
         ActivityUtils.startActivity(from, intent);
     }
 
-    /* 相当于setContentView 在initView()里调用 */
-    public void initContentView(int res) {
-        setContentView(res);
+    /* 重写setContentView 在initView()里调用 */
+    @Override
+    public void setContentView(@LayoutRes int layoutResID) {
+        super.setContentView(layoutResID);
         ButterKnife.bind(this);
     }
 

@@ -43,8 +43,8 @@ public class AppUtils {
         private boolean isSystem; // 是否是用户级别
         private String resDir; // SDCard/包名/
         private String logDir; // SDCard/包名/log/
-        private String FilesDir; // SDCard/Android/data/包名/files/
-        private String CacheDir; // SDCard/Android/data/包名/cache/
+        private String FilesDir; // SDCard/Android/data/包名/files/ 或者是sys的
+        private String CacheDir; // SDCard/Android/data/包名/cache/ 或者是sys的
 
         public String getFilesDir() {
             return FilesDir;
