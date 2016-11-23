@@ -15,7 +15,7 @@ import com.umeng.message.entity.UMessage;
 
 /**
  * Created by JiangZhiGuo on 2016/8/5.
- * describe 友盟管理工具类
+ * describe 友盟管理工具类 (不用的话，删掉PushSDK module 并去掉manifest下的配置)
  */
 public class PushManager {
 

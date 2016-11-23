@@ -33,7 +33,7 @@ import java.util.ArrayList;
 
 /**
  * Created by JiangZhiGuo on 2016/08/05.
- * describe 高德地图管理
+ * describe 高德地图管理 (不用的话，删掉lib下的几个jar 并去掉manifest下的配置)
  */
 public class MapManager {
 

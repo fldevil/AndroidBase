@@ -23,8 +23,8 @@ import retrofit2.http.QueryMap;
 import retrofit2.http.Url;
 
 /**
- * Created by Jiang on 2016/10/14.
- * Retrofit接口
+ * Created by JiangZhiGuo on 2016/10/14.
+ * describe Retrofit接口
  */
 public interface APIManager {
 

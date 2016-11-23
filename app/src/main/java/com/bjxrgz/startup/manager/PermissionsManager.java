@@ -16,7 +16,7 @@ import rx.functions.Action1;
 
 public class PermissionsManager {
 
-    public interface PermissionListener{
+    public interface PermissionListener {
         /**
          * 同意使用权限
          */
@@ -36,7 +36,7 @@ public class PermissionsManager {
     /**
      * 请求权限
      */
-    public static void requestEach(Context context,final PermissionListener permissionListener,final String... permissions){
+    public static void request(Context context, final PermissionListener listener, final String... permissions) {
         RxPermissions.getInstance(context)
                 .requestEach(permissions)
                 .subscribe(new Action1<Permission>() {
@@ -44,18 +44,18 @@ public class PermissionsManager {
                     public void call(Permission permission) {
                         if (permission.granted) {
                             LogUtils.d("同意使用" + permission.name + "权限");
-                            if (permissionListener != null) {
-                                permissionListener.onAgree();
+                            if (listener != null) {
+                                listener.onAgree();
                             }
                         } else if (permission.shouldShowRequestPermissionRationale) {
                             LogUtils.d("拒绝使用" + permission.name + "权限");
-                            if (permissionListener != null) {
-                                permissionListener.onRefuse();
+                            if (listener != null) {
+                                listener.onRefuse();
                             }
                         } else {
                             LogUtils.d("拒绝使用" + permission.name + "权限，且不再询问");
-                            if (permissionListener != null) {
-                                permissionListener.onRefuseAndNotAsk();
+                            if (listener != null) {
+                                listener.onRefuseAndNotAsk();
                             }
                         }
                     }

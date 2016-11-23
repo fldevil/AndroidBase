@@ -35,7 +35,7 @@ public class HomeActivity extends BaseViewActivity<HomeActivity> {
 
     @Override
     protected void initObject(Bundle savedInstanceState) {
-        PermissionsManager.requestEach(this, null, Manifest.permission.READ_PHONE_STATE);
+        PermissionsManager.request(this, null, Manifest.permission.READ_PHONE_STATE);
     }
 
     @Override
