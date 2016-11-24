@@ -11,8 +11,6 @@
 
     <string name="http_error_connect">An unexpected network error occurred</string>
     <string name="http_error_time">connection timed out</string>
-    <string name="http_error_404">The server is busy, please try again later!</string>
-    <string name="http_error_500">The server is busy, please try again later!</string>
 
     <string name="day1">MON</string>
     <string name="day2">TUE</string>

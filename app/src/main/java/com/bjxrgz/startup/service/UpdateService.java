@@ -41,7 +41,7 @@ public class UpdateService extends Service {
     }
 
     private void checkUpdate() {
-        APIManager apiEmptyGson = HttpManager.getAPIEmptyGson();
+        APIManager apiEmptyGson = HttpManager.getCallGsonEmpty();
         Call<Version> responseBodyCall = apiEmptyGson.checkUpdate();
         HttpManager.enqueue(responseBodyCall, new HttpManager.CallBack<Version>() {
             @Override
@@ -82,7 +82,7 @@ public class UpdateService extends Service {
     }
 
     private void downloadApk() {
-        APIManager apiNullGson = HttpManager.getAPINullGson();
+        APIManager apiNullGson = HttpManager.getCallGson();
         Call<ResponseBody> downCall = apiNullGson.downloadAPK(version.getUpdateUrl());
         HttpManager.enqueue(downCall, new HttpManager.CallBack<ResponseBody>() {
             @Override

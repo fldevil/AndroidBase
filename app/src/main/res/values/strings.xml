@@ -11,8 +11,6 @@
 
     <string name="http_error_connect">网络连接错误</string>
     <string name="http_error_time">连接超时</string>
-    <string name="http_error_404">服务器忙，稍后再试！</string>
-    <string name="http_error_500">服务器忙，稍后再试！</string>
 
     <string name="day1">一</string>
     <string name="day2">二</string>

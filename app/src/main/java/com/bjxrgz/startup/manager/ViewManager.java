@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,13 +33,15 @@ public class ViewManager {
 
     /* Toast 单例 可覆盖 */
     public static void showToast(CharSequence message) {
-        if (toast == null) {
-            toast = Toast.makeText(MyApp.getInstance(), message, Toast.LENGTH_SHORT);
-        } else {
-            TextView tv = (TextView) toast.getView().findViewById(android.R.id.message);
-            tv.setText(message);
+        if (!TextUtils.isEmpty(message)) {
+            if (toast == null) {
+                toast = Toast.makeText(MyApp.getInstance(), message, Toast.LENGTH_SHORT);
+            } else {
+                TextView tv = (TextView) toast.getView().findViewById(android.R.id.message);
+                tv.setText(message);
+            }
+            toast.show();
         }
-        toast.show();
     }
 
     public static void showToast(int message) {

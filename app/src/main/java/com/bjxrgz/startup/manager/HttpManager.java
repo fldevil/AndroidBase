@@ -1,8 +1,6 @@
 package com.bjxrgz.startup.manager;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.text.TextUtils;
 
 import com.bjxrgz.startup.R;
 import com.bjxrgz.startup.base.MyApp;
@@ -46,23 +44,8 @@ public class HttpManager {
         if (MyApp.DEBUG) {
             return APIManager.HOST_DEBUG;
         } else {
-            return  APIManager.HOST_RELEASE;
+            return APIManager.HOST_RELEASE;
         }
-    }
-
-    /*构建头信息*/
-    private static Interceptor getHeader(final Map<String, String> options) {
-        return new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request.Builder builder = chain.request().newBuilder();
-                for (String key : options.keySet()) {
-                    builder.addHeader(key, options.get(key));
-                }
-                Request request = builder.build();
-                return chain.proceed(request);
-            }
-        };
     }
 
     private static Interceptor getHeaderEmpty() {
@@ -81,6 +64,21 @@ public class HttpManager {
         String userToken = UserManager.getUser().getUserToken();
         options.put("userToken", userToken);
         return getHeader(options);
+    }
+
+    /*构建头信息*/
+    private static Interceptor getHeader(final Map<String, String> options) {
+        return new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request.Builder builder = chain.request().newBuilder();
+                for (String key : options.keySet()) {
+                    builder.addHeader(key, options.get(key));
+                }
+                Request request = builder.build();
+                return chain.proceed(request);
+            }
+        };
     }
 
     /*数据解析构造器*/
@@ -116,7 +114,7 @@ public class HttpManager {
         return retrofit.create(APIManager.class);
     }
 
-    public static APIManager getAPITokenGson() {
+    public static APIManager getCallGsonToken() {
         if (APITokenGson == null) {
             synchronized (HttpManager.class) {
                 if (APITokenGson == null) {
@@ -127,7 +125,7 @@ public class HttpManager {
         return APITokenGson;
     }
 
-    public static APIManager getAPITokenString() {
+    public static APIManager getCallStrToken() {
         if (APITokenString == null) {
             synchronized (HttpManager.class) {
                 if (APITokenString == null) {
@@ -138,7 +136,7 @@ public class HttpManager {
         return APITokenString;
     }
 
-    public static APIManager getAPIEmptyGson() {
+    public static APIManager getCallGsonEmpty() {
         if (APIEmptyGson == null) {
             synchronized (HttpManager.class) {
                 if (APIEmptyGson == null) {
@@ -149,7 +147,7 @@ public class HttpManager {
         return APIEmptyGson;
     }
 
-    public static APIManager getAPIEmptyString() {
+    public static APIManager getCallStrEmpty() {
         if (APIEmptyString == null) {
             synchronized (HttpManager.class) {
                 if (APIEmptyString == null) {
@@ -160,7 +158,7 @@ public class HttpManager {
         return APIEmptyString;
     }
 
-    public static APIManager getAPINullGson() {
+    public static APIManager getCallGson() {
         if (APINullGson == null) {
             synchronized (HttpManager.class) {
                 if (APINullGson == null) {
@@ -177,30 +175,18 @@ public class HttpManager {
         void onFailure();
     }
 
-    public static <T> void enqueue(Call<T> call, final CallBack<T> callBack) {
-        enqueue(null, call, callBack);
-    }
-
     /**
-     * @param dialog   等待loading（内部自动show/dismiss）
+     * 先调用getCall ,再调用此方法
+     *
      * @param call     APIService接口调用
      * @param callBack 回调接口
      * @param <T>      返回实体类
      */
-    public static <T> void enqueue(final Dialog dialog, Call<T> call, final CallBack<T> callBack) {
-        if (dialog != null) {
-            dialog.show();
-        }
+    public static <T> void enqueue(Call<T> call, final CallBack<T> callBack) {
         call.enqueue(new Callback<T>() {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
-                if (dialog != null) {
-                    if (dialog.isShowing()) {
-                        dialog.dismiss();
-                    }
-                }
                 int code = response.code();
-                Headers headers = response.headers();
                 if (code == 200) { // 200成功
                     T result = response.body();
                     String json;
@@ -214,14 +200,12 @@ public class HttpManager {
                         callBack.onSuccess(result);
                     }
                 } else { // 非200错误
+                    Headers headers = response.headers();
                     ResponseBody error = response.errorBody();
-                    if (error != null) {
+                    if (null != error) {
                         try {
-                            String message = error.string();
-                            LogUtils.e(code + "\n"
-                                    + headers.toString() + "\n"
-                                    + message);
-                            responseError(code, message);
+                            LogUtils.e(code + "\n" + headers.toString() + "\n" + error.string());
+                            responseError(code, error.string());
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -235,11 +219,6 @@ public class HttpManager {
             @Override
             public void onFailure(Call<T> call, Throwable t) {
                 responseError(t);
-                if (dialog != null) {
-                    if (dialog.isShowing()) {
-                        dialog.dismiss();
-                    }
-                }
                 if (callBack != null) {
                     callBack.onFailure();
                 }
@@ -265,15 +244,7 @@ public class HttpManager {
             ActivityUtils.closeActivities();
 
         } else { // 弹出提示
-            if (!TextUtils.isEmpty(message)) { // 有错误信息
-                ViewManager.showToast(message);
-            } else { // 无错误信息
-                if (code == 404) {
-                    ViewManager.showToast(R.string.http_error_404);
-                } else if (code == 500) {
-                    ViewManager.showToast(R.string.http_error_500);
-                }
-            }
+            ViewManager.showToast(message);
         }
     }
 

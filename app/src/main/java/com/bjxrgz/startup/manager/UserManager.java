@@ -64,9 +64,10 @@ public class UserManager {
     }
 
     public static User getUser() {
+        SharedPreferences preference = getPreference();
         User user = new User();
-        user.setId(getPreference().getString(USER_USER_ID, ""));
-        user.setUserToken(getPreference().getString(USER_USER_TOKEN, ""));
+        user.setId(preference.getString(USER_USER_ID, ""));
+        user.setUserToken(preference.getString(USER_USER_TOKEN, ""));
         LogUtils.json("getUser", GsonManager.getInstance().toJson(user));
         return user;
     }
