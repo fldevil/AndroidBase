@@ -21,9 +21,12 @@ public class PopUtils {
     /**
      * @param width  WindowManager.LayoutParams.WRAP_CONTENT
      * @param height WindowManager.LayoutParams.WRAP_CONTENT
+     * @return 下面的代码放到onTouchEvent中来点击外部dismiss也行
+     * if (popupWindow != null && popupWindow.isShowing()) {
+     * popupWindow.dismiss();}
      */
-    private static PopupWindow getPop(View view, int width, int height, int anim) {
-        PopupWindow pop = new PopupWindow(view, width, height);
+    private static PopupWindow getPop(View window, int width, int height, int anim) {
+        PopupWindow pop = new PopupWindow(window, width, height);
         pop.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         if (0 != anim) {
             pop.setAnimationStyle(anim);
@@ -48,72 +51,67 @@ public class PopUtils {
         return pop;
     }
 
-    /**
-     * 创建适配的PopupWindow，不要多次创建
-     */
-    public static PopupWindow create(View popView) {
-        return getPop(popView, WindowManager.LayoutParams.WRAP_CONTENT,
+    /* 创建适配的PopupWindow，不要多次创建 */
+    public static PopupWindow createWindow(View window) {
+        return getPop(window, WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT, 0);
     }
 
-    /**
-     * 创建指定宽高的PopupWindow，不要多次创建
-     */
-    public static PopupWindow create(View popView, int width, int height) {
-        return getPop(popView, width, height, 0);
+    /* 创建指定宽高的PopupWindow，不要多次创建 */
+    public static PopupWindow createWindow(View window, int width, int height) {
+        return getPop(window, width, height, 0);
     }
 
-    /**
-     * 显示popupWindow ,location可用viewUtils获取
-     */
-    public static void show(PopupWindow pop, int gravity, View parent, int offsetX, int offsetY) {
-        if (pop != null && !pop.isShowing()) {
-            pop.showAtLocation(parent, gravity, offsetX, offsetY);
-        }
+    /* 显示popupWindow ,location可用viewUtils获取 */
+    public static void show(PopupWindow window, View parent, int gravity, int offsetX, int offsetY) {
+        if (window != null && !window.isShowing())
+            window.showAtLocation(parent, gravity, offsetX, offsetY);
     }
 
-    /**
-     * 显示popupWindow ,会依附在anchor的下方 还有偏移量(有动画)
-     */
-    public static void show(PopupWindow pop, View anchor, int offsetX, int offsetY) {
-        if (pop != null && !pop.isShowing()) {
-            pop.showAsDropDown(anchor, offsetX, offsetY);
-        }
+    public static void show(PopupWindow window, View parent, int gravity) {
+        if (window != null && !window.isShowing()) window.showAtLocation(parent, gravity, 0, 0);
     }
 
-    /**
-     * 更新popupWindow宽高
-     */
+    /* 显示popupWindow ,会依附在anchor的下方 还有偏移量(有动画) */
+    public static void show(PopupWindow window, View anchor, int offsetX, int offsetY) {
+        if (window != null && !window.isShowing()) window.showAsDropDown(anchor, offsetX, offsetY);
+    }
+
+    public static void show(PopupWindow window, View anchor) {
+        if (window != null && !window.isShowing()) window.showAsDropDown(anchor);
+    }
+
+    /* 更新popupWindow宽高 */
     public static void update(PopupWindow pop, int width, int height) {
-        if (pop != null) {
-            pop.update(width, height);
-        }
+        if (pop != null) pop.update(width, height);
     }
 
     public static void update(PopupWindow pop, int x, int y, int width, int height) {
-        if (pop != null) {
-            pop.update(x, y, width, height);
-        }
+        if (pop != null) pop.update(x, y, width, height);
     }
 
-    /**
-     * popupWindow 移除的popupWindow
-     */
-    public static void dismiss(PopupWindow pop) {
-        if (pop != null && pop.isShowing()) {
-            pop.dismiss();
-        }
+    /* 移除popupWindow */
+    public static void dismiss(PopupWindow window) {
+        if (window != null && window.isShowing()) window.dismiss();
     }
 
-    /**
-     * 创建PopMenu 调用menu.show()显示
-     */
-    public static PopupMenu createPopMenu(Context context, View view, int menuID,
-                                          PopupMenu.OnMenuItemClickListener listener) {
-        PopupMenu menu = new PopupMenu(context, view);
+    /* 创建PopMenu(显示位置只能是在anchor的下面) */
+    public static PopupMenu createMenu(Context context, View anchor, int menuID,
+                                       PopupMenu.OnMenuItemClickListener listener) {
+        PopupMenu menu = new PopupMenu(context, anchor);
         menu.getMenuInflater().inflate(menuID, menu.getMenu());
         menu.setOnMenuItemClickListener(listener);
         return menu;
+    }
+
+    /* 显示PopupMenu */
+    public static void show(PopupMenu menu) {
+        if (menu != null) menu.show();
+    }
+
+    /* 移除的PopupMenu */
+    public static void dismiss(PopupMenu menu) {
+        if (menu != null) menu.dismiss();
     }
 
 }

@@ -96,6 +96,7 @@ public class TopUtils {
                 tvRight.setVisibility(View.VISIBLE);
                 tvRight.setTextColor(color);
                 tvRight.setText(right);
+                tvRight.setOnClickListener(listener);
             }
         }
 
@@ -104,6 +105,7 @@ public class TopUtils {
                 tvRight.setVisibility(View.VISIBLE);
                 tvRight.setTextColor(color);
                 tvRight.setText(right);
+                tvRight.setOnClickListener(listener);
             }
         }
 

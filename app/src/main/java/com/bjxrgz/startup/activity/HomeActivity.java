@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.bjxrgz.startup.R;
 import com.bjxrgz.startup.base.BaseActivity;
@@ -20,7 +21,8 @@ import butterknife.OnClick;
  * describe 主界面
  */
 public class HomeActivity extends BaseActivity<HomeActivity> {
-
+    @BindView(R.id.llMain)
+    LinearLayout llMain;
     @BindView(R.id.btn1)
     Button btn1;
     @BindView(R.id.btn2)

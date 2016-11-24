@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao' // greenDao
 
 android {
-    buildToolsVersion "24.0.3"
+    buildToolsVersion "25.0.1"
     compileSdkVersion 25 // 最高安装版本
     defaultConfig {
         targetSdkVersion 25 // 22以上需动态权限
