@@ -30,7 +30,7 @@ public class PushManager {
         // 打印日志
         mPushAgent.setDebugMode(isLog);
         // 检查配置文件,会弹错误信息的toast
-        mPushAgent.setPushCheck(isLog);
+//        mPushAgent.setPushCheck(isLog);
         // 收集奔溃日志
         MobclickAgent.setScenarioType(context, MobclickAgent.EScenarioType.E_UM_NORMAL);
         MobclickAgent.setCatchUncaughtExceptions(true);

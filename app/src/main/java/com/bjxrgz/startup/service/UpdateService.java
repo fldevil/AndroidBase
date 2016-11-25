@@ -87,7 +87,7 @@ public class UpdateService extends Service {
         HttpManager.enqueue(downCall, new HttpManager.CallBack<ResponseBody>() {
             @Override
             public void onSuccess(ResponseBody body) {
-                if (body != null) {
+                if (body != null) { // 这里应该开个线程
                     InputStream inputStream = body.byteStream();
                     if (null != inputStream) {
                         File apkFile = FileManager.createAPKFile(version.getVersionName());

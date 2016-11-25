@@ -55,12 +55,12 @@ public class StartActivity extends BaseActivity<StartActivity> {
             }
         }, 1500);
         // 立刻关闭当前页面会出现空白缝隙
-//        MyApp.getInstance().getHandler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                mActivity.finish();
-//            }
-//        }, 3000);
+        MyApp.getInstance().getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mActivity.finish();
+            }
+        }, 3000);
     }
 
 }
