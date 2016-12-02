@@ -46,7 +46,7 @@ public class UserManager {
     }
 
     /* 清除信息 */
-    public void clear() {
+    public static void clear() {
         getPreference().edit().clear().apply();
     }
 

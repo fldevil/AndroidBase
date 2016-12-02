@@ -44,8 +44,8 @@ public class MapManager {
         return mapClient;
     }
 
-    public static void requestMap(Context context, PermissionsManager.PermissionListener listener) {
-        PermissionsManager.request(context, listener, Manifest.permission.ACCESS_COARSE_LOCATION,
+    public static void requestMap(Context context, PermManager.PermissionListener listener) {
+        PermManager.request(context, listener, Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION);
     }
 

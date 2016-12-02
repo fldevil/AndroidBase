@@ -14,7 +14,7 @@ import android.os.Build;
 import android.provider.MediaStore;
 
 import com.bjxrgz.startup.base.MyApp;
-import com.bjxrgz.startup.manager.PermissionsManager;
+import com.bjxrgz.startup.manager.PermManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -60,8 +60,8 @@ public class MediaUtils {
     }
 
     /* 拍照权限 */
-    public static void requestCamera(Context context, PermissionsManager.PermissionListener listener) {
-        PermissionsManager.request(context, listener, Manifest.permission.CAMERA);
+    public static void requestCamera(Context context, PermManager.PermissionListener listener) {
+        PermManager.request(context, listener, Manifest.permission.CAMERA);
     }
 
     /**

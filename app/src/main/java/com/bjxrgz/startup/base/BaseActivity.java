@@ -1,12 +1,9 @@
 package com.bjxrgz.startup.base;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,14 +17,10 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.bjxrgz.startup.manager.PushManager;
-import com.bjxrgz.startup.manager.ViewManager;
 import com.bjxrgz.startup.utils.ActivityUtils;
 import com.bjxrgz.startup.utils.LogUtils;
-import com.bjxrgz.startup.utils.NetUtils;
 
 import java.lang.reflect.ParameterizedType;
-
-import butterknife.ButterKnife;
 
 /**
  * Created by JiangZhiGuo on 2016/06/01
@@ -38,30 +31,9 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
 
     protected AppCompatActivity mActivity;
     protected FragmentManager mFragmentManager;
-    protected ProgressDialog loading;
     protected boolean anim = true; // 跳转动画开关
     protected boolean log = false; // 是否打印生命周期
     protected String logTag = "BaseActivity";
-
-    /* 子类重写类似方法 实现跳转 */
-    public static void goActivity(Activity from) {
-        Intent intent = new Intent(from, BaseActivity.class);
-        // intent.putData();
-        ActivityUtils.startActivity(from, intent);
-    }
-
-    /* 重写setContentView 在initView()里调用 */
-    @Override
-    public void setContentView(@LayoutRes int layoutResID) {
-        super.setContentView(layoutResID);
-        ButterKnife.bind(this);
-    }
-
-    protected abstract void initObject(Bundle savedInstanceState);
-
-    protected abstract void initView(Bundle savedInstanceState);
-
-    protected abstract void initData();
 
     /**
      * ***********************************以下是生命周期***********************************
@@ -71,14 +43,11 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         logTag = getCls();
+        LogUtils.lifeCycle(log, logTag);
         ActivityUtils.initBaseCreate(this, anim);
         super.onCreate(savedInstanceState);
-        LogUtils.lifeCycle(log, logTag);
         mActivity = this; // 实例
-        loading = ViewManager.createLoading(this);
         mFragmentManager = getSupportFragmentManager();
-        initObject(savedInstanceState);
-        initView(savedInstanceState);
     }
 
     /**
@@ -87,8 +56,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public void onAttachFragment(Fragment fragment) {
-        super.onAttachFragment(fragment);
         LogUtils.lifeCycle(log, logTag);
+        super.onAttachFragment(fragment);
     }
 
     /**
@@ -96,8 +65,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public void onEnterAnimationComplete() {
-        super.onEnterAnimationComplete();
         LogUtils.lifeCycle(log, logTag);
+        super.onEnterAnimationComplete();
     }
 
     /**
@@ -111,9 +80,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public void onContentChanged() {
-        super.onContentChanged();
         LogUtils.lifeCycle(log, logTag);
-        initData();
+        super.onContentChanged();
     }
 
     /**
@@ -121,8 +89,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
         LogUtils.lifeCycle(log, logTag);
+        super.onNewIntent(intent);
     }
 
     /**
@@ -130,8 +98,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onRestart() {
-        super.onRestart();
         LogUtils.lifeCycle(log, logTag);
+        super.onRestart();
     }
 
     /**
@@ -139,8 +107,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onStart() {
-        super.onStart();
         LogUtils.lifeCycle(log, logTag);
+        super.onStart();
     }
 
     /**
@@ -148,8 +116,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         LogUtils.lifeCycle(log, logTag);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     /**
@@ -161,8 +129,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         LogUtils.lifeCycle(log, logTag);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     /**
@@ -171,8 +139,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
         LogUtils.lifeCycle(log, logTag);
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     /**
@@ -180,8 +148,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
         LogUtils.lifeCycle(log, logTag);
+        super.onPostCreate(savedInstanceState);
     }
 
     /**
@@ -189,10 +157,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onResume() {
-        super.onResume();
         LogUtils.lifeCycle(log, logTag);
-        PushManager.analysisOnResume(this);
-        NetUtils.isAvailable(this);
+        super.onResume();
     }
 
     /**
@@ -201,8 +167,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onResumeFragments() {
-        super.onResumeFragments();
         LogUtils.lifeCycle(log, logTag);
+        super.onResumeFragments();
     }
 
     /**
@@ -210,8 +176,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onPostResume() {
-        super.onPostResume();
         LogUtils.lifeCycle(log, logTag);
+        super.onPostResume();
     }
 
     /**
@@ -221,8 +187,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public void onAttachedToWindow() {
-        super.onAttachedToWindow();
         LogUtils.lifeCycle(log, logTag);
+        super.onAttachedToWindow();
         // View decorView = getWindow().getDecorView();
         // 控制DecorView的大小来控制activity的大小，可做窗口activity
         // setFinishOnTouchOutside(true);
@@ -249,9 +215,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onPause() {
-        super.onPause();
         LogUtils.lifeCycle(log, logTag);
-        PushManager.analysisOnPause(this);
+        super.onPause();
     }
 
     /**
@@ -260,8 +225,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         LogUtils.lifeCycle(log, logTag);
+        super.onSaveInstanceState(outState);
     }
 
     /**
@@ -269,8 +234,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onStop() {
-        super.onStop();
         LogUtils.lifeCycle(log, logTag);
+        super.onStop();
     }
 
     /**
@@ -278,8 +243,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     public void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
         LogUtils.lifeCycle(log, logTag);
+        super.onDetachedFromWindow();
     }
 
     /**
@@ -287,8 +252,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
      */
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         LogUtils.lifeCycle(log, logTag);
+        super.onDestroy();
     }
 
     /**

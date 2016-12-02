@@ -1,6 +1,5 @@
 package com.bjxrgz.startup.base;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,16 +18,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 
-import com.bjxrgz.startup.manager.ViewManager;
 import com.bjxrgz.startup.utils.FragmentUtils;
 import com.bjxrgz.startup.utils.LogUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
-
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * Created by JiangZhiGuo on 2016/06/01
@@ -41,26 +36,9 @@ public abstract class BaseFragment<T> extends Fragment {
     public BaseFragment mFragment;
     public FragmentManager mFragmentManager;
     protected Bundle mBundle;// 接受数据的Bundle
-    protected ProgressDialog loading;
     protected boolean anim = true; // 跳转动画开关
     protected boolean log = false; // 是否打印生命周期
     protected String logTag = "BaseFragment";
-    private Unbinder unbinder; // ButterKnife
-
-    /* 子类重写类似方法 获取对象 */
-    public static BaseFragment newFragment() {
-        Bundle bundle = new Bundle();
-        // bundle.putData();
-        return BaseFragment.newInstance(BaseFragment.class, bundle);
-    }
-
-    protected abstract void initObject(Bundle savedInstanceState);
-
-    protected abstract int createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
-
-    protected abstract void initView(View view, @Nullable Bundle savedInstanceState);
-
-    protected abstract void initData(Bundle savedInstanceState);
 
     /**
      * **********************************以下是生命周期*******************************
@@ -70,8 +48,8 @@ public abstract class BaseFragment<T> extends Fragment {
     @Override
     public void onInflate(Context context, AttributeSet attrs, Bundle savedInstanceState) {
         logTag = getCls();
-        super.onInflate(context, attrs, savedInstanceState);
         LogUtils.lifeCycle(log, logTag);
+        super.onInflate(context, attrs, savedInstanceState);
     }
 
     /**
@@ -81,8 +59,8 @@ public abstract class BaseFragment<T> extends Fragment {
     @Override
     public void onAttach(Context context) {
         logTag = getCls();
-        super.onAttach(context);
         LogUtils.lifeCycle(log, logTag);
+        super.onAttach(context);
         FragmentUtils.initBaseAttach(this, anim);
         mFragment = this;
         if (context instanceof FragmentActivity) {
@@ -97,12 +75,10 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         LogUtils.lifeCycle(log, logTag);
+        super.onCreate(savedInstanceState);
         FragmentUtils.initBaseCreate(this);
-        loading = ViewManager.createLoading(mActivity);
         mBundle = getArguments(); // 取出Bundle
-        initObject(savedInstanceState);
     }
 
     /**
@@ -113,13 +89,7 @@ public abstract class BaseFragment<T> extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LogUtils.lifeCycle(log, logTag);
-        View view = getView();
-        if (view == null) {
-            int rootRes = createView(inflater, container, savedInstanceState);
-            view = inflater.inflate(rootRes, container, false);
-            unbinder = ButterKnife.bind(mFragment, view);
-        }
-        return view;
+        return getView();
     }
 
     @Override
@@ -133,9 +103,8 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         LogUtils.lifeCycle(log, logTag);
-        initView(view, savedInstanceState);
+        super.onViewCreated(view, savedInstanceState);
     }
 
     /**
@@ -144,9 +113,8 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
         LogUtils.lifeCycle(log, logTag);
-        initData(savedInstanceState);
+        super.onActivityCreated(savedInstanceState);
     }
 
     /**
@@ -163,8 +131,8 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onStart() {
-        super.onStart();
         LogUtils.lifeCycle(log, logTag);
+        super.onStart();
     }
 
     /**
@@ -172,8 +140,8 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         LogUtils.lifeCycle(log, logTag);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     /**
@@ -181,8 +149,8 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onResume() {
-        super.onResume();
         LogUtils.lifeCycle(log, logTag);
+        super.onResume();
     }
 
     /**
@@ -190,8 +158,8 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
         LogUtils.lifeCycle(log, logTag);
+        super.onHiddenChanged(hidden);
     }
 
     /**
@@ -200,8 +168,8 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
         LogUtils.lifeCycle(log, logTag);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     /**
@@ -209,8 +177,8 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onPause() {
-        super.onPause();
         LogUtils.lifeCycle(log, logTag);
+        super.onPause();
     }
 
     /**
@@ -218,8 +186,8 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         LogUtils.lifeCycle(log, logTag);
+        super.onSaveInstanceState(outState);
     }
 
     /**
@@ -227,8 +195,8 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onStop() {
-        super.onStop();
         LogUtils.lifeCycle(log, logTag);
+        super.onStop();
     }
 
     /**
@@ -240,6 +208,7 @@ public abstract class BaseFragment<T> extends Fragment {
         // viewpager有四个fragment 当滑动到第四页的时候 第一页执行onDestroyView(),但没有执行onDestroy。
         // 他依然和activity关联。当在滑动到第一页的时候又执行了 onCreateView()。会出现重复加载view的局面
         // 这里的做法是个onCreateView配套的
+        LogUtils.lifeCycle(log, logTag);
         View view = getView();
         if (view != null) {
             ViewGroup parent = (ViewGroup) view.getParent();
@@ -248,7 +217,6 @@ public abstract class BaseFragment<T> extends Fragment {
             }
         }
         super.onDestroyView();
-        LogUtils.lifeCycle(log, logTag);
     }
 
     /**
@@ -256,8 +224,8 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onDestroy() {
-        super.onDestroy();
         LogUtils.lifeCycle(log, logTag);
+        super.onDestroy();
     }
 
     /**
@@ -265,11 +233,8 @@ public abstract class BaseFragment<T> extends Fragment {
      */
     @Override
     public void onDetach() {
-        super.onDetach();
         LogUtils.lifeCycle(log, logTag);
-        if (unbinder != null) {
-            unbinder.unbind();
-        }
+        super.onDetach();
     }
 
     /**

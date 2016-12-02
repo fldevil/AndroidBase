@@ -3,23 +3,18 @@ package com.bjxrgz.startup.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.LinearLayout;
 
 import com.bjxrgz.startup.R;
-import com.bjxrgz.startup.base.BaseActivity;
+import com.bjxrgz.startup.base.MyActivity;
 import com.bjxrgz.startup.manager.ViewManager;
 import com.bjxrgz.startup.utils.ActivityUtils;
-
-import butterknife.BindView;
 
 /**
  * Created by JiangZhiGuo on 2016/06/01
  * <p>
  * describe 主界面
  */
-public class HomeActivity extends BaseActivity<HomeActivity> {
-    @BindView(R.id.llMain)
-    LinearLayout llMain;
+public class HomeActivity extends MyActivity<HomeActivity> {
 
     public static void goActivity(Activity from) {
         Intent intent = new Intent(from, HomeActivity.class);
@@ -34,7 +29,7 @@ public class HomeActivity extends BaseActivity<HomeActivity> {
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_home);
-        ViewManager.initTop(mActivity, "标题");
+        ViewManager.initTop(mActivity, "主页面");
 
     }
 

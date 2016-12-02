@@ -49,14 +49,14 @@ public class ShareManager {
     }
 
     /* 权限请求 */
-    public static void request(Context context, PermissionsManager.PermissionListener listener) {
+    public static void request(Context context, PermManager.PermissionListener listener) {
         String[] mPermissionList = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE,
                 Manifest.permission.READ_LOGS, Manifest.permission.READ_PHONE_STATE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.SET_DEBUG_APP,
                 Manifest.permission.SYSTEM_ALERT_WINDOW, Manifest.permission.GET_ACCOUNTS,
                 Manifest.permission.WRITE_APN_SETTINGS};
-        PermissionsManager.request(context, listener, mPermissionList);
+        PermManager.request(context, listener, mPermissionList);
     }
 
     /* 检查是否支持分享和授权 */
@@ -76,14 +76,10 @@ public class ShareManager {
      * 先授权，再获取用户信息 这里获取的信息比授权的多
      */
     public static void auth(final Activity activity, final SHARE_MEDIA platform) {
-        request(activity, new PermissionsManager.PermissionListener() {
+        request(activity, new PermManager.PermissionListener() {
             @Override
             public void onAgree() {
                 toAuth(activity, platform);
-            }
-
-            @Override
-            public void onRefuse() {
             }
         });
     }
@@ -143,14 +139,10 @@ public class ShareManager {
      */
 
     public static void share(final Activity activity, final SHARE_MEDIA platform, final String imgUrl) {
-        request(activity, new PermissionsManager.PermissionListener() {
+        request(activity, new PermManager.PermissionListener() {
             @Override
             public void onAgree() {
                 goShare(activity, platform, imgUrl);
-            }
-
-            @Override
-            public void onRefuse() {
             }
         });
     }
