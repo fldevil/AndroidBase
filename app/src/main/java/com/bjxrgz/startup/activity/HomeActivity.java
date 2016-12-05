@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.bjxrgz.startup.R;
-import com.bjxrgz.startup.base.MyActivity;
+import com.bjxrgz.startup.base.BaseActivity;
 import com.bjxrgz.startup.manager.ViewManager;
 import com.bjxrgz.startup.utils.ActivityUtils;
 
@@ -14,7 +14,7 @@ import com.bjxrgz.startup.utils.ActivityUtils;
  * <p>
  * describe 主界面
  */
-public class HomeActivity extends MyActivity<HomeActivity> {
+public class HomeActivity extends BaseActivity<HomeActivity> {
 
     public static void goActivity(Activity from) {
         Intent intent = new Intent(from, HomeActivity.class);

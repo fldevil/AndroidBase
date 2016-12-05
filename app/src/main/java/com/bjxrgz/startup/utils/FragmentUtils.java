@@ -15,7 +15,9 @@ import android.transition.AutoTransition;
  */
 public class FragmentUtils {
 
-    public static void initBaseAttach(Fragment fragment, boolean anim) {
+    private static final boolean anim = true; // 跳转动画开关
+
+    public static void initBaseAttach(Fragment fragment) {
         // 只要进的动画就好，出的有时候执行不完全会bug
         if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             fragment.setEnterTransition(new AutoTransition());

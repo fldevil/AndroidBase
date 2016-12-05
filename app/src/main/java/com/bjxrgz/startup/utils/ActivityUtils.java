@@ -26,13 +26,12 @@ import java.util.List;
  */
 public class ActivityUtils {
 
-    private static boolean anim = false; // 跳转动画开关(默认不开)
+    private static boolean anim = true; // 跳转动画开关
     private static final int kitkatAnimIn = android.R.anim.fade_in; // 4.4下的跳转效果
     private static final int kitkatAnimOut = android.R.anim.fade_out; // 4.4下的跳转效果
     private static List<Activity> activities = new LinkedList<>(); // 所有已启动的Activity
 
-    public static void initBaseCreate(Activity activity, boolean isAnim) {
-        anim = isAnim;
+    public static void initBaseCreate(Activity activity) {
         Window window = activity.getWindow(); // 软键盘
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);// 键盘不会遮挡输入框
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN); // 不自动弹键盘
