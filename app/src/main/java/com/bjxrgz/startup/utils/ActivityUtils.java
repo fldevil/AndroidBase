@@ -31,15 +31,14 @@ public class ActivityUtils {
     private static final int kitkatAnimOut = android.R.anim.fade_out; // 4.4下的跳转效果
     private static List<Activity> activities = new LinkedList<>(); // 所有已启动的Activity
 
-    public static void initBaseCreate(Activity activity) {
+    public static void initCreate(Activity activity) {
         Window window = activity.getWindow(); // 软键盘
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);// 键盘不会遮挡输入框
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN); // 不自动弹键盘
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN); // 总是隐藏键盘
         ScreenUtils.requestPortrait(activity); // 竖屏
         if (activity instanceof AppCompatActivity) { // titleBar
-            AppCompatActivity appCompatActivity = (AppCompatActivity) activity;
-            ScreenUtils.requestNoTitle(appCompatActivity);
+            ScreenUtils.requestNoTitle((AppCompatActivity) activity);
         }
         if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { // 动画
             window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);

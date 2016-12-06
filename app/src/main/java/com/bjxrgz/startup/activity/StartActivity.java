@@ -53,7 +53,7 @@ public class StartActivity extends BaseActivity<StartActivity> {
             public void run() {
                 HomeActivity.goActivity(mActivity);
             }
-        }, 1500);
+        }, 1000);
         // 立刻关闭当前页面会出现空白缝隙
         MyApp.getInstance().getHandler().postDelayed(new Runnable() {
             @Override

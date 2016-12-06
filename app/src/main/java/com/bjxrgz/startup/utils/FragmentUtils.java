@@ -17,7 +17,7 @@ public class FragmentUtils {
 
     private static final boolean anim = true; // 跳转动画开关
 
-    public static void initBaseAttach(Fragment fragment) {
+    public static void initAttach(Fragment fragment) {
         // 只要进的动画就好，出的有时候执行不完全会bug
         if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             fragment.setEnterTransition(new AutoTransition());
@@ -27,7 +27,7 @@ public class FragmentUtils {
         }
     }
 
-    public static void initBaseCreate(Fragment fragment) {
+    public static void initCreate(Fragment fragment) {
         fragment.setHasOptionsMenu(true);// Fragment与ActionBar和MenuItem集成
     }
 

@@ -63,7 +63,7 @@ public abstract class BaseFragment<T> extends Fragment {
             mActivity = (AppCompatActivity) context;
             mFragmentManager = mActivity.getSupportFragmentManager();
         }
-        FragmentUtils.initBaseAttach(this);
+        FragmentUtils.initAttach(this);
     }
 
     /* Activity中的onAttachFragment执行完后会执行 */
@@ -72,7 +72,7 @@ public abstract class BaseFragment<T> extends Fragment {
         super.onCreate(savedInstanceState);
         mBundle = getArguments(); // 取出Bundle
         loading = ViewManager.createLoading(mActivity);
-        FragmentUtils.initBaseCreate(this);
+        FragmentUtils.initCreate(this);
         initObject(savedInstanceState);
     }
 

@@ -28,7 +28,7 @@ public class ScreenUtils {
     }
 
     /**
-     * 无actionBar
+     * 无actionBar, 要在setContentView之前调用
      */
     public static void requestNoTitle(AppCompatActivity activity) {
         activity.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);

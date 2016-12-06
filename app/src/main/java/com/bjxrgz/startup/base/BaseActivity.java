@@ -61,7 +61,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         tag = getCls();
-        ActivityUtils.initBaseCreate(this);
+        ActivityUtils.initCreate(this);
         super.onCreate(savedInstanceState);
         mActivity = this; // 实例
         mFragmentManager = getSupportFragmentManager();
