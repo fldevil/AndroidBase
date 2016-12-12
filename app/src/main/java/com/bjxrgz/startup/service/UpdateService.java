@@ -90,7 +90,7 @@ public class UpdateService extends Service {
                 if (body != null) { // 这里应该开个线程
                     InputStream inputStream = body.byteStream();
                     if (null != inputStream) {
-                        File apkFile = FileManager.createAPKFile(version.getVersionName());
+                        File apkFile = FileManager.createAPKInRes(version.getVersionName());
                         FileUtils.writeFileFromIS(apkFile, inputStream, false);
                         Intent installIntent = AppUtils.getInstallIntent(apkFile);
                         UpdateService.this.startService(installIntent);

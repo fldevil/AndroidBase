@@ -3,7 +3,6 @@ package com.bjxrgz.startup.manager;
 import android.content.Context;
 
 import com.bjxrgz.startup.R;
-import com.bjxrgz.startup.base.MyApp;
 import com.bjxrgz.startup.utils.ActivityUtils;
 import com.bjxrgz.startup.utils.LogUtils;
 
@@ -34,6 +33,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  */
 public class HttpManager {
 
+    private static String HOST;
+
     private static APIManager callGson;
     private static APIManager callGsonEmpty;
     private static APIManager callGsonToken;
@@ -41,11 +42,11 @@ public class HttpManager {
     private static APIManager callStrEmpty;
     private static APIManager callStrToken;
 
-    private static String getBase() {
-        if (MyApp.DEBUG) {
-            return APIManager.HOST_DEBUG;
+    public static void initApp(boolean isDebug) {
+        if (isDebug) {
+            HOST = APIManager.HOST_DEBUG;
         } else {
-            return APIManager.HOST_RELEASE;
+            HOST = APIManager.HOST_RELEASE;
         }
     }
 
@@ -230,7 +231,7 @@ public class HttpManager {
         }
     }
 
-    /*构建头信息*/
+    /* 构建头信息 */
     private static Interceptor getHeader(final Map<String, String> options) {
         return new Interceptor() {
             @Override
@@ -245,7 +246,7 @@ public class HttpManager {
         };
     }
 
-    /*数据解析构造器*/
+    /* 数据解析构造器 */
     private static GsonConverterFactory getGsonFactory() {
         return GsonConverterFactory.create();
     }
@@ -254,7 +255,7 @@ public class HttpManager {
         return ScalarsConverterFactory.create();
     }
 
-    /*获取OKHttp的client*/
+    /* 获取OKHttp的client */
     private static OkHttpClient getClient(Interceptor header) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         if (header != null) {
@@ -263,33 +264,33 @@ public class HttpManager {
         return builder.build();
     }
 
-    /*获取Retrofit实例*/
+    /* 获取Retrofit实例 */
     private static Retrofit getRetrofit(Interceptor header, Converter.Factory factory) {
         Retrofit.Builder builder = new Retrofit.Builder();
-        builder.baseUrl(getBase()); // host
+        builder.baseUrl(HOST); // host
         builder.addConverterFactory(factory); //解析构造器
         builder.client(getClient(header)); // client
         return builder.build();
     }
 
-    /*获取service 开始请求网络*/
+    /* 获取service 开始请求网络 */
     private static APIManager getService(Interceptor header, Converter.Factory factory) {
         Retrofit retrofit = getRetrofit(header, factory);
         return retrofit.create(APIManager.class);
     }
 
-    /*语言环境*/
+    /* 语言环境 */
     private static Locale getLocale(Context context) {
         return context.getResources().getConfiguration().locale;
     }
 
-    /*是否为英语环境*/
+    /* 是否为英语环境 */
     private static boolean isEN(Context context) {
         String language = getLocale(context).getLanguage();
         return language.endsWith("en");
     }
 
-    /*是否为中文环境*/
+    /* 是否为中文环境 */
     private static boolean isZH(Context context) {
         String language = getLocale(context).getLanguage();
         return language.endsWith("zh");

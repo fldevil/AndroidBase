@@ -43,53 +43,53 @@ public class RxManager {
     }
 
     /* 注册 */
-    public <T> Observable<T> register(RxEvent<T> rxEvent) {
-        return createObservable(rxEvent.getId()); // 获取观察者(外部绑定订阅者或者做事件处理)
+    public <T> Observable<T> register(RxEvent.ID eventId) {
+        return createObservable(eventId); // 获取观察者(外部绑定订阅者或者做事件处理)
     }
 
-    public <T> Observable<T> registerMain(RxEvent<T> rxEvent) {
-        Observable<T> observable = register(rxEvent); // 获取观察者
+    public <T> Observable<T> registerMain(RxEvent.ID eventId) {
+        Observable<T> observable = register(eventId); // 获取观察者
         observable.observeOn(AndroidSchedulers.mainThread()); // 主线程
         return observable;
     }
 
-    public <T> Observable<T> registerBack(RxEvent<T> rxEvent) {
-        Observable<T> observable = register(rxEvent); // 获取观察者
+    public <T> Observable<T> registerBack(RxEvent.ID eventId) {
+        Observable<T> observable = register(eventId); // 获取观察者
         observable.observeOn(AndroidSchedulers.from(new Handler().getLooper())); // 子线程
         return observable;
     }
 
-    public <T> Observable<T> registerMain(RxEvent<T> rxEvent, Action1<? super T> onNext) {
-        Observable<T> register = registerMain(rxEvent); // 获取观察者
+    public <T> Observable<T> registerMain(RxEvent.ID eventId, Action1<? super T> onNext) {
+        Observable<T> register = registerMain(eventId); // 获取观察者
         register.subscribe(onNext); // 事件处理
         return register;
     }
 
-    public <T> Observable<T> registerBack(RxEvent<T> rxEvent, Action1<? super T> onNext) {
-        Observable<T> register = registerBack(rxEvent); // 获取观察者
+    public <T> Observable<T> registerBack(RxEvent.ID eventId, Action1<? super T> onNext) {
+        Observable<T> register = registerBack(eventId); // 获取观察者
         register.subscribe(onNext); // 事件处理
         return register;
     }
 
-    public <T> Observable<T> registerMain(RxEvent<T> rxEvent, Action1<? super T> onNext,
+    public <T> Observable<T> registerMain(RxEvent.ID eventId, Action1<? super T> onNext,
                                           final Action1<Throwable> onError,
                                           final Action0 onCompleted) {
-        Observable<T> register = registerMain(rxEvent); // 获取观察者
+        Observable<T> register = registerMain(eventId); // 获取观察者
         register.subscribe(onNext, onError, onCompleted); // 事件,异常,最后处理(不用绑定订阅者)
         return register;
     }
 
-    public <T> Observable<T> registerBack(RxEvent<T> rxEvent, Action1<? super T> onNext,
+    public <T> Observable<T> registerBack(RxEvent.ID eventId, Action1<? super T> onNext,
                                           final Action1<Throwable> onError,
                                           final Action0 onCompleted) {
-        Observable<T> register = registerBack(rxEvent); // 获取观察者
+        Observable<T> register = registerBack(eventId); // 获取观察者
         register.subscribe(onNext, onError, onCompleted);  // 事件,异常,最后处理(不用绑定订阅者)
         return register;
     }
 
     /* 注销 */
-    public <T> void unregister(RxEvent<T> rxEvent, @NonNull Observable observable) {
-        removeObservable(rxEvent.getId(), observable); // 移除此event绑定的观察者
+    public <T> void unregister(RxEvent.ID eventId, @NonNull Observable observable) {
+        removeObservable(eventId, observable); // 移除此event绑定的观察者
     }
 
     /* 发送消息(只有已注册的才会收到) */
