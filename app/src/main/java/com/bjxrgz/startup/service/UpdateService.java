@@ -1,6 +1,7 @@
 package com.bjxrgz.startup.service;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.IBinder;
@@ -26,6 +27,11 @@ import retrofit2.Call;
 public class UpdateService extends Service {
 
     private Version version;
+
+    public static void goService(Context from){
+        Intent intent = new Intent(from, UpdateService.class);
+        from.startService(intent);
+    }
 
     public UpdateService() {
     }

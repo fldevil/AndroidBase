@@ -36,14 +36,8 @@ public class StartActivity extends BaseActivity<StartActivity> {
 
     @Override
     protected void initData() {
-//        update();
+        // UpdateService.goService(mActivity); // 检查更新
         goHome();
-    }
-
-    /* 检查更新 */
-    private void update() {
-        Intent intent = new Intent(this, UpdateService.class);
-        startService(intent);
     }
 
     /* 跳转主页 */
