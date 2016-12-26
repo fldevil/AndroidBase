@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.v7.app.AlertDialog;
+import android.view.Window;
 import android.view.WindowManager;
 
 import com.bjxrgz.startup.base.MyApp;
@@ -28,7 +29,7 @@ public class UpdateService extends Service {
 
     private Version version;
 
-    public static void goService(Context from){
+    public static void goService(Context from) {
         Intent intent = new Intent(from, UpdateService.class);
         from.startService(intent);
     }
@@ -37,13 +38,20 @@ public class UpdateService extends Service {
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
-        throw null;
+    public void onCreate() {
+        checkUpdate();
     }
 
     @Override
-    public void onCreate() {
-        checkUpdate();
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        // startService才走这个 不走下面的
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        // bindService不走上面的 走这个
+        throw null;
     }
 
     private void checkUpdate() {
@@ -83,7 +91,10 @@ public class UpdateService extends Service {
                         downloadApk(); //  确定开始下载
                     }
                 });
-        dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+        }
         dialog.show();
     }
 
