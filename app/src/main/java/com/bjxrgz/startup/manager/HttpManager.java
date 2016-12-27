@@ -160,7 +160,7 @@ public class HttpManager {
                     if (result instanceof String) {
                         json = result.toString();
                     } else {
-                        json = GsonManager.getInstance().toJson(result);
+                        json = GsonManager.get().toJson(result);
                     }
                     LogUtils.json(json);
                     if (callBack != null) {
@@ -211,7 +211,7 @@ public class HttpManager {
             ActivityUtils.closeActivities();
 
         } else { // 弹出提示
-            ViewManager.showToast(message);
+            ViewManager.toast(message);
         }
     }
 
@@ -221,10 +221,10 @@ public class HttpManager {
     private static void responseError(Throwable ex) {
         Class<? extends Throwable> aClass = ex.getClass();
         if (aClass.equals(java.net.ConnectException.class)) { // 网络环境
-            ViewManager.showToast(R.string.http_error_connect);
+            ViewManager.toast(R.string.http_error_connect);
 
         } else if (aClass.equals(java.net.SocketTimeoutException.class)) { // 超时错误
-            ViewManager.showToast(R.string.http_error_time);
+            ViewManager.toast(R.string.http_error_time);
 
         } else {
             LogUtils.e(ex.toString());

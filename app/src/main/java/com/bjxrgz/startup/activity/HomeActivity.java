@@ -50,7 +50,7 @@ public class HomeActivity extends BaseActivity<HomeActivity> {
             Long nowTime = new Date().getTime();
 
             if (nowTime - lastExitTime > 2000) { // 第一次按
-                ViewManager.showToast("再按一次退出");
+                ViewManager.toast("再按一次退出");
             } else { // 返回键连按两次
                 System.exit(0); // 真正退出程序
             }

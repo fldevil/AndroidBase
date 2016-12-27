@@ -32,7 +32,7 @@ public class ViewManager {
     }
 
     /* Toast 单例 可覆盖 */
-    public static void showToast(CharSequence message) {
+    public static void toast(CharSequence message) {
         if (!TextUtils.isEmpty(message)) {
             if (toast == null) {
                 toast = Toast.makeText(MyApp.get(), message, Toast.LENGTH_SHORT);
@@ -44,9 +44,9 @@ public class ViewManager {
         }
     }
 
-    public static void showToast(int message) {
+    public static void toast(int message) {
         String show = MyApp.get().getString(message);
-        showToast(show);
+        toast(show);
     }
 
     public static void initTop(final AppCompatActivity activity, String title) {

@@ -153,8 +153,7 @@ public class PushManager {
             @Override
             public void launchApp(Context context, UMessage uMessage) {
                 // 一般这里会先进行判断  是正常打开app，还是跳转到指定的页面
-                boolean appBackground = AppUtils.isAppBackground(context);
-                if (appBackground) {
+                if (!AppUtils.isAppOnForeground()) {
                     // 如果数据在uMessage.extra里，那么友盟会自动把这些数据封装带启动的intent里
                     // 如果数据不在extra里，那么需要额外的处理
                     super.launchApp(context, uMessage);

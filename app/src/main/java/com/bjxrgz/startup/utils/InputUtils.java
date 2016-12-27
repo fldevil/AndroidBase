@@ -10,14 +10,16 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.bjxrgz.startup.base.MyApp;
+
 /**
  * Created by JiangZhiGuo on 2016/10/13.
  * describe 输入管理工具类
  */
 public class InputUtils {
 
-    private static InputMethodManager getInputManager(Context context) {
-        return (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+    private static InputMethodManager getInputManager() {
+        return (InputMethodManager) MyApp.get().getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     /**
@@ -26,7 +28,7 @@ public class InputUtils {
     public static void hideSoftInput(Activity activity) {
         View view = activity.getWindow().peekDecorView();
         if (view != null) {
-            InputMethodManager inputManager = getInputManager(activity);
+            InputMethodManager inputManager = getInputManager();
             inputManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
@@ -34,57 +36,56 @@ public class InputUtils {
     /**
      * 动态隐藏软键盘
      */
-    public static void hideSoftInput(Context context, EditText edit) {
+    public static void hideSoftInput(EditText edit) {
         edit.clearFocus();
-        InputMethodManager inputManager = getInputManager(context);
+        InputMethodManager inputManager = getInputManager();
         inputManager.hideSoftInputFromWindow(edit.getWindowToken(), 0);
     }
 
     /**
      * 动态显示软键盘
      */
-    public static void showSoftInput(Context context, EditText edit) {
+    public static void showSoftInput(EditText edit) {
         edit.setFocusable(true);
         edit.setFocusableInTouchMode(true);
         edit.requestFocus();
-        InputMethodManager inputManager = getInputManager(context);
+        InputMethodManager inputManager = getInputManager();
         inputManager.showSoftInput(edit, 0);
     }
 
     /**
      * 切换键盘显示与否状态
      */
-    public static void toggleSoftInput(Context context, EditText edit) {
+    public static void toggleSoftInput(EditText edit) {
         edit.setFocusable(true);
         edit.setFocusableInTouchMode(true);
         edit.requestFocus();
-        InputMethodManager inputManager = getInputManager(context);
+        InputMethodManager inputManager = getInputManager();
         inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
 
     /**
      * **********************************剪切板************************************
      */
-    public static ClipboardManager getClipboardManager(Context context) {
-
-        return (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+    public static ClipboardManager getClipboardManager() {
+        return (ClipboardManager) MyApp.get().getSystemService(Context.CLIPBOARD_SERVICE);
     }
 
     /**
      * 复制文本到剪贴板
      */
-    public static void copyText(Context context, String text) {
+    public static void copyText(String text) {
         ClipData myClip = ClipData.newPlainText("text", text);
-        getClipboardManager(context).setPrimaryClip(myClip);
+        getClipboardManager().setPrimaryClip(myClip);
     }
 
     /**
      * 获取剪贴板的文本
      */
-    public static CharSequence getCopy(Context context) {
-        ClipData clip = getClipboardManager(context).getPrimaryClip();
+    public static CharSequence getCopy() {
+        ClipData clip = getClipboardManager().getPrimaryClip();
         if (clip != null && clip.getItemCount() > 0) {
-            return clip.getItemAt(0).coerceToText(context);
+            return clip.getItemAt(0).coerceToText(MyApp.get());
         }
         return "";
     }
@@ -92,16 +93,16 @@ public class InputUtils {
     /**
      * 复制uri到剪贴板
      */
-    public static void copyUri(Context context, Uri uri) {
-        ClipData clipData = ClipData.newUri(context.getContentResolver(), "uri", uri);
-        getClipboardManager(context).setPrimaryClip(clipData);
+    public static void copyUri(Uri uri) {
+        ClipData clipData = ClipData.newUri(MyApp.get().getContentResolver(), "uri", uri);
+        getClipboardManager().setPrimaryClip(clipData);
     }
 
     /**
      * 获取剪贴板的uri
      */
-    public static Uri getUri(Context context) {
-        ClipData clip = getClipboardManager(context).getPrimaryClip();
+    public static Uri getUri() {
+        ClipData clip = getClipboardManager().getPrimaryClip();
         if (clip != null && clip.getItemCount() > 0) {
             return clip.getItemAt(0).getUri();
         }
@@ -111,16 +112,16 @@ public class InputUtils {
     /**
      * 复制意图到剪贴板
      */
-    public static void copyIntent(Context context, Intent intent) {
+    public static void copyIntent(Intent intent) {
         ClipData clipData = ClipData.newIntent("intent", intent);
-        getClipboardManager(context).setPrimaryClip(clipData);
+        getClipboardManager().setPrimaryClip(clipData);
     }
 
     /**
      * 获取剪贴板的意图
      */
-    public static Intent getIntent(Context context) {
-        ClipData clip = getClipboardManager(context).getPrimaryClip();
+    public static Intent getIntent() {
+        ClipData clip = getClipboardManager().getPrimaryClip();
         if (clip != null && clip.getItemCount() > 0) {
             return clip.getItemAt(0).getIntent();
         }

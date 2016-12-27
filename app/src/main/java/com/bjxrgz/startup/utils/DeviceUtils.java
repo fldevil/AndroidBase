@@ -6,6 +6,14 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 
+import com.bjxrgz.startup.base.MyApp;
+
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+
 /**
  * Created by jiang on 2016/10/12
  * <p/>
@@ -28,6 +36,32 @@ public class DeviceUtils {
         private boolean isTable; // 是否是手表
         private String phoneNumber; // 手机号
         private String simSerial; // sim卡序号
+        private String ipAddress; // ip地址 eg:127.168.x.x
+
+        public String getIpAddress() {
+            try {
+                Enumeration nis = NetworkInterface.getNetworkInterfaces();
+                while (nis.hasMoreElements()) {
+                    NetworkInterface ni = (NetworkInterface) nis.nextElement();
+                    Enumeration<InetAddress> ias = ni.getInetAddresses();
+                    while (ias.hasMoreElements()) {
+                        InetAddress ia = ias.nextElement();
+                        if (ia instanceof Inet6Address) {
+                            continue; // skip ipv6
+                        }
+                        String ip = ia.getHostAddress();
+                        String host = "127.0.0.1";
+                        if (!host.equals(ip)) {
+                            ipAddress = ip;
+                            break;
+                        }
+                    }
+                }
+            } catch (SocketException e) {
+                e.printStackTrace();
+            }
+            return ipAddress;
+        }
 
         public String getPhoneNumber() {
             return phoneNumber;
@@ -126,13 +160,13 @@ public class DeviceUtils {
         }
     }
 
-    public static DeviceInfo getDeviceInfo(Context context) {
-        String deviceId = PhoneUtils.getDeviceId(context);
-        String macAddress = getMacAddress(context);
-        boolean phone = PhoneUtils.isPhone(context);
-        boolean table = isTable(context);
-        String phoneNumber = PhoneUtils.getPhoneNumber(context);
-        String simSerial = PhoneUtils.getSimSerial(context);
+    public static DeviceInfo getDeviceInfo() {
+        String deviceId = PhoneUtils.getDeviceId();
+        String macAddress = getMacAddress();
+        boolean phone = PhoneUtils.isPhone();
+        boolean table = isTable();
+        String phoneNumber = PhoneUtils.getPhoneNumber();
+        String simSerial = PhoneUtils.getSimSerial();
 
         DeviceInfo deviceInfo = new DeviceInfo();
         deviceInfo.setDeviceId(deviceId);
@@ -151,9 +185,9 @@ public class DeviceUtils {
     /**
      * 物理地址
      */
-    private static String getMacAddress(Context context) {
+    private static String getMacAddress() {
         String macAddress = "";
-        WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) MyApp.get().getSystemService(Context.WIFI_SERVICE);
         WifiInfo info = wifi.getConnectionInfo();
         if (info != null) {
             macAddress = info.getMacAddress();
@@ -164,9 +198,10 @@ public class DeviceUtils {
         return macAddress;
     }
 
-    public static boolean isTable(Context context) {
-        boolean xlarge = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
-        boolean large = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
+    public static boolean isTable() {
+        int screenLayout = MyApp.get().getResources().getConfiguration().screenLayout;
+        boolean xlarge = ((screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
+        boolean large = ((screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
         return (xlarge || large);
     }
 

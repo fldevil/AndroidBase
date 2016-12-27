@@ -117,7 +117,7 @@ public class UpdateService extends Service {
 
             @Override
             public void onFailure() {
-                ViewManager.showToast("下载失败");
+                ViewManager.toast("下载失败");
             }
         });
     }

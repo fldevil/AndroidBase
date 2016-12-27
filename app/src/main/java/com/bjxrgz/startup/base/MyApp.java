@@ -91,7 +91,7 @@ public class MyApp extends MultiDexApplication {
             PermManager.requestDevice(instance, new PermManager.PermissionListener() {
                 @Override
                 public void onAgree() {
-                    deviceInfo = DeviceUtils.getDeviceInfo(instance);
+                    deviceInfo = DeviceUtils.getDeviceInfo();
                 }
             });
         }

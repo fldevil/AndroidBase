@@ -56,7 +56,7 @@ public class UserManager {
     }
 
     public static void setUser(User user) {
-        LogUtils.json("setUser", GsonManager.getInstance().toJson(user));
+        LogUtils.json("setUser", GsonManager.get().toJson(user));
         SharedPreferences.Editor editor = getPreference().edit();
         editor.putString(USER_USER_ID, user.getId());
         editor.putString(USER_USER_TOKEN, user.getUserToken());
@@ -68,7 +68,7 @@ public class UserManager {
         User user = new User();
         user.setId(preference.getString(USER_USER_ID, ""));
         user.setUserToken(preference.getString(USER_USER_TOKEN, ""));
-        LogUtils.json("getUser", GsonManager.getInstance().toJson(user));
+        LogUtils.json("getUser", GsonManager.get().toJson(user));
         return user;
     }
 

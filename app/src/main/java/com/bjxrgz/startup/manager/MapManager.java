@@ -214,7 +214,7 @@ public class MapManager {
                         if (locationCallBack != null) {
                             locationCallBack.onFailed(aMapLocation);
                         }
-//                        WidgetUtils.showToast(MyApp.instance, R.string.map_location_error);
+//                        WidgetUtils.toast(MyApp.instance, R.string.map_location_error);
                         String errText = "定位失败," + aMapLocation.getErrorCode()
                                 + ": " + aMapLocation.getErrorInfo();
                         LogUtils.e(errText);

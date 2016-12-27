@@ -81,7 +81,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        NetUtils.isAvailable(this);
+        NetUtils.isAvailable();
         PushManager.analysisOnResume(this);
     }
 

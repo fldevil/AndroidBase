@@ -14,21 +14,6 @@ import com.bjxrgz.startup.R;
 
 public class TopUtils {
 
-    /* 废弃 */
-//    private static Toolbar setTop(AppCompatActivity activity) {
-//        Toolbar toolbar = (Toolbar) activity.findViewById(R.id.tbTop);
-//        if (toolbar != null) {
-//            // 设置top
-//            activity.setSupportActionBar(toolbar);
-//            // 获取top
-//            ActionBar actionBar = activity.getSupportActionBar();
-//            if (actionBar != null) {
-//                actionBar.setDisplayShowTitleEnabled(false);
-//            }
-//        }
-//        return toolbar;
-//    }
-
     public static class Builder {
 
         private Toolbar toolbar;

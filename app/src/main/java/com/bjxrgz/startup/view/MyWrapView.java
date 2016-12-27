@@ -38,9 +38,9 @@ public class MyWrapView extends ViewGroup {
      * @param dpL 内部子View的左TopMargin
      * @param dpT 内部子View的LeftMargin
      */
-    public void init(Context context, int dpL, int dpT) {
-        MARGIN_LEFT = ConvertUtils.dp2px(context, dpL);
-        MARGIN_TOP = ConvertUtils.dp2px(context, dpT);
+    public void init(int dpL, int dpT) {
+        MARGIN_LEFT = ConvertUtils.dp2px(dpL);
+        MARGIN_TOP = ConvertUtils.dp2px(dpT);
     }
 
     public void addChild(View child) {

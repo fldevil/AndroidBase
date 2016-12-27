@@ -7,7 +7,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.OperationApplicationException;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.RemoteException;
@@ -16,6 +15,8 @@ import android.provider.Settings;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+
+import com.bjxrgz.startup.base.MyApp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,33 +32,34 @@ public class PhoneUtils {
     /**
      * SIM信息，服务商，数据连接
      */
-    public static TelephonyManager getTelephonyManager(Context context) {
-        return (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+    public static TelephonyManager getTelephonyManager() {
+        return (TelephonyManager) MyApp.get().getSystemService(Context.TELEPHONY_SERVICE);
     }
 
-    public static boolean isPhone(Context context) {
-        return getTelephonyManager(context).getPhoneType() != TelephonyManager.PHONE_TYPE_NONE;
+    public static boolean isPhone() {
+        return getTelephonyManager().getPhoneType() != TelephonyManager.PHONE_TYPE_NONE;
     }
 
     /**
      * 获取手机的IMIE(DeviceId)
      */
-    public static String getDeviceId(Context context) {
+    public static String getDeviceId() {
         String deviceId;
-        if (isPhone(context)) {
-            deviceId = getTelephonyManager(context).getDeviceId();
+        if (isPhone()) {
+            deviceId = getTelephonyManager().getDeviceId();
         } else {
-            deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+            ContentResolver contentResolver = MyApp.get().getContentResolver();
+            deviceId = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID);
         }
         return deviceId;
     }
 
-    public static String getPhoneNumber(Context context){
-        return getTelephonyManager(context).getLine1Number();
+    public static String getPhoneNumber() {
+        return getTelephonyManager().getLine1Number();
     }
 
-    public static String getSimSerial(Context context){
-        return getTelephonyManager(context).getSimSerialNumber();
+    public static String getSimSerial() {
+        return getTelephonyManager().getSimSerialNumber();
     }
 
     /**
@@ -79,8 +81,8 @@ public class PhoneUtils {
      * SubscriberId(IMSI) = 460030419724900<br>
      * VoiceMailNumber = *86<br>
      */
-    public static String getPhoneStatus(Context context) {
-        TelephonyManager tm = (TelephonyManager) context
+    public static String getPhoneStatus() {
+        TelephonyManager tm = (TelephonyManager) MyApp.get()
                 .getSystemService(Context.TELEPHONY_SERVICE);
         String str = "";
         str += "DeviceId(IMEI) = " + tm.getDeviceId() + "\n";
@@ -160,9 +162,10 @@ public class PhoneUtils {
      * 读取联系人数据 KEY见上
      * 需添加权限 <uses-permission android:name="android.permission.READ_CONTACTS"/>
      */
-    public static List<Map<String, String>> getContacts(Context context) {
+    public static List<Map<String, String>> getContacts() {
+        ContentResolver resolver = MyApp.get().getContentResolver();
+
         List<Map<String, String>> list = new ArrayList<>();
-        ContentResolver resolver = context.getContentResolver();
         Cursor cursorID = resolver.query(contacts_uri, new String[]{"_id"}, null, null, null);
         if (cursorID == null) {
             return null;
@@ -170,7 +173,7 @@ public class PhoneUtils {
         while (cursorID.moveToNext()) {
             int contractID = cursorID.getInt(0);
             Uri uri = Uri.parse("content://com.android.contacts/contacts/" + contractID + "/data");
-            Cursor cursorData = context.getContentResolver().query(uri, new String[]{"mimetype", "data1", "data2"}, null, null, null);
+            Cursor cursorData = resolver.query(uri, new String[]{"mimetype", "data1", "data2"}, null, null, null);
             if (cursorData == null) {
                 return null;
             }
@@ -199,7 +202,7 @@ public class PhoneUtils {
     /**
      * 添加联系人  <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
      */
-    public static boolean insertContact(Context context, String name,
+    public static boolean insertContact(String name,
                                         String number, String email) {
 
         ArrayList<ContentProviderOperation> list = new ArrayList<>();
@@ -233,7 +236,7 @@ public class PhoneUtils {
         list.add(addEmail);
 
         try {
-            context.getContentResolver().applyBatch("com.android.contacts", list);
+            MyApp.get().getContentResolver().applyBatch("com.android.contacts", list);
             return true;
         } catch (RemoteException | OperationApplicationException e) {
             e.printStackTrace();
@@ -255,12 +258,12 @@ public class PhoneUtils {
     /**
      * 在onActivityResult中调用，获取选中的号码
      */
-    public static String getSelectContact(Context context, Intent data) {
+    public static String getSelectContact(Intent data) {
         String num = "";
         if (data != null) {
             Uri uri = data.getData();
             // 创建内容解析者
-            ContentResolver contentResolver = context.getContentResolver();
+            ContentResolver contentResolver = MyApp.get().getContentResolver();
             Cursor cursor = contentResolver.query(uri, null, null, null, null);
             if (cursor == null) {
                 return num;
@@ -278,10 +281,10 @@ public class PhoneUtils {
      * 查询SMS ( date为long，type = 1 为接受的短信， 2 为发送的短信 )
      * <uses-permission android:name="android.permission.READ_SMS"/>
      */
-    public static List<Map<String, String>> getSMS(Context context) {
+    public static List<Map<String, String>> getSMS() {
         List<Map<String, String>> list = new ArrayList<>();
         String[] pros = new String[]{"_id", "address", "person", "body", "date", "type"};
-        Cursor cursor = context.getContentResolver().query(sms_uri, pros, null, null, "date desc");
+        Cursor cursor = MyApp.get().getContentResolver().query(sms_uri, pros, null, null, "date desc");
         if (cursor == null) {
             return null;
         }
@@ -310,15 +313,14 @@ public class PhoneUtils {
      * 添加SMS type(见上)
      * <uses-permission android:name="android.permission.WRITE_SMS"/>
      */
-    public static boolean insertSMS(Context context, String phone,
-                                    String body, long date, int type) {
+    public static boolean insertSMS(String phone, String body, long date, int type) {
         ContentValues values = new ContentValues();
         values.put("address", phone);
         values.put("body", body);
         values.put("type", String.valueOf(type));
         values.put("date", String.valueOf(date));
         try {
-            context.getContentResolver().insert(sms_uri, values);
+            MyApp.get().getContentResolver().insert(sms_uri, values);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -330,9 +332,9 @@ public class PhoneUtils {
      * 直接发送短信
      * <uses-permission android:name="android.permission.SEND_SMS"/>
      */
-    public static void sendSMS(Context context, String phoneNumber, String content) {
+    public static void sendSMS(String phoneNumber, String content) {
         if (StringUtils.isEmpty(content)) return;
-        PendingIntent sentIntent = PendingIntent.getBroadcast(context, 0, new Intent(), 0);
+        PendingIntent sentIntent = PendingIntent.getBroadcast(MyApp.get(), 0, new Intent(), 0);
         SmsManager smsManager = SmsManager.getDefault();
         if (content.length() >= 70) {
             List<String> ms = smsManager.divideMessage(content);

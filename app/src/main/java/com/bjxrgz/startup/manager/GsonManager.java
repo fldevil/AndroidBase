@@ -20,7 +20,7 @@ public class GsonManager {
     private static Gson GSON;
     private static Gson GSON_BUILDER;
 
-    public static Gson getInstance() {
+    public static Gson get() {
         if (GSON == null) {
             synchronized (GsonManager.class) {
                 if (GSON == null) {
