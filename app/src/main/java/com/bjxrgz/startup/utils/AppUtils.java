@@ -1,5 +1,6 @@
 package com.bjxrgz.startup.utils;
 
+import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -7,12 +8,14 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.pm.Signature;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
+import android.text.format.Formatter;
 import android.webkit.MimeTypeMap;
 
 import com.bjxrgz.startup.base.MyApp;
@@ -20,8 +23,6 @@ import com.bjxrgz.startup.base.MyApp;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-
-import static u.aly.av.F;
 
 /**
  * Created by JiangZhiGuo on 2016/10/12.
@@ -209,8 +210,8 @@ public class AppUtils {
             sha1 = EncryptUtils.encryptSHA1ToString(signatures[0].toByteArray()).replaceAll("(?<=[0-9A-F]{2})[0-9A-F]{2}", ":$0");
         }
         boolean isSystem = (ApplicationInfo.FLAG_SYSTEM & ai.flags) == ApplicationInfo.FLAG_SYSTEM;
-        String filesDir = getFilesDir(MyApp.getInstance(), "");
-        String cacheDir = getCacheDir(MyApp.getInstance());
+        String filesDir = getFilesDir(MyApp.get(), "");
+        String cacheDir = getCacheDir(MyApp.get());
         String resDir = getResDir(packageName);
         FileUtils.createOrExistsDir(resDir); // 并创建
         String logDir = getLogDir(resDir);
@@ -313,7 +314,7 @@ public class AppUtils {
      * 清除所有资源
      */
     public static void clearRes() {
-        String resDir = MyApp.getInstance().getAppInfo().getResDir();
+        String resDir = MyApp.get().getAppInfo().getResDir();
         List<File> fileList = FileUtils.listFilesAndDirInDir(resDir, true);
         for (File file : fileList) {
             FileUtils.deleteDir(file);
@@ -324,8 +325,8 @@ public class AppUtils {
      * 清除缓存(Glide手动清)
      */
     public static void clearSys(Context context) {
-        String filesDir = MyApp.getInstance().getAppInfo().getFilesDir();
-        String cacheDir = MyApp.getInstance().getAppInfo().getCacheDir();
+        String filesDir = MyApp.get().getAppInfo().getFilesDir();
+        String cacheDir = MyApp.get().getAppInfo().getCacheDir();
         File externalFilesDir = new File(filesDir);
         File externalCacheDir = new File(cacheDir);
         File internalFilesDir = context.getFilesDir();
@@ -338,19 +339,13 @@ public class AppUtils {
     }
 
     /**
+     * ***********************************外存***********************************
+     * <p>
      * 外存总共空间
      */
     public static String getExternalTotal() {
         long totalSpace = Environment.getExternalStorageDirectory().getTotalSpace();
         return FileUtils.getFileSize(totalSpace);
-    }
-
-    /**
-     * 外存剩余空间
-     */
-    public static String getExternalFree() {
-        long freeSpace = Environment.getExternalStorageDirectory().getFreeSpace();
-        return FileUtils.getFileSize(freeSpace);
     }
 
     /**
@@ -362,25 +357,72 @@ public class AppUtils {
     }
 
     /**
-     * **************************************意图管理**********************************
+     * 外存剩余空间
      */
+    public static String getExternalFree() {
+        long freeSpace = Environment.getExternalStorageDirectory().getFreeSpace();
+        return FileUtils.getFileSize(freeSpace);
+    }
+
     /**
+     * ***********************************运存***********************************
+     * <p>
+     * 内存，进程，服务，任务
+     */
+    private static ActivityManager getActivityManager(Context context) {
+        return (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+    }
+
+    /**
+     * 获取手机内存信息
+     */
+    private static ActivityManager.MemoryInfo getMemoryInfo(Context context) {
+        ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
+        getActivityManager(context).getMemoryInfo(memoryInfo);
+        return memoryInfo;
+    }
+
+    /**
+     * 获取总共运存
+     */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public static String getTotalMem(Context context) {
+        return Formatter.formatFileSize(context, getMemoryInfo(context).totalMem);
+    }
+
+    /**
+     * 获取可用运存
+     */
+    public static String getAvailMem(Context context) {
+        return Formatter.formatFileSize(context, getMemoryInfo(context).availMem);
+    }
+
+    /**
+     * 如果当前可用内存 <= threshold，该值为真
+     */
+    public static boolean isLowMemory(Context context) {
+        return getMemoryInfo(context).availMem <= getMemoryInfo(context).threshold;
+    }
+
+    /**
+     * **************************************意图管理**********************************
      * 打开app系统设置
      */
     public static Intent getSettingsIntent() {
         Intent intent = new Intent();
         intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
-        String packageName = MyApp.getInstance().getAppInfo().getPackageName();
+        String packageName = MyApp.get().getAppInfo().getPackageName();
         intent.setData(Uri.parse("package:" + packageName));
         return intent;
     }
 
     /**
-     * 获取安装App(支持6.0)的意图
+     * 获取App信息的意图
      */
-    public static Intent getInstallIntent(String filePath) {
-        return getInstallIntent(FileUtils.getFileByPath(filePath));
+    public static Intent getInfoIntent(String packageName) {
+        Intent intent = new Intent("android.settings.APPLICATION_DETAILS_SETTINGS");
+        return intent.setData(Uri.parse("package:" + packageName));
     }
 
     /**
@@ -410,32 +452,10 @@ public class AppUtils {
     }
 
     /**
-     * 获取App信息的意图
-     */
-    public static Intent getInfoIntent(String packageName) {
-        Intent intent = new Intent("android.settings.APPLICATION_DETAILS_SETTINGS");
-        return intent.setData(Uri.parse("package:" + packageName));
-    }
-
-    /**
      * 获取打开当前App的意图
      */
     public static Intent getOpenIntent(Context context) {
-        return getIntentByPackageName(context, context.getPackageName());
-    }
-
-    /**
-     * 判断App是否安装
-     */
-    public static boolean isInstall(Context context, String packageName) {
-        return getIntentByPackageName(context, packageName) != null;
-    }
-
-    /**
-     * 根据包名获取意图
-     */
-    private static Intent getIntentByPackageName(Context context, String packageName) {
-        return context.getPackageManager().getLaunchIntentForPackage(packageName);
+        return context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
     }
 
     /**
@@ -449,18 +469,54 @@ public class AppUtils {
     }
 
     /**
-     * 判断当前App处于前台还是后台
-     * <p>需添加权限 {@code <uses-permission android:name="android.permission.GET_TASKS"/>}</p>
-     * <p>并且必须是系统应用该方法才有效</p>
+     * 判断App在前台运行
      */
-    public static boolean isAppBackground(Context context) {
-        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        @SuppressWarnings("deprecation")
-        List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(1);
-        if (!tasks.isEmpty()) {
-            ComponentName topActivity = tasks.get(0).topActivity;
-            if (!topActivity.getPackageName().equals(context.getPackageName())) {
-                return true;
+    public static boolean isAppOnForeground(Context context) {
+        ActivityManager activityManager = (ActivityManager)
+                context.getSystemService(Context.ACTIVITY_SERVICE);
+
+        List<ActivityManager.RunningAppProcessInfo> appProcesses =
+                activityManager.getRunningAppProcesses();
+        if (appProcesses != null && appProcesses.size() > 0) {
+            for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+                if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+                        && appProcess.processName.equals(context.getPackageName())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断是否存在Activity
+     *
+     * @param packageName 包名
+     * @param className   activity全路径类名
+     */
+    public static boolean isActivityExist(Context context, String packageName, String className) {
+        Intent intent = new Intent();
+        intent.setClassName(packageName, className);
+        ResolveInfo resolveInfo = context.getPackageManager().resolveActivity(intent, 0);
+        ComponentName componentName = intent.resolveActivity(context.getPackageManager());
+        int size = context.getPackageManager().queryIntentActivities(intent, 0).size();
+        return !(resolveInfo == null || componentName == null || size == 0);
+    }
+
+    /**
+     * 判断服务是否运行
+     *
+     * @param serviceName 是包名+服务的类名（例如：net.loonggg.testbackstage.TestService）
+     */
+    public static boolean isServiceWork(Context mContext, String serviceName) {
+        ActivityManager myAM = (ActivityManager) mContext
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> myList = myAM.getRunningServices(100);
+        if (myList != null && myList.size() > 0) {
+            for (ActivityManager.RunningServiceInfo serviceInfo : myList) {
+                if (serviceInfo.service.getClassName().equals(serviceName)) {
+                    return true;
+                }
             }
         }
         return false;

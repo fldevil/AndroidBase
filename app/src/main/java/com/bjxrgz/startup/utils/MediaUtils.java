@@ -82,13 +82,13 @@ public class MediaUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-            if (intent.resolveActivity(MyApp.getInstance().getPackageManager()) == null) {
+            if (intent.resolveActivity(MyApp.get().getPackageManager()) == null) {
                 intent.setAction(Intent.ACTION_GET_CONTENT);
             }
         } else {
             intent.setAction(Intent.ACTION_GET_CONTENT);
         }
-        if (intent.resolveActivity(MyApp.getInstance().getPackageManager()) == null) {
+        if (intent.resolveActivity(MyApp.get().getPackageManager()) == null) {
             intent = new Intent(Intent.ACTION_PICK,
                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         }

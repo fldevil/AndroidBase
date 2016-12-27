@@ -56,7 +56,7 @@ public class MyApp extends MultiDexApplication {
         MultiDex.install(this); // 大项目需要分包
     }
 
-    public static MyApp getInstance() {
+    public static MyApp get() {
         return instance;
     }
 

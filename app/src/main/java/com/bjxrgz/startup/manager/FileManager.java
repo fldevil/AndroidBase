@@ -15,21 +15,21 @@ public class FileManager {
 
     public static File createJPGInRes() {
         String fileName = StringUtils.getRandom(8) + ".jpg";
-        File jpgFile = new File(MyApp.getInstance().getAppInfo().getResDir(), fileName);
+        File jpgFile = new File(MyApp.get().getAppInfo().getResDir(), fileName);
         FileUtils.createOrExistsFile(jpgFile);
         return jpgFile;
     }
 
     public static File createJPGInFiles() {
         String fileName = StringUtils.getRandom(8) + ".jpg";
-        File jpgFile = new File(MyApp.getInstance().getAppInfo().getFilesDir(), fileName);
+        File jpgFile = new File(MyApp.get().getAppInfo().getFilesDir(), fileName);
         FileUtils.createOrExistsFile(jpgFile);
         return jpgFile;
     }
 
     public static File createAPKInRes(String versionName) {
         String fileName = versionName + ".apk";
-        File apkFile = new File(MyApp.getInstance().getAppInfo().getResDir(), fileName);
+        File apkFile = new File(MyApp.get().getAppInfo().getResDir(), fileName);
         FileUtils.createOrExistsFile(apkFile);
         return apkFile;
     }

@@ -14,10 +14,6 @@ public class RxEvent<T> {
     private ID id; // 订阅的id (可以在上面的枚举ID中定义)
     private T object; // 要传输的数据
 
-    public RxEvent(ID id) {
-        this.id = id;
-    }
-
     public RxEvent(ID id, T object) {
         this.id = id;
         this.object = object;
@@ -54,9 +50,7 @@ public class RxEvent<T> {
 
         RxEvent<?> rxEvent = (RxEvent<?>) o;
 
-        if (id != rxEvent.id) return false;
-        return object != null ? object.equals(rxEvent.object) : rxEvent.object == null;
-
+        return id == rxEvent.id && (object != null ? object.equals(rxEvent.object) : rxEvent.object == null);
     }
 
     @Override

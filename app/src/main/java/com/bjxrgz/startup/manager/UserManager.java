@@ -27,9 +27,9 @@ public class UserManager {
     private synchronized static SharedPreferences getPreference() {
         if (preferences == null) {
             if (TextUtils.isEmpty(SHARE_NAME)) {
-                preferences = PreferenceManager.getDefaultSharedPreferences(MyApp.getInstance());
+                preferences = PreferenceManager.getDefaultSharedPreferences(MyApp.get());
             } else {
-                preferences = MyApp.getInstance().getSharedPreferences(SHARE_NAME, Context.MODE_PRIVATE);
+                preferences = MyApp.get().getSharedPreferences(SHARE_NAME, Context.MODE_PRIVATE);
             }
         }
         return preferences;

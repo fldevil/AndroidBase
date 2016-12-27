@@ -127,7 +127,7 @@ public class ImageUtils {
      * 获取bitmap 相册
      */
     public static Bitmap getBitmap(InputStream is, double maxSize) {
-        String dir = MyApp.getInstance().getAppInfo().getResDir();
+        String dir = MyApp.get().getAppInfo().getResDir();
         String fileName = StringUtils.getRandom(8) + ".jpg";
         File file = new File(dir, fileName);
         FileUtils.writeFileFromIS(file, is, false);

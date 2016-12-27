@@ -165,22 +165,22 @@ public class TimeUtils {
      */
     public static String getUnit(long time) {
         if (time >= 0 && time < MIN) {
-            return time / SEC + MyApp.getInstance().getString(R.string.second);
+            return time / SEC + MyApp.get().getString(R.string.second);
 
         } else if (time > MIN && time < HOUR) {
-            return time / MIN + MyApp.getInstance().getString(R.string.minute);
+            return time / MIN + MyApp.get().getString(R.string.minute);
 
         } else if (time > HOUR && time < DAY) {
-            return time / HOUR + MyApp.getInstance().getString(R.string.hour);
+            return time / HOUR + MyApp.get().getString(R.string.hour);
 
         } else if (time > DAY && time < MONTH) {
-            return time / DAY + MyApp.getInstance().getString(R.string.day);
+            return time / DAY + MyApp.get().getString(R.string.day);
 
         } else if (time > MONTH && time < YEAR) {
-            return time / MONTH + MyApp.getInstance().getString(R.string.month);
+            return time / MONTH + MyApp.get().getString(R.string.month);
 
         } else if (time > YEAR) {
-            return time / YEAR + MyApp.getInstance().getString(R.string.year);
+            return time / YEAR + MyApp.get().getString(R.string.year);
         }
         return "error time";
     }
@@ -224,19 +224,19 @@ public class TimeUtils {
     public static String getWeekFromNumber(int week) {
         switch (week) {
             case Calendar.MONDAY:
-                return MyApp.getInstance().getString(R.string.day1);
+                return MyApp.get().getString(R.string.day1);
             case Calendar.TUESDAY:
-                return MyApp.getInstance().getString(R.string.day2);
+                return MyApp.get().getString(R.string.day2);
             case Calendar.WEDNESDAY:
-                return MyApp.getInstance().getString(R.string.day3);
+                return MyApp.get().getString(R.string.day3);
             case Calendar.THURSDAY:
-                return MyApp.getInstance().getString(R.string.day4);
+                return MyApp.get().getString(R.string.day4);
             case Calendar.FRIDAY:
-                return MyApp.getInstance().getString(R.string.day5);
+                return MyApp.get().getString(R.string.day5);
             case Calendar.SATURDAY:
-                return MyApp.getInstance().getString(R.string.day6);
+                return MyApp.get().getString(R.string.day6);
             case Calendar.SUNDAY:
-                return MyApp.getInstance().getString(R.string.day7);
+                return MyApp.get().getString(R.string.day7);
             default:
                 return "";
         }

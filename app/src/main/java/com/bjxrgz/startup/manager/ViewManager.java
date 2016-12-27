@@ -35,7 +35,7 @@ public class ViewManager {
     public static void showToast(CharSequence message) {
         if (!TextUtils.isEmpty(message)) {
             if (toast == null) {
-                toast = Toast.makeText(MyApp.getInstance(), message, Toast.LENGTH_SHORT);
+                toast = Toast.makeText(MyApp.get(), message, Toast.LENGTH_SHORT);
             } else {
                 TextView tv = (TextView) toast.getView().findViewById(android.R.id.message);
                 tv.setText(message);
@@ -45,7 +45,7 @@ public class ViewManager {
     }
 
     public static void showToast(int message) {
-        String show = MyApp.getInstance().getString(message);
+        String show = MyApp.get().getString(message);
         showToast(show);
     }
 

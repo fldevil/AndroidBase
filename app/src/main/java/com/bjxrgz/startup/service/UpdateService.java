@@ -60,7 +60,7 @@ public class UpdateService extends Service {
         HttpManager.enqueue(responseBodyCall, new HttpManager.CallBack<Version>() {
             @Override
             public void onSuccess(Version result) {
-                int versionCode = MyApp.getInstance().getAppInfo().getVersionCode();
+                int versionCode = MyApp.get().getAppInfo().getVersionCode();
                 if (result != null) {
                     version = result;
                     if (versionCode < result.getVersionCode()) { // 小于 有新版本

@@ -38,7 +38,7 @@ public class ConvertUtils {
      * setStatusColor(int)的参数不是资源文件的索引，所以要转换
      */
     private static int get0xColor(int colorID) {
-        return ContextCompat.getColor(MyApp.getInstance().getBaseContext(), colorID);
+        return ContextCompat.getColor(MyApp.get().getBaseContext(), colorID);
     }
 
     private static final char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};

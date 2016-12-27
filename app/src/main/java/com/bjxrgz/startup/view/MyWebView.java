@@ -133,7 +133,7 @@ public class MyWebView extends WebView {
         settings.setDatabaseEnabled(supportCache); // 开启database 缓存
         if (supportCache) { // 优先使用缓存
             settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-            String resDir = MyApp.getInstance().getAppInfo().getResDir();
+            String resDir = MyApp.get().getAppInfo().getResDir();
             cacheDir = resDir + "web_cache";
             FileUtils.createOrExistsFile(cacheDir);
             settings.setAppCachePath(cacheDir);
