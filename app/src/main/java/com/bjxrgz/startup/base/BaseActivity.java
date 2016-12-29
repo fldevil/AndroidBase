@@ -4,13 +4,10 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.bjxrgz.startup.manager.PushManager;
@@ -29,13 +26,12 @@ import butterknife.Unbinder;
  */
 public abstract class BaseActivity<T> extends AppCompatActivity {
 
-    protected AppCompatActivity mActivity;
-    protected FragmentManager mFragmentManager;
-    protected String tag = "BaseActivity";
-
+    public AppCompatActivity mActivity;
+    public FragmentManager mFragmentManager;
+    public String tag = "BaseActivity";
+    public ProgressDialog loading;
+    public Intent mIntent;
     private Unbinder unbinder;
-    protected ProgressDialog loading;
-    protected View rootView;
 
     /* 子类重写类似方法 实现跳转 */
     public static void goActivity(Activity from) {
@@ -44,44 +40,46 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
         ActivityUtils.startActivity(from, intent);
     }
 
-    /* 重写setContentView 在initView()里调用 */
-    @Override
-    public void setContentView(@LayoutRes int layoutResID) {
-        super.setContentView(layoutResID);
-        rootView = LayoutInflater.from(this).inflate(layoutResID, null);
-        unbinder = ButterKnife.bind(this);
-    }
+    /* 初始layout */
+    protected abstract int initLayout(Bundle savedInstanceState);
 
-    protected abstract void initObject(Bundle savedInstanceState);
+    /* 实例化View */
+    protected abstract void initView();
 
-    protected abstract void initView(Bundle savedInstanceState);
-
+    /* 初始Data */
     protected abstract void initData();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         tag = getCls();
-        ActivityUtils.initCreate(this);
+        mActivity = this;
+        ActivityUtils.initCreate(mActivity);
         super.onCreate(savedInstanceState);
-        mActivity = this; // 实例
         mFragmentManager = getSupportFragmentManager();
-        loading = ViewManager.createLoading(this);
-        initObject(savedInstanceState);
-        initView(savedInstanceState);
+        loading = ViewManager.createLoading(this); // Fragment也调用父Activity的Loading
+        mIntent = getIntent();
+        setContentView(initLayout(savedInstanceState)); // 这之后 页面才会加载出来
     }
 
-    /* setContentView()或者addContentView()方法执行完毕时就会调用该方法
-     可以在这里initData,但不能initListener,view只是加载出来，还没有实例化 */
+    /* setContentView()或addContentView()后调用,view只是加载出来，没有实例化.
+     * 为了页面的加载速度，不要在setContentView里做过多的操作 */
     @Override
     public void onContentChanged() {
         super.onContentChanged();
-        initData();
+        unbinder = ButterKnife.bind(this); // 每次setContentView之后都要bind一下
+        initView(); // 二次setContentView之后控件是以前view的，所以要重新实例化一次
+        initData(); // 二次setContentView的话，可以不用获取数据 只加载数据
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        NetUtils.isAvailable();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        NetUtils.isAvailable();
         PushManager.analysisOnResume(this);
     }
 

@@ -22,18 +22,19 @@ public class StartActivity extends BaseActivity<StartActivity> {
     ImageView ivWelcome;
 
     @Override
-    protected void initObject(Bundle savedInstanceState) {
-        PushManager.setEnable(true); // 推送开关
+    protected int initLayout(Bundle savedInstanceState) {
+        return R.layout.activity_start;
     }
 
     @Override
-    protected void initView(Bundle savedInstanceState) {
+    protected void initView() {
         ScreenUtils.hideStatusBar(mActivity);
         setContentView(R.layout.activity_start);
     }
 
     @Override
     protected void initData() {
+        PushManager.setEnable(true); // 推送开关
         // UpdateService.goService(mActivity); // 检查更新
         goHome();
     }

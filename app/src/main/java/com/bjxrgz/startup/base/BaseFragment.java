@@ -1,18 +1,15 @@
 package com.bjxrgz.startup.base;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bjxrgz.startup.manager.ViewManager;
 import com.bjxrgz.startup.utils.FragmentUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -29,15 +26,13 @@ import butterknife.Unbinder;
 
 public abstract class BaseFragment<T> extends Fragment {
 
-    public AppCompatActivity mActivity;
+    public BaseActivity mActivity;
     public BaseFragment mFragment;
     public FragmentManager mFragmentManager;
-    protected Bundle mBundle;// 接受数据的Bundle
-    protected String tag = "BaseFragment";
-
-    private Unbinder unbinder;
-    protected ProgressDialog loading;
+    public String tag = "BaseFragment";
+    public Bundle mBundle;
     public View rootView;
+    private Unbinder unbinder;
 
     /* 子类重写类似方法 获取对象 */
     public static BaseFragment newFragment() {
@@ -46,21 +41,22 @@ public abstract class BaseFragment<T> extends Fragment {
         return BaseFragment.newInstance(BaseFragment.class, bundle);
     }
 
-    protected abstract void initObject(Bundle savedInstanceState);
+    /* 初始layout */
+    protected abstract int initLayout(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
 
-    protected abstract int layoutId(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
-
+    /* 实例化View */
     protected abstract void initView(View view, @Nullable Bundle savedInstanceState);
 
+    /* 初始Data */
     protected abstract void initData(Bundle savedInstanceState);
 
     @Override
     public void onAttach(Context context) {
         tag = getCls();
-        super.onAttach(context);
         mFragment = this;
+        super.onAttach(context);
         if (context instanceof FragmentActivity) {
-            mActivity = (AppCompatActivity) context;
+            mActivity = (BaseActivity) context;
             mFragmentManager = mActivity.getSupportFragmentManager();
         }
         FragmentUtils.initAttach(this);
@@ -71,9 +67,7 @@ public abstract class BaseFragment<T> extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBundle = getArguments(); // 取出Bundle
-        loading = ViewManager.createLoading(mActivity);
         FragmentUtils.initCreate(this);
-        initObject(savedInstanceState);
     }
 
     /* 在这里返回绑定并View,从stack返回的时候也是先执行这个方法 */
@@ -81,9 +75,9 @@ public abstract class BaseFragment<T> extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = super.onCreateView(inflater, container, savedInstanceState);
         if (rootView == null) {
-            int layoutId = layoutId(inflater, container, savedInstanceState);
+            int layoutId = initLayout(inflater, container, savedInstanceState);
             rootView = inflater.inflate(layoutId, container, false);
-            unbinder = ButterKnife.bind(mFragment, rootView);
+            unbinder = ButterKnife.bind(this, rootView);
         }
         return rootView;
     }

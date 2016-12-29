@@ -25,13 +25,12 @@ public class HomeActivity extends BaseActivity<HomeActivity> {
     }
 
     @Override
-    protected void initObject(Bundle savedInstanceState) {
-
+    protected int initLayout(Bundle savedInstanceState) {
+        return R.layout.activity_home;
     }
 
     @Override
-    protected void initView(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_home);
+    protected void initView() {
         ViewManager.initTop(mActivity, "主页面");
 
     }
