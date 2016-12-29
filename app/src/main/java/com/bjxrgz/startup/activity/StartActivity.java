@@ -23,13 +23,12 @@ public class StartActivity extends BaseActivity<StartActivity> {
 
     @Override
     protected int initLayout(Bundle savedInstanceState) {
+        ScreenUtils.hideStatusBar(mActivity);
         return R.layout.activity_start;
     }
 
     @Override
     protected void initView() {
-        ScreenUtils.hideStatusBar(mActivity);
-        setContentView(R.layout.activity_start);
     }
 
     @Override

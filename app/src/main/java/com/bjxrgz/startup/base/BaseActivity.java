@@ -40,7 +40,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
         ActivityUtils.startActivity(from, intent);
     }
 
-    /* 初始layout */
+    /* 初始layout(setContent之前调用) */
     protected abstract int initLayout(Bundle savedInstanceState);
 
     /* 实例化View */
@@ -53,7 +53,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         tag = getCls();
         mActivity = this;
-        ActivityUtils.initCreate(mActivity);
+        ActivityUtils.initSuperCreate(mActivity);
         super.onCreate(savedInstanceState);
         mFragmentManager = getSupportFragmentManager();
         loading = ViewManager.createLoading(this); // Fragment也调用父Activity的Loading

@@ -21,11 +21,11 @@ import java.util.List;
 public class ActivityUtils {
 
     private static boolean anim = true; // 跳转动画开关
-    private static final int kitkatAnimIn = android.R.anim.fade_in; // 4.4下的跳转效果
-    private static final int kitkatAnimOut = android.R.anim.fade_out; // 4.4下的跳转效果
+    private static final int animIn = android.R.anim.fade_in; // 4.4下的进场效果
+    private static final int animOut = android.R.anim.fade_out; // 4.4下的退场效果
     private static List<Activity> activities = new LinkedList<>(); // 所有已启动的Activity
 
-    public static void initCreate(Activity activity) {
+    public static void initSuperCreate(Activity activity) {
         Window window = activity.getWindow(); // 软键盘
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);// 键盘不会遮挡输入框
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN); // 不自动弹键盘
@@ -34,10 +34,13 @@ public class ActivityUtils {
         if (activity instanceof AppCompatActivity) { // titleBar
             ScreenUtils.requestNoTitle((AppCompatActivity) activity);
         }
-        if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { // 动画
+        // 专门的跳转方式才会有过场效果
+        if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-            window.setEnterTransition(new Fade());
-            window.setExitTransition(new Fade());
+            window.setEnterTransition(new Fade()); // 下一个activity进场
+            window.setExitTransition(new Fade()); //  当前activity向后时退场
+            // window.setReenterTransition(slideIn); // 上一个activity进场
+            // window.setReturnTransition(slideOut); // 当前activity向前时退场
         }
     }
 
@@ -84,7 +87,7 @@ public class ActivityUtils {
             } else {
                 activity.startActivity(intent);
                 if (anim) { // 4.4跳转效果
-                    activity.overridePendingTransition(kitkatAnimIn, kitkatAnimOut);
+                    activity.overridePendingTransition(animIn, animOut);
                 }
             }
         } else {
@@ -124,7 +127,7 @@ public class ActivityUtils {
         } else {
             from.startActivityForResult(intent, requestCode);
             if (anim) { // 4.4跳转效果
-                from.overridePendingTransition(kitkatAnimIn, kitkatAnimOut);
+                from.overridePendingTransition(animIn, animOut);
             }
         }
     }
@@ -144,7 +147,7 @@ public class ActivityUtils {
         } else {
             from.startActivityForResult(intent, requestCode);
             if (anim) { // 4.4跳转效果
-                to.overridePendingTransition(kitkatAnimIn, kitkatAnimOut);
+                to.overridePendingTransition(animIn, animOut);
             }
         }
     }
@@ -164,7 +167,7 @@ public class ActivityUtils {
         } else {
             activity.startActivityFromFragment(fragment, intent, requestCode);
             if (anim) // 4.4跳转效果
-                activity.overridePendingTransition(kitkatAnimIn, kitkatAnimOut);
+                activity.overridePendingTransition(animIn, animOut);
         }
     }
 
