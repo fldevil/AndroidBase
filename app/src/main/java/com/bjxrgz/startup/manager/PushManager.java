@@ -3,6 +3,7 @@ package com.bjxrgz.startup.manager;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.bjxrgz.startup.base.MyApp;
 import com.bjxrgz.startup.utils.AppUtils;
 import com.bjxrgz.startup.utils.LogUtils;
 import com.umeng.analytics.MobclickAgent;
@@ -22,9 +23,10 @@ public class PushManager {
     private static String DEVICE_TOKEN; // 友盟标识
     private static PushAgent mPushAgent;
 
-    public static void initAPP(Context context, boolean isLog) {
+    public static void initAPP(boolean isLog) {
+        Context context = MyApp.get().getApplicationContext();
         // 获取mPushAgent
-        mPushAgent = PushAgent.getInstance(context.getApplicationContext());
+        mPushAgent = PushAgent.getInstance(context);
         // 统计应用启动数据
         mPushAgent.onAppStart();
         // 打印日志

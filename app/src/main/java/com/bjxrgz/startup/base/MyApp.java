@@ -43,11 +43,11 @@ public class MyApp extends MultiDexApplication {
         instance = this;
         initListener();
 
+        HttpManager.initApp(DEBUG); // 网络
         LogUtils.initApp(LOG); // 打印
         ButterKnife.setDebug(LOG); // 注解
-        HttpManager.initApp(DEBUG); // 网络
-        PushManager.initAPP(this, LOG); // 推送
-        ShareManager.initApp(this, LOG); // 分享/授权
+        PushManager.initAPP(LOG); // 推送
+        ShareManager.initApp(LOG); // 分享/授权
     }
 
     @Override

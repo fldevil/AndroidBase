@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.bjxrgz.startup.R;
+import com.bjxrgz.startup.base.MyApp;
 import com.bjxrgz.startup.utils.LogUtils;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
@@ -36,13 +37,14 @@ public class ShareManager {
 
     private static UMShareAPI umShareAPI;
 
-    public static void initApp(Context context, boolean isLog) {
+    public static void initApp(boolean isLog) {
+        MyApp myApp = MyApp.get();
         Log.LOG = isLog;
         Config.IsToastTip = isLog;
 //        Config.dialogSwitch = true; // 是否使用默认dialog
 //        Config.dialog = null;
 //        Config.REDIRECT_URL = "您新浪后台的回调地址";
-        umShareAPI = UMShareAPI.get(context);
+        umShareAPI = UMShareAPI.get(myApp);
         PlatformConfig.setWeixin("wx967daebe835fbeac", "5bb696d9ccd75a38c8a0bfe0675559b3");
         PlatformConfig.setSinaWeibo("3921700954", "04b48b094faeb16683c32669824ebdad");
         PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba");

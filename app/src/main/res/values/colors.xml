@@ -9,7 +9,7 @@
     <color name="text_color">#ffffff</color>
     <color name="window_color">#F5F5F5</color>
 
-    <color name="dialog_custom_text_color">#ff1E90FF</color><!--dialog中按钮字体颜色 -->
+    <color name="dialog_custom_text_color">@color/color_primary</color><!--dialog中按钮字体颜色 -->
 
     <color name="font_black">@android:color/black</color>
     <color name="font_white">@android:color/white</color>
