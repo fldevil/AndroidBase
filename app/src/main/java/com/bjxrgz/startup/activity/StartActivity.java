@@ -33,8 +33,6 @@ public class StartActivity extends BaseActivity<StartActivity> {
 
     @Override
     protected void initData() {
-        PushManager.setEnable(true); // 推送开关
-        // UpdateService.goService(mActivity); // 检查更新
         goHome();
     }
 

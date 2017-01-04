@@ -38,21 +38,68 @@ import java.util.ArrayList;
  */
 public class MapManager {
 
-    public static AMapLocationClient getClient(Context context, AMapLocationClientOption clientOption) {
-        AMapLocationClient mapClient = new AMapLocationClient(context);
-        mapClient.setLocationOption(clientOption);
-        return mapClient;
+    private static MapManager mapManager;
+
+    public static MapManager get() {
+        if (mapManager == null) {
+            synchronized (MapManager.class) {
+                if (mapManager == null) {
+                    mapManager = new MapManager();
+                }
+            }
+        }
+        return mapManager;
     }
 
-    public static void requestMap(Context context, PermManager.PermissionListener listener) {
+    /* 权限 */
+    public void request(Context context, PermManager.PermissionListener listener) {
         PermManager.request(context, listener, Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION);
     }
 
     /**
+     * *****************************************定位************************************************
+     */
+    private AMapLocationClient aMapLocationClient;
+    private LocationSource.OnLocationChangedListener locationChangedListener; // 注意这个是小蓝点的监听
+
+    /* 1.初始化定位 */
+    public void initLocation(Context context) {
+        if (aMapLocationClient == null) {
+            aMapLocationClient = new AMapLocationClient(context);
+        }
+        aMapLocationClient.setLocationOption(getClientOption()); // 定位配置
+        locationChangedListener = new LocationSource.OnLocationChangedListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                // 这个是小蓝点的监听
+            }
+        };
+    }
+
+    /* 2.开始定位 */
+    public void startLocation(AMapLocationListener locationListener) {
+        if (aMapLocationClient != null) {
+            //设置定位回调监听
+            aMapLocationClient.setLocationListener(locationListener);
+            //启动定位
+            aMapLocationClient.startLocation();
+        }
+    }
+
+    /* 3.关闭定位 */
+    public void stopLocation() {
+        if (aMapLocationClient != null) {
+            aMapLocationClient.stopLocation();
+            aMapLocationClient.onDestroy();
+            aMapLocationClient = null;
+        }
+    }
+
+    /**
      * 定位配置对象
      */
-    public static AMapLocationClientOption getClientOption() {
+    private AMapLocationClientOption getClientOption() {
         //声明mLocationOption对象,初始化定位参数
         AMapLocationClientOption clientOption = new AMapLocationClientOption();
         //设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
@@ -60,7 +107,7 @@ public class MapManager {
         //设置是否返回地址信息（默认返回地址信息）
         clientOption.setNeedAddress(true);
         //设置是否只定位一次,默认为false
-        clientOption.setOnceLocation(true);
+        clientOption.setOnceLocation(false);
         //设置setOnceLocationLatest(boolean b)接口为true，启动定位时SDK会返回最近3s内精度最高的一次定位结果。
         //如果设置其为true，setOnceLocation(boolean b)接口也会被设置为true，反之不会。
         if (clientOption.isOnceLocationLatest()) {
@@ -71,118 +118,19 @@ public class MapManager {
         //设置是否允许模拟位置,默认为false，不允许模拟位置
         clientOption.setMockEnable(false);
         //设置定位间隔,单位毫秒,默认为2000ms
-        clientOption.setInterval(2000);
+        clientOption.setInterval(10000);
         return clientOption;
     }
 
-    /**
-     * 初始化定位
-     */
-    public static void startLocation(AMapLocationClient mLocationClient,
-                                     AMapLocationListener aMapLocationListener) {
-        //设置定位回调监听
-        mLocationClient.setLocationListener(aMapLocationListener);
-        //启动定位
-        mLocationClient.startLocation();
-    }
-
-    /**
-     * 关闭定位
-     */
-    public static void stopLocation(AMapLocationClient mLocationClient) {
-        if (mLocationClient != null) {
-            mLocationClient.stopLocation();
-            mLocationClient.onDestroy();
-            mLocationClient = null;
-        }
-    }
-
-    /**
-     * 初始化搜索
-     */
-    public static void startSearch(Context context,
-                                   String key, String category, String cityCode,
-                                   double latitude, double longitude,
-                                   PoiSearch.OnPoiSearchListener poiSearchListener) {
-        // keyWord表示搜索字符串，第二个参数表示POI搜索类型，默认为：生活服务、餐饮服务、商务住宅
-        //共分为以下20种：汽车服务|汽车销售|
-        //汽车维修|摩托车服务|餐饮服务|购物服务|生活服务|体育休闲服务|医疗保健服务|
-        //住宿服务|风景名胜|商务住宅|政府机构及社会团体|科教文化服务|交通设施服务|
-        //金融保险服务|公司企业|道路附属设施|地名地址信息|公共设施
-        //cityCode表示POI搜索区域，（这里可以传空字符串，空字符串代表全国在全国范围内进行搜索）
-        PoiSearch.Query query;
-        if (TextUtils.isEmpty(cityCode)) {
-            query = new PoiSearch.Query(key, category);
-        } else {
-            query = new PoiSearch.Query(key, category, cityCode);
-        }
-        query.setPageSize(100);// 设置每页最多返回多少条poiitem
-        query.setPageNum(0);//设置查第一页
-        PoiSearch poiSearch = new PoiSearch(context, query);
-        if (latitude != 0 && longitude != 0) {
-            poiSearch.setBound(new PoiSearch.SearchBound(new LatLonPoint(latitude, longitude), 1000));//设置周边搜索的中心点以及区域
-        }
-        if (poiSearchListener != null) {
-            poiSearch.setOnPoiSearchListener(poiSearchListener);//设置数据返回的监听器
-        }
-        poiSearch.searchPOIAsyn();// 开始搜索
-    }
-
-    /**
-     * 初始化地图
-     */
-    public static void initMap(MapView mapView, int locationRes,
-                               LocationSource locationSource,
-                               AMap.OnCameraChangeListener onCameraChangeListener) {
-        AMap aMap = mapView.getMap();
-        // 自定义系统定位蓝点
-        MyLocationStyle myLocationStyle = new MyLocationStyle();
-        // 自定义定位蓝点图标
-        if (locationRes != 0) {
-            myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(locationRes));
-        }
-        // 自定义精度范围的圆形边框颜色
-        myLocationStyle.strokeColor(Color.BLACK);
-        //自定义精度范围的圆形边框宽度
-        myLocationStyle.strokeWidth(5);
-        // 将自定义的 myLocationStyle 对象添加到地图上
-        aMap.setMyLocationStyle(myLocationStyle);
-        // 设置定位监听
-        aMap.setLocationSource(locationSource);
-        // 设置默认定位按钮是否显示 ,如果不设置此定位资源则定位按钮不可点击。
-        aMap.getUiSettings().setMyLocationButtonEnabled(true);
-        // 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
-        aMap.setMyLocationEnabled(true);
-        // 地图移动效果监听
-        aMap.setOnCameraChangeListener(onCameraChangeListener);
-    }
-
-    /**
-     * 地图移动到指定区域
-     */
-    public static void moveCamera(MapView mapView, double latitude, double longitude) {
-        AMap aMap = mapView.getMap();
-
-        if (latitude == 0 || longitude == 0) { // 单纯放大
-            aMap.moveCamera(CameraUpdateFactory.zoomTo(15f));
-        } else {// 移动到指定位置并放大
-            aMap.animateCamera(CameraUpdateFactory.newLatLngZoom
-                    (new LatLng(latitude, longitude), 15f));
-        }
-    }
-
-    /**
-     * 定位 并 回调信息
-     */
+    /* 定位 并 回调信息 */
     public interface LocationCallBack {
-
         void onSuccess(AMapLocation aMapLocation);
 
         void onFailed(AMapLocation aMapLocation);
     }
 
-    public static AMapLocationListener getAMapLocationListener(final LocationSource.OnLocationChangedListener locationChangedListener,
-                                                               final LocationCallBack locationCallBack) {
+    /* 定位回调监听 */
+    public AMapLocationListener getAMapLocationListener(final LocationCallBack locationCallBack) {
         return new AMapLocationListener() {
             @Override
             public void onLocationChanged(AMapLocation aMapLocation) {
@@ -211,13 +159,13 @@ public class MapManager {
                             locationCallBack.onSuccess(aMapLocation);
                         }
                     } else {
-                        if (locationCallBack != null) {
-                            locationCallBack.onFailed(aMapLocation);
-                        }
-//                        WidgetUtils.toast(MyApp.instance, R.string.map_location_error);
                         String errText = "定位失败," + aMapLocation.getErrorCode()
                                 + ": " + aMapLocation.getErrorInfo();
                         LogUtils.e(errText);
+//                        WidgetUtils.toast(MyApp.instance, R.string.map_location_error);
+                        if (locationCallBack != null) {
+                            locationCallBack.onFailed(aMapLocation);
+                        }
                     }
                 }
             }
@@ -225,189 +173,102 @@ public class MapManager {
     }
 
     /**
-     * 移动监听
+     * ****************************************地图***********************************************
+     * 初始化地图
      */
-    public interface LocationChangeCallBack {
+    private MapView mapView;
+    private GeocodeSearch geocoderSearch; // 地理编码只有地图的时候需要
 
-        void onLocationChanged(Location location);
-    }
-
-    public static LocationSource.OnLocationChangedListener getOnLocationChangedListener
-            (final LocationChangeCallBack locationChangeCallBack) {
-        return new LocationSource.OnLocationChangedListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                if (locationChangeCallBack != null)
-                    locationChangeCallBack.onLocationChanged(location);
-            }
-        };
-    }
-
-    /**
-     * 搜索SDK回调
-     */
-    public interface SearchCallBack {
-
-        void onSuccess(ArrayList<PoiItem> pois);
-    }
-
-    public static PoiSearch.OnPoiSearchListener getOnPoiSearchListener(final SearchCallBack searchCallBack) {
-        return new PoiSearch.OnPoiSearchListener() {
-            @Override
-            public void onPoiSearched(PoiResult poiResult, int rCode) {
-                int successCode = 1000; // 以后可能会变
-                if (rCode == successCode) {
-                    //result.getPois()可以获取到PoiItem列表，Poi详细信息可参考PoiItem类
-                    //若当前城市查询不到所需Poi信息，可以通过result.getSearchSuggestionCitys()获取当前Poi搜索的建议城市
-                    //如果搜索关键字明显为误输入，则可通过result.getSearchSuggestionKeywords()方法得到搜索关键词建议
-                    ArrayList<PoiItem> pois = poiResult.getPois();
-                    LogUtils.d(pois.toString());
-                    if (searchCallBack != null) {
-                        searchCallBack.onSuccess(pois);
-                    }
-                }
-            }
-
-            @Override
-            public void onPoiItemSearched(PoiItem poiItem, int i) {
-
-            }
-        };
-    }
-
-    /**
-     * 定位开关
-     */
-    public interface LocationSourceCallBack {
-
-        void open(LocationSource.OnLocationChangedListener onLocationChangedListener);
-
-        void close();
-    }
-
-
-    public static LocationSource getLocationSource(final Context context,
-                                                   final AMapLocationListener locationListener,
-                                                   final LocationSourceCallBack locationSourceCallBack) {
-        final AMapLocationClient[] client = new AMapLocationClient[1];
-
-        return new LocationSource() {
-            @Override
-            public void activate(OnLocationChangedListener onLocationChangedListener) {
-                AMapLocationClientOption aMapLocationClientOption = getClientOption();
-                client[0] = getClient(context, aMapLocationClientOption);
-                startLocation(client[0], locationListener);
-
-                if (locationSourceCallBack != null) {
-                    locationSourceCallBack.open(onLocationChangedListener);
-                }
-            }
-
-            @Override
-            public void deactivate() {
-                stopLocation(client[0]);
-                if (locationSourceCallBack != null) {
-                    locationSourceCallBack.close();
-                }
-            }
-        };
-    }
-
-    /**
-     * 地图拖拽监听
-     */
-    public interface CameraChangeCallBack {
-
-        void onChange(CameraPosition cameraPosition, double latitude, double longitude);
-
-        void onFinish(CameraPosition cameraPosition, double latitude, double longitude);
-    }
-
-    public static AMap.OnCameraChangeListener getOnCameraChangeListener(final CameraChangeCallBack cameraChangeCallBack) {
-        return new AMap.OnCameraChangeListener() {
-            @Override
-            public void onCameraChange(CameraPosition cameraPosition) {
-
-                if (cameraChangeCallBack != null) {
-                    cameraChangeCallBack.onChange(cameraPosition,
-                            cameraPosition.target.latitude,
-                            cameraPosition.target.longitude);
-                }
-            }
-
-            @Override
-            public void onCameraChangeFinish(CameraPosition cameraPosition) {
-                if (cameraChangeCallBack != null) {
-                    cameraChangeCallBack.onFinish(cameraPosition,
-                            cameraPosition.target.latitude,
-                            cameraPosition.target.longitude);
-                }
-            }
-        };
-    }
-
-    /**
-     * 系统小蓝点监听
-     */
-    private static LocationSource.OnLocationChangedListener locationChangedListener = new LocationSource.OnLocationChangedListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-
+    /* 初始化地图 两个参数都是自己定义,这里没有 */
+    public void initMap(MapView mapView, int locationRes, LocationSource locationSource,
+                        AMap.OnCameraChangeListener onCameraChangeListener) {
+        this.mapView = mapView;
+        AMap aMap = mapView.getMap();
+        // 自定义系统定位蓝点
+        MyLocationStyle myLocationStyle = new MyLocationStyle();
+        // 自定义定位蓝点图标
+        if (locationRes != 0) {
+            myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(locationRes));
         }
-    };
-
-    /**
-     * 实现地图生命周期管理
-     */
-    public static void onCreate(MapView mMapView, Bundle savedInstanceState) {
-        mMapView.onCreate(savedInstanceState);
+        // 自定义精度范围的圆形边框颜色
+        myLocationStyle.strokeColor(Color.BLACK);
+        //自定义精度范围的圆形边框宽度
+        myLocationStyle.strokeWidth(5);
+        // 将自定义的 myLocationStyle 对象添加到地图上
+        aMap.setMyLocationStyle(myLocationStyle);
+        // 设置定位监听
+        aMap.setLocationSource(locationSource);
+        // 设置默认定位按钮是否显示 ,如果不设置此定位资源则定位按钮不可点击。
+        aMap.getUiSettings().setMyLocationButtonEnabled(true);
+        // 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
+        aMap.setMyLocationEnabled(true);
+        // 地图移动效果监听
+        aMap.setOnCameraChangeListener(onCameraChangeListener);
     }
 
-    public static void onResume(MapView mMapView) {
-        mMapView.onResume();
+    /* 地图移动到指定区域 */
+    public void moveCamera(double latitude, double longitude) {
+        if (mapView != null) {
+            if (latitude == 0 || longitude == 0) { // 单纯放大
+                mapView.getMap().moveCamera(CameraUpdateFactory.zoomTo(15f));
+            } else {// 移动到指定位置并放大
+                mapView.getMap().animateCamera(CameraUpdateFactory.newLatLngZoom
+                        (new LatLng(latitude, longitude), 15f));
+            }
+        }
     }
 
-    public static void onSaveInstanceState(MapView mMapView, Bundle outState) {
-        mMapView.onSaveInstanceState(outState);
+    /* 实现地图生命周期管理 */
+    public void onCreate(Bundle savedInstanceState) {
+        if (mapView != null) {
+            mapView.onCreate(savedInstanceState);
+        }
     }
 
-    public static void onPause(MapView mMapView) {
-        mMapView.onPause();
+    public void onResume() {
+        if (mapView != null) {
+            mapView.onResume();
+        }
     }
 
-    public static void onDestroy(MapView mMapView) {
-        mMapView.onDestroy();
+    public void onSaveInstanceState(Bundle outState) {
+        if (mapView != null) {
+            mapView.onSaveInstanceState(outState);
+        }
     }
 
-    private static GeocodeSearch geocoderSearch;
+    public void onPause() {
+        if (mapView != null) {
+            mapView.onPause();
+        }
+    }
 
-    /**
-     * 逆地理编码
-     */
-    public static void initGeocode(Context context, GeocodeSearch.OnGeocodeSearchListener onGeocodeSearchListener) {
+    public void onDestroy() {
+        if (mapView != null) {
+            mapView.onDestroy();
+        }
+    }
+
+    /* 逆地理编码 */
+    public void initGeocode(Context context, GeocodeSearch.OnGeocodeSearchListener onGeocodeSearchListener) {
         geocoderSearch = new GeocodeSearch(context);
-
         geocoderSearch.setOnGeocodeSearchListener(onGeocodeSearchListener);
     }
 
-    /**
-     * 逆地理回调
-     */
+    /* 逆地理回调 */
     public interface GeocodeSearchCallBack {
-
         void onSuccess(RegeocodeAddress regeocodeAddress);
 
         void onFailed();
     }
 
-    public static GeocodeSearch.OnGeocodeSearchListener getOnGeocodeSearchListener(final GeocodeSearchCallBack geocodeSearchCallBack) {
+    public GeocodeSearch.OnGeocodeSearchListener getOnGeocodeSearchListener(final GeocodeSearchCallBack geocodeSearchCallBack) {
         return new GeocodeSearch.OnGeocodeSearchListener() {
             @Override
             public void onRegeocodeSearched(RegeocodeResult result, int rCode) {
                 int successCode = 1000; // 以后可能会变
                 if (rCode == successCode) {
                     if (result != null && result.getRegeocodeAddress() != null) {
-
                         RegeocodeAddress regeocodeAddress = result.getRegeocodeAddress();
                         String city = regeocodeAddress.getCity();
                         String district = regeocodeAddress.getDistrict();
@@ -429,19 +290,76 @@ public class MapManager {
 
             @Override
             public void onGeocodeSearched(GeocodeResult geocodeResult, int rCode) {
-
             }
         };
     }
 
-    /**
-     * 响应逆地理编码(可在在camera回调中调用)
-     */
-    public static void getAddress(double latitude, double longitude) {
+    /* 响应逆地理编码(在camera回调中调用) */
+    public void getAddress(double latitude, double longitude) {
         RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(latitude, longitude), 200,
                 GeocodeSearch.AMAP);// 第一个参数表示一个Latlng，第二参数表示范围多少米，第三个参数表示是火系坐标系还是GPS原生坐标系
 
         geocoderSearch.getFromLocationAsyn(query);// 设置同步逆地理编码请求
+    }
+
+    /**
+     * *************************************搜索***************************************************
+     * 开始搜索
+     */
+    public void startSearch(Context context, String key, String category, String cityCode,
+                            double latitude, double longitude,
+                            PoiSearch.OnPoiSearchListener poiSearchListener) {
+        // keyWord表示搜索字符串，第二个参数表示POI搜索类型，默认为：生活服务、餐饮服务、商务住宅
+        //共分为以下20种：汽车服务|汽车销售|
+        //汽车维修|摩托车服务|餐饮服务|购物服务|生活服务|体育休闲服务|医疗保健服务|
+        //住宿服务|风景名胜|商务住宅|政府机构及社会团体|科教文化服务|交通设施服务|
+        //金融保险服务|公司企业|道路附属设施|地名地址信息|公共设施
+        //cityCode表示POI搜索区域，（这里可以传空字符串，空字符串代表全国在全国范围内进行搜索）
+        PoiSearch.Query query;
+        if (TextUtils.isEmpty(cityCode)) {
+            query = new PoiSearch.Query(key, category);
+        } else {
+            query = new PoiSearch.Query(key, category, cityCode);
+        }
+        query.setPageSize(100);// 设置每页最多返回多少条poiitem
+        query.setPageNum(0);//设置查第一页
+        PoiSearch poiSearch = new PoiSearch(context, query);
+        if (latitude != 0 && longitude != 0) {
+            poiSearch.setBound(new PoiSearch.SearchBound(new LatLonPoint(latitude, longitude), 1000));//设置周边搜索的中心点以及区域
+        }
+        if (poiSearchListener != null) {
+            poiSearch.setOnPoiSearchListener(poiSearchListener);//设置数据返回的监听器
+        }
+        poiSearch.searchPOIAsyn();// 开始搜索
+    }
+
+    /* 搜索SDK回调 */
+    public interface SearchCallBack {
+        void onSuccess(ArrayList<PoiItem> pois);
+    }
+
+    public PoiSearch.OnPoiSearchListener getOnPoiSearchListener(final SearchCallBack searchCallBack) {
+        return new PoiSearch.OnPoiSearchListener() {
+            @Override
+            public void onPoiSearched(PoiResult poiResult, int rCode) {
+                int successCode = 1000; // 以后可能会变
+                if (rCode == successCode) {
+                    //result.getPois()可以获取到PoiItem列表，Poi详细信息可参考PoiItem类
+                    //若当前城市查询不到所需Poi信息，可以通过result.getSearchSuggestionCitys()获取当前Poi搜索的建议城市
+                    //如果搜索关键字明显为误输入，则可通过result.getSearchSuggestionKeywords()方法得到搜索关键词建议
+                    ArrayList<PoiItem> pois = poiResult.getPois();
+                    LogUtils.d(pois.toString());
+                    if (searchCallBack != null) {
+                        searchCallBack.onSuccess(pois);
+                    }
+                }
+            }
+
+            @Override
+            public void onPoiItemSearched(PoiItem poiItem, int i) {
+
+            }
+        };
     }
 
 }

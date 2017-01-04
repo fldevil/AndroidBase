@@ -28,9 +28,6 @@ public class RxManager {
     private HashMap<Object, List<Subject>> maps = new HashMap<>();
     private static RxManager instance;
 
-    private RxManager() {
-    }
-
     public static RxManager get() {
         if (instance == null) {
             synchronized (RxManager.class) {
@@ -67,9 +64,12 @@ public class RxManager {
     /* 注册频道 */
     public <T> Observable<T> register(RxEvent.ID eventId, Action1<? super T> onNext) {
         Observable<T> observable = createObservable(eventId); // 获取观察者
-        observable.subscribeOn(Schedulers.immediate()); // 当前线程
-        // 接受线程和事件处理必须连起来,否则回调线程会不正确
-        observable.observeOn(AndroidSchedulers.mainThread()).subscribe(onNext);
+        // Rx最好连着点出来,不连着点，下面全是Bug
+        observable.subscribeOn(Schedulers.immediate()) // 当前线程
+                // 解决连续发送数据过快时的异常，toList也行
+                .onBackpressureBuffer()
+                // 接受线程和事件处理必须连起来,否则回调线程会不正确
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(onNext);
         return observable;
     }
 
@@ -77,9 +77,12 @@ public class RxManager {
                                       final Action1<Throwable> onError,
                                       final Action0 onCompleted) {
         Observable<T> observable = createObservable(eventId); // 获取观察者
-        observable.subscribeOn(Schedulers.immediate()); // 当前线程
-        // 接受线程和事件,异常,最后处理必须连起来,否则回调线程会不正确
-        observable.observeOn(AndroidSchedulers.mainThread()).subscribe(onNext, onError, onCompleted);
+        // Rx最好连着点出来,不连着点，下面全是Bug
+        observable.subscribeOn(Schedulers.immediate()) // 当前线程
+                // 解决连续发送数据过快时的异常，toList也行
+                .onBackpressureBuffer()
+                // 接受线程和事件处理必须连起来,否则回调线程会不正确
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(onNext, onError, onCompleted);
         return observable;
     }
 

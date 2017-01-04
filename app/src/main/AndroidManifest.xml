@@ -115,6 +115,11 @@
             android:name=".service.UpdateService"
             android:enabled="true"
             android:exported="true" />
+        <!-- 地图服务 -->
+        <service
+            android:name=".service.LocationService"
+            android:enabled="true"
+            android:exported="true" />
 
     </application>
 </manifest>
