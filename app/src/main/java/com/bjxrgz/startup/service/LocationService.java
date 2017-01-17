@@ -7,7 +7,9 @@ import android.os.IBinder;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
+import com.bjxrgz.startup.base.MyApp;
 import com.bjxrgz.startup.manager.MapManager;
+import com.bjxrgz.startup.utils.DeviceUtils;
 
 public class LocationService extends Service {
 
@@ -23,7 +25,11 @@ public class LocationService extends Service {
         AMapLocationListener locationListener = MapManager.get().getAMapLocationListener(new MapManager.LocationCallBack() {
             @Override
             public void onSuccess(AMapLocation aMapLocation) {
-                String address = aMapLocation.getAddress();
+                double longitude = aMapLocation.getLongitude();
+                double latitude = aMapLocation.getLatitude();
+                DeviceUtils.DeviceInfo deviceInfo = MyApp.get().getDeviceInfo();
+                deviceInfo.setLongitude(longitude);
+                deviceInfo.setLatitude(latitude);
             }
 
             @Override

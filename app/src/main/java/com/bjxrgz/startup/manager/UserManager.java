@@ -21,8 +21,7 @@ public class UserManager {
     private static SharedPreferences preferences;
 
     /* 储存字段 */
-    private static final String USER_USER_ID = "userId";
-    private static final String USER_USER_TOKEN = "userToken";
+    private static final String userToken = "userToken";
 
     private synchronized static SharedPreferences getPreference() {
         if (preferences == null) {
@@ -58,16 +57,14 @@ public class UserManager {
     public static void setUser(User user) {
         LogUtils.json("setUser", GsonManager.get().toJson(user));
         SharedPreferences.Editor editor = getPreference().edit();
-        editor.putString(USER_USER_ID, user.getId());
-        editor.putString(USER_USER_TOKEN, user.getUserToken());
+        editor.putString(userToken, user.getUserToken());
         editor.apply();
     }
 
     public static User getUser() {
         SharedPreferences preference = getPreference();
         User user = new User();
-        user.setId(preference.getString(USER_USER_ID, ""));
-        user.setUserToken(preference.getString(USER_USER_TOKEN, ""));
+        user.setUserToken(preference.getString(userToken, ""));
         LogUtils.json("getUser", GsonManager.get().toJson(user));
         return user;
     }

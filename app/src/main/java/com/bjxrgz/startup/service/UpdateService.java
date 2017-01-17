@@ -20,7 +20,6 @@ import com.bjxrgz.startup.utils.DialogUtils;
 import com.bjxrgz.startup.utils.FileUtils;
 
 import java.io.File;
-import java.io.InputStream;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -55,7 +54,7 @@ public class UpdateService extends Service {
     }
 
     private void checkUpdate() {
-        APIManager apiEmptyGson = HttpManager.getCallGsonEmpty();
+        APIManager apiEmptyGson = HttpManager.getCallGson();
         Call<Version> responseBodyCall = apiEmptyGson.checkUpdate();
         HttpManager.enqueue(responseBodyCall, new HttpManager.CallBack<Version>() {
             @Override
@@ -88,7 +87,12 @@ public class UpdateService extends Service {
                 "以后再说", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        downloadApk(); //  确定开始下载
+                        MyApp.get().getThread().execute(new Runnable() {
+                            @Override
+                            public void run() { // 子线程下载
+                                downloadApk();
+                            }
+                        });
                     }
                 });
         Window window = dialog.getWindow();
@@ -103,15 +107,12 @@ public class UpdateService extends Service {
         Call<ResponseBody> downCall = apiNullGson.downloadAPK(version.getUpdateUrl());
         HttpManager.enqueue(downCall, new HttpManager.CallBack<ResponseBody>() {
             @Override
-            public void onSuccess(ResponseBody body) {
-                if (body != null) { // 这里应该开个线程
-                    InputStream inputStream = body.byteStream();
-                    if (null != inputStream) {
-                        File apkFile = FileManager.createAPKInRes(version.getVersionName());
-                        FileUtils.writeFileFromIS(apkFile, inputStream, false);
-                        Intent installIntent = AppUtils.getInstallIntent(apkFile);
-                        UpdateService.this.startService(installIntent);
-                    }
+            public void onSuccess(ResponseBody body) { // 回调也是子线程
+                if (body != null && body.byteStream() != null) {
+                    File apkFile = FileManager.createAPKInRes(version.getVersionName());
+                    FileUtils.writeFileFromIS(apkFile, body.byteStream(), false);
+                    Intent installIntent = AppUtils.getInstallIntent(apkFile);
+                    UpdateService.this.startActivity(installIntent);
                 }
             }
 

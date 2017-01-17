@@ -37,6 +37,8 @@ public class DeviceUtils {
         private String phoneNumber; // 手机号
         private String simSerial; // sim卡序号
         private String ipAddress; // ip地址 eg:127.168.x.x
+        private double longitude; // 经度
+        private double latitude; // 纬度
 
         public String getIpAddress() {
             try {
@@ -61,6 +63,22 @@ public class DeviceUtils {
                 e.printStackTrace();
             }
             return ipAddress;
+        }
+
+        public double getLongitude() {
+            return longitude;
+        }
+
+        public void setLongitude(double longitude) {
+            this.longitude = longitude;
+        }
+
+        public double getLatitude() {
+            return latitude;
+        }
+
+        public void setLatitude(double latitude) {
+            this.latitude = latitude;
         }
 
         public String getPhoneNumber() {

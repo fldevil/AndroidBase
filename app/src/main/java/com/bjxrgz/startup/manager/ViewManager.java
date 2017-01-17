@@ -32,15 +32,20 @@ public class ViewManager {
     }
 
     /* Toast 单例 可覆盖 */
-    public static void toast(CharSequence message) {
+    public static void toast(final CharSequence message) {
         if (!TextUtils.isEmpty(message)) {
-            if (toast == null) {
-                toast = Toast.makeText(MyApp.get(), message, Toast.LENGTH_SHORT);
-            } else {
-                TextView tv = (TextView) toast.getView().findViewById(android.R.id.message);
-                tv.setText(message);
-            }
-            toast.show();
+            MyApp.get().getHandler().post(new Runnable() {
+                @Override
+                public void run() {
+                    if (toast == null) {
+                        toast = Toast.makeText(MyApp.get(), message, Toast.LENGTH_SHORT);
+                    } else {
+                        TextView tv = (TextView) toast.getView().findViewById(android.R.id.message);
+                        tv.setText(message);
+                    }
+                    toast.show();
+                }
+            });
         }
     }
 

@@ -20,6 +20,7 @@ import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
+import retrofit2.http.Streaming;
 import retrofit2.http.Url;
 
 /**
@@ -35,6 +36,7 @@ public interface APIManager {
     String CHECK_UPDATE = "http://www.bjxrgz.com:808/bio/api/v1/";
     String DOWNLOAD_APK = "/getapp?file={name}";
 
+    @Streaming // 下载大文件(请求需要放在子线程中)
     @Multipart // 上传文件
     @GET("demo/{path}")
     Call<List<User>> demo(@Url String url, @Path("path") String path,
@@ -47,6 +49,7 @@ public interface APIManager {
     @GET(CHECK_UPDATE)
     Call<Version> checkUpdate();
 
+    @Streaming
     @GET(DOWNLOAD_APK)
     Call<ResponseBody> downloadAPK(@Path("name") String name);
 
