@@ -11,7 +11,6 @@ import android.view.WindowManager;
 
 import com.bjxrgz.startup.base.MyApp;
 import com.bjxrgz.startup.domain.Version;
-import com.bjxrgz.startup.manager.APIManager;
 import com.bjxrgz.startup.manager.FileManager;
 import com.bjxrgz.startup.manager.HttpManager;
 import com.bjxrgz.startup.manager.ViewManager;
@@ -25,8 +24,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 public class UpdateService extends Service {
-
-    private Version version;
 
     public static void goService(Context from) {
         Intent intent = new Intent(from, UpdateService.class);
@@ -54,14 +51,12 @@ public class UpdateService extends Service {
     }
 
     private void checkUpdate() {
-        APIManager apiEmptyGson = HttpManager.getCallGson();
-        Call<Version> responseBodyCall = apiEmptyGson.checkUpdate();
-        HttpManager.enqueue(responseBodyCall, new HttpManager.CallBack<Version>() {
+        Call<Version> call = HttpManager.getCallGson().checkUpdate();
+        HttpManager.enqueue(call, new HttpManager.CallBack<Version>() {
             @Override
             public void onSuccess(Version result) {
-                int versionCode = MyApp.get().getAppInfo().getVersionCode();
                 if (result != null) {
-                    version = result;
+                    int versionCode = MyApp.get().getAppInfo().getVersionCode();
                     if (versionCode < result.getVersionCode()) { // 小于 有新版本
                         showNoticeDialog(result); //  提示对话框
                     } else {
@@ -74,7 +69,6 @@ public class UpdateService extends Service {
 
             @Override
             public void onFailure() {
-
             }
         });
     }
@@ -90,7 +84,7 @@ public class UpdateService extends Service {
                         MyApp.get().getThread().execute(new Runnable() {
                             @Override
                             public void run() { // 子线程下载
-                                downloadApk();
+                                downloadApk(version);
                             }
                         });
                     }
@@ -102,10 +96,9 @@ public class UpdateService extends Service {
         dialog.show();
     }
 
-    private void downloadApk() {
-        APIManager apiNullGson = HttpManager.getCallGson();
-        Call<ResponseBody> downCall = apiNullGson.downloadAPK(version.getUpdateUrl());
-        HttpManager.enqueue(downCall, new HttpManager.CallBack<ResponseBody>() {
+    private void downloadApk(final Version version) {
+        Call<ResponseBody> call = HttpManager.getCallGson().downloadAPK(version.getUpdateUrl());
+        HttpManager.enqueue(call, new HttpManager.CallBack<ResponseBody>() {
             @Override
             public void onSuccess(ResponseBody body) { // 回调也是子线程
                 if (body != null && body.byteStream() != null) {

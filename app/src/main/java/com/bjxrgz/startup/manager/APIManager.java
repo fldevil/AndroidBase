@@ -33,13 +33,12 @@ public interface APIManager {
     String HOST_DEBUG = ""; // 测试
     String HOST_RELEASE = ""; // 正式
 
-    String CHECK_UPDATE = "http://www.bjxrgz.com:808/bio/api/v1/";
-    String DOWNLOAD_APK = "/getapp?file={name}";
+    String CHECK_UPDATE = "update/check";
 
     @Streaming // 下载大文件(请求需要放在子线程中)
     @Multipart // 上传文件
     @GET("demo/{path}")
-    Call<List<User>> demo(@Url String url, @Path("path") String path,
+    Call<List<User>> demo(@Url String url, @Path("path") String path, // {path}
                           @Header("key") String key, @HeaderMap Map<String, String> headers,
                           @Query("limit") String limit, @QueryMap Map<String, String> options,
                           @Part MultipartBody.Part file, @PartMap Map<String, RequestBody> params,
@@ -50,7 +49,7 @@ public interface APIManager {
     Call<Version> checkUpdate();
 
     @Streaming
-    @GET(DOWNLOAD_APK)
-    Call<ResponseBody> downloadAPK(@Path("name") String name);
+    @GET // 底下的url前面不会有host
+    Call<ResponseBody> downloadAPK(@Url String downloadUrl);
 
 }
