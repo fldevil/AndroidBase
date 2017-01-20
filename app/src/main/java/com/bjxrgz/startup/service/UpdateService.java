@@ -97,15 +97,20 @@ public class UpdateService extends Service {
     }
 
     private void downloadApk(final Version version) {
-        Call<ResponseBody> call = HttpManager.callNullGson().downloadAPK(version.getUpdateUrl());
+        Call<ResponseBody> call = HttpManager.callNullNull().downloadAPK(version.getUpdateUrl());
         HttpManager.enqueue(call, new HttpManager.CallBack<ResponseBody>() {
             @Override
-            public void onSuccess(ResponseBody body) { // 回调也是子线程
+            public void onSuccess(final ResponseBody body) { // 回调也是子线程
                 if (body != null && body.byteStream() != null) {
-                    File apkFile = FileManager.createAPKInRes(version.getVersionName());
-                    FileUtils.writeFileFromIS(apkFile, body.byteStream(), false);
-                    Intent installIntent = AppUtils.getInstallIntent(apkFile);
-                    UpdateService.this.startActivity(installIntent);
+                    MyApp.get().getThread().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            File apkFile = FileManager.createAPKInRes(version.getVersionName());
+                            FileUtils.writeFileFromIS(apkFile, body.byteStream(), false);
+                            Intent installIntent = AppUtils.getInstallIntent(apkFile);
+                            UpdateService.this.startActivity(installIntent);
+                        }
+                    });
                 }
             }
 

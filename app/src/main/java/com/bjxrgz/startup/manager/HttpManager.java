@@ -35,6 +35,7 @@ public class HttpManager {
 
     private static String HOST;
 
+    private static APIManager callNullNull;
     private static APIManager callNullGson;
     private static APIManager callNullStr;
     private static APIManager callHeaderGson;
@@ -134,6 +135,17 @@ public class HttpManager {
             }
         }
         return callNullStr;
+    }
+
+    public static APIManager callNullNull() {
+        if (callNullNull == null) {
+            synchronized (HttpManager.class) {
+                if (callNullNull == null) {
+                    callNullNull = getService(null, null);
+                }
+            }
+        }
+        return callTokenGson;
     }
 
     public interface CallBack<T> {
@@ -268,7 +280,9 @@ public class HttpManager {
     private static Retrofit getRetrofit(Interceptor header, Converter.Factory factory) {
         Retrofit.Builder builder = new Retrofit.Builder();
         builder.baseUrl(HOST); // host
-        builder.addConverterFactory(factory); //解析构造器
+        if (factory != null) {
+            builder.addConverterFactory(factory); //解析构造器
+        }
         builder.client(getClient(header)); // client
         return builder.build();
     }
