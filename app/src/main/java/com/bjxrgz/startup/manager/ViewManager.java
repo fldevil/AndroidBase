@@ -18,7 +18,6 @@ import com.bjxrgz.startup.view.MyLoading;
  * Created by JiangZhiGuo on 2016-10-31.
  * describe 符合项目样式的View管理类
  */
-
 public class ViewManager {
 
     private static Toast toast;

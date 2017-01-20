@@ -10,7 +10,6 @@ import java.io.File;
  * Created by JiangZhiGuo on 2016-10-31.
  * describe 文件管理
  */
-
 public class FileManager {
 
     public static File createJPGInRes() {

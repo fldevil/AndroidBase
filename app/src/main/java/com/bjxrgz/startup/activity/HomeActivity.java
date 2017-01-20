@@ -14,7 +14,6 @@ import java.util.Date;
 
 /**
  * Created by JiangZhiGuo on 2016/06/01
- * <p>
  * describe 主界面
  */
 public class HomeActivity extends BaseActivity<HomeActivity> {

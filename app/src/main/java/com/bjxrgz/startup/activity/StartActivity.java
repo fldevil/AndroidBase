@@ -13,7 +13,6 @@ import butterknife.BindView;
 
 /**
  * Created by JiangZhiGuo on 2016/06/01
- * <p/>
  * describe 启动界面
  */
 public class StartActivity extends BaseActivity<StartActivity> {

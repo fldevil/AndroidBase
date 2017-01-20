@@ -4,7 +4,6 @@ package com.bjxrgz.startup.domain;
  * Created by JiangZhiGuo on 2016-11-25.
  * describe 用来RxBUs传输的实体类
  */
-
 public class RxEvent<T> {
 
     public enum ID {

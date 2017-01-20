@@ -23,7 +23,6 @@ import butterknife.Unbinder;
  * Created by JiangZhiGuo on 2016-12-2.
  * describe Fragment的基类
  */
-
 public abstract class BaseFragment<T> extends Fragment {
 
     public BaseActivity mActivity;

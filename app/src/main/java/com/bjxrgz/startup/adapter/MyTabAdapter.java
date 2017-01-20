@@ -11,7 +11,6 @@ import java.util.List;
  * Created by JiangZhiGuo on 2016-11-9.
  * describe 通用tab适配器
  */
-
 public class MyTabAdapter<T extends Fragment> extends FragmentPagerAdapter {
 
     private List<String> titleList;

@@ -8,7 +8,6 @@ import org.greenrobot.greendao.annotation.Property;
  * Created by Fan on 2016/11/7.
  * describe 数据库实体类 demo
  */
-
 @Entity(nameInDb = "dao_test")
 public class DaoTest {
 

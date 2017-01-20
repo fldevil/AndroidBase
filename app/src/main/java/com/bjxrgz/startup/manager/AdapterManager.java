@@ -16,7 +16,6 @@ import java.util.List;
  * Created by JiangZhiGuo on 2016-11-9.
  * describe BaseRecyclerViewAdapterHelper管理类
  */
-
 public class AdapterManager {
 
     public interface MoreListener {

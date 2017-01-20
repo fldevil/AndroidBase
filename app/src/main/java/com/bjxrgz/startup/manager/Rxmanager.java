@@ -21,7 +21,6 @@ import rx.subjects.Subject;
  * Created by JiangZhiGuo on 2016-11-24.
  * describe RxBus管理类
  */
-
 public class RxManager {
 
     // object是订阅的类型 ,List<Subject>里时候所有订阅此频道的订阅者

@@ -32,7 +32,6 @@ import java.util.Map;
  * 4.并去掉manifest下的配置)
  * 5.删除java里的微信activity
  */
-
 public class ShareManager {
 
     private static UMShareAPI umShareAPI;
