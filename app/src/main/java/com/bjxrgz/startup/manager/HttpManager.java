@@ -35,12 +35,12 @@ public class HttpManager {
 
     private static String HOST;
 
-    private static APIManager callGson;
-    private static APIManager callGsonEmpty;
-    private static APIManager callGsonToken;
-    private static APIManager callStr;
-    private static APIManager callStrEmpty;
-    private static APIManager callStrToken;
+    private static APIManager callNullGson;
+    private static APIManager callNullStr;
+    private static APIManager callHeaderGson;
+    private static APIManager callHeaderStr;
+    private static APIManager callTokenGson;
+    private static APIManager callTokenStr;
 
     public static void initApp(boolean isDebug) {
         if (isDebug) {
@@ -51,7 +51,7 @@ public class HttpManager {
     }
 
     /* 没登陆 */
-    private static Interceptor getHeaderEmpty() {
+    private static Interceptor getHeader() {
         HashMap<String, String> options = new HashMap<>();
         options.put("API_KEY", "330892d73e5f1171be4d8df7550bc2f3");
         options.put("Content-Type", "application/json;charset=utf-8");
@@ -70,70 +70,70 @@ public class HttpManager {
         return getHeader(options);
     }
 
-    public static APIManager getCallGsonToken() {
-        if (callGsonToken == null) {
+    public static APIManager callTokenGson() {
+        if (callTokenGson == null) {
             synchronized (HttpManager.class) {
-                if (callGsonToken == null) {
-                    callGsonToken = getService(getHeaderToken(), getGsonFactory());
+                if (callTokenGson == null) {
+                    callTokenGson = getService(getHeaderToken(), getGsonFactory());
                 }
             }
         }
-        return callGsonToken;
+        return callTokenGson;
     }
 
-    public static APIManager getCallStrToken() {
-        if (callStrToken == null) {
+    public static APIManager callTokenStr() {
+        if (callTokenStr == null) {
             synchronized (HttpManager.class) {
-                if (callStrToken == null) {
-                    callStrToken = getService(getHeaderToken(), getStringFactory());
+                if (callTokenStr == null) {
+                    callTokenStr = getService(getHeaderToken(), getStringFactory());
                 }
             }
         }
-        return callStrToken;
+        return callTokenStr;
     }
 
-    public static APIManager getCallGsonEmpty() {
-        if (callGsonEmpty == null) {
+    public static APIManager callHeaderGson() {
+        if (callHeaderGson == null) {
             synchronized (HttpManager.class) {
-                if (callGsonEmpty == null) {
-                    callGsonEmpty = getService(getHeaderEmpty(), getGsonFactory());
+                if (callHeaderGson == null) {
+                    callHeaderGson = getService(getHeader(), getGsonFactory());
                 }
             }
         }
-        return callGsonEmpty;
+        return callHeaderGson;
     }
 
-    public static APIManager getCallStrEmpty() {
-        if (callStrEmpty == null) {
+    public static APIManager callHeaderStr() {
+        if (callHeaderStr == null) {
             synchronized (HttpManager.class) {
-                if (callStrEmpty == null) {
-                    callStrEmpty = getService(getHeaderEmpty(), getStringFactory());
+                if (callHeaderStr == null) {
+                    callHeaderStr = getService(getHeader(), getStringFactory());
                 }
             }
         }
-        return callStrEmpty;
+        return callHeaderStr;
     }
 
-    public static APIManager getCallGson() {
-        if (callGson == null) {
+    public static APIManager callNullGson() {
+        if (callNullGson == null) {
             synchronized (HttpManager.class) {
-                if (callGson == null) {
-                    callGson = getService(null, getGsonFactory());
+                if (callNullGson == null) {
+                    callNullGson = getService(null, getGsonFactory());
                 }
             }
         }
-        return callGson;
+        return callNullGson;
     }
 
-    public static APIManager getCallStr() {
-        if (callStr == null) {
+    public static APIManager callNullStr() {
+        if (callNullStr == null) {
             synchronized (HttpManager.class) {
-                if (callStr == null) {
-                    callStr = getService(null, getStringFactory());
+                if (callNullStr == null) {
+                    callNullStr = getService(null, getStringFactory());
                 }
             }
         }
-        return callStr;
+        return callNullStr;
     }
 
     public interface CallBack<T> {

@@ -51,7 +51,7 @@ public class UpdateService extends Service {
     }
 
     private void checkUpdate() {
-        Call<Version> call = HttpManager.getCallGson().checkUpdate();
+        Call<Version> call = HttpManager.callHeaderGson().checkUpdate();
         HttpManager.enqueue(call, new HttpManager.CallBack<Version>() {
             @Override
             public void onSuccess(Version result) {
@@ -97,7 +97,7 @@ public class UpdateService extends Service {
     }
 
     private void downloadApk(final Version version) {
-        Call<ResponseBody> call = HttpManager.getCallGson().downloadAPK(version.getUpdateUrl());
+        Call<ResponseBody> call = HttpManager.callNullGson().downloadAPK(version.getUpdateUrl());
         HttpManager.enqueue(call, new HttpManager.CallBack<ResponseBody>() {
             @Override
             public void onSuccess(ResponseBody body) { // 回调也是子线程
