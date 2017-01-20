@@ -93,6 +93,53 @@
         <item name="android:textSize">@dimen/font_big</item>
     </style>
 
+    <style name="FontBlackHuge">
+        <item name="android:textColor">@color/font_black</item>
+        <item name="android:textSize">@dimen/font_huge</item>
+    </style>
+
+    <!-- 主题色字体 -->
+    <style name="FontPrimarySmall">
+        <item name="android:textColor">@color/font_primary</item>
+        <item name="android:textSize">@dimen/font_small</item>
+    </style>
+
+    <style name="FontPrimaryNormal">
+        <item name="android:textColor">@color/font_primary</item>
+        <item name="android:textSize">@dimen/font_normal</item>
+    </style>
+
+    <style name="FontPrimaryBig">
+        <item name="android:textColor">@color/font_primary</item>
+        <item name="android:textSize">@dimen/font_big</item>
+    </style>
+
+    <style name="FontPrimaryHuge">
+        <item name="android:textColor">@color/font_primary</item>
+        <item name="android:textSize">@dimen/font_huge</item>
+    </style>
+
+    <!-- 灰色字体 -->
+    <style name="FontGraySmall">
+        <item name="android:textColor">@color/font_gray</item>
+        <item name="android:textSize">@dimen/font_small</item>
+    </style>
+
+    <style name="FontGrayNormal">
+        <item name="android:textColor">@color/font_gray</item>
+        <item name="android:textSize">@dimen/font_normal</item>
+    </style>
+
+    <style name="FontGrayBig">
+        <item name="android:textColor">@color/font_gray</item>
+        <item name="android:textSize">@dimen/font_big</item>
+    </style>
+
+    <style name="FontGrayHuge">
+        <item name="android:textColor">@color/font_gray</item>
+        <item name="android:textSize">@dimen/font_huge</item>
+    </style>
+
     <!-- 白色字体 -->
     <style name="FontWhiteSmall">
         <item name="android:textColor">@color/font_white</item>
@@ -107,6 +154,11 @@
     <style name="FontWhiteBig">
         <item name="android:textColor">@color/font_white</item>
         <item name="android:textSize">@dimen/font_big</item>
+    </style>
+
+    <style name="FontWhiteHuge">
+        <item name="android:textColor">@color/font_white</item>
+        <item name="android:textSize">@dimen/font_huge</item>
     </style>
 
 </resources>

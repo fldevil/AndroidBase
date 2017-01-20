@@ -6,7 +6,6 @@ import android.widget.ImageView;
 import com.bjxrgz.startup.R;
 import com.bjxrgz.startup.base.BaseActivity;
 import com.bjxrgz.startup.base.MyApp;
-import com.bjxrgz.startup.manager.PushManager;
 import com.bjxrgz.startup.utils.ScreenUtils;
 
 import butterknife.BindView;
@@ -15,7 +14,7 @@ import butterknife.BindView;
  * Created by JiangZhiGuo on 2016/06/01
  * describe 启动界面
  */
-public class StartActivity extends BaseActivity<StartActivity> {
+public class WelcomeActivity extends BaseActivity<WelcomeActivity> {
 
     @BindView(R.id.ivWelcome)
     ImageView ivWelcome;
@@ -23,7 +22,7 @@ public class StartActivity extends BaseActivity<StartActivity> {
     @Override
     protected int initLayout(Bundle savedInstanceState) {
         ScreenUtils.hideStatusBar(mActivity);
-        return R.layout.activity_start;
+        return R.layout.activity_welcome;
     }
 
     @Override

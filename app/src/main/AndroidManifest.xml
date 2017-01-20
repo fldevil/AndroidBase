@@ -101,7 +101,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <!-- 启动页 -->
-        <activity android:name=".activity.StartActivity">
+        <activity android:name=".activity.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
