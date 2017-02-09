@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.bjxrgz.startup.R;
 import com.bjxrgz.startup.base.MyApp;
+import com.bjxrgz.startup.manager.ViewManager;
 
 /**
  * Created by jiang on 2016/10/12
@@ -131,13 +132,8 @@ public class NetUtils {
         NetworkInfo networkInfo = getNetworkInfo();
         boolean available = (networkInfo != null && getNetworkInfo().isAvailable());
         if (!available) {
-            MyApp.get().getHandler().post(new Runnable() {
-                @Override
-                public void run() {
-                    String show = myApp.getString(R.string.no_network_title);
-                    Toast.makeText(myApp, show, Toast.LENGTH_SHORT).show();
-                }
-            });
+            String show = myApp.getString(R.string.no_network_title);
+            ViewManager.toast(show);
             return false;
         } else {
             return true;

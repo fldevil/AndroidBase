@@ -429,6 +429,14 @@ public class AppUtils {
     }
 
     /**
+     * 跳转应用市场的意图
+     */
+    public static Intent getMarketIntent() {
+        String str = "market://details?id=" + MyApp.get().getPackageName();
+        return new Intent("android.intent.action.VIEW", Uri.parse(str));
+    }
+
+    /**
      * 获取安装App(支持6.0)的意图
      */
     public static Intent getInstallIntent(File file) {
