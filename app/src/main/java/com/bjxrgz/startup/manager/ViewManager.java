@@ -1,9 +1,9 @@
 package com.bjxrgz.startup.manager;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import com.bjxrgz.startup.R;
 import com.bjxrgz.startup.base.MyApp;
-import com.bjxrgz.startup.utils.TopUtils;
 import com.bjxrgz.startup.view.MyLoading;
 
 /**
@@ -53,20 +52,11 @@ public class ViewManager {
         toast(show);
     }
 
-    public static void initTop(final AppCompatActivity activity, String title) {
-        TopUtils.Builder builder = new TopUtils.Builder(activity);
-        builder.setTitleCenter(title, Color.WHITE);
-    }
-
-    public static void initTopBack(final AppCompatActivity activity, String title) {
-        TopUtils.Builder builder = new TopUtils.Builder(activity);
-        builder.setTitleCenter(title, Color.WHITE);
-        builder.setNavigateLeft(R.mipmap.ic_launcher, new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                activity.finish();
-            }
-        });
+    public static void initTop(Activity activity, String title) {
+        TextView tvCenter = (TextView) activity.findViewById(R.id.tvCenter);
+        tvCenter.setVisibility(View.VISIBLE);
+        tvCenter.setTextColor(Color.WHITE);
+        tvCenter.setText(title);
     }
 
 }

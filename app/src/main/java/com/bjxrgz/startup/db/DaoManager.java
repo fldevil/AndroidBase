@@ -17,7 +17,6 @@ import java.io.InputStream;
  * Created by Fan on 2016/10/25.
  * 数据库管理类
  */
-
 public class DaoManager {
 
     public static String DB_NAME = "startup.db";

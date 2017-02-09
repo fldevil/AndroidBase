@@ -45,11 +45,11 @@ public interface APIManager {
                           @Part("fileName") String description, @Part("file") RequestBody imgs,
                           @Body User user, @Body String requestBody);
 
+    @Streaming // 下载大文件,需要开线程下载
+    @GET // 底下的url前面不会有host
+    Call<ResponseBody> downloadLargeFile(@Url String url);
+
     @GET(CHECK_UPDATE)
     Call<Version> checkUpdate();
-
-    @Streaming
-    @GET // 底下的url前面不会有host
-    Call<ResponseBody> downloadAPK(@Url String downloadUrl);
 
 }

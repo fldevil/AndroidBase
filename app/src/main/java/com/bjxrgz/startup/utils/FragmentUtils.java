@@ -69,6 +69,9 @@ public class FragmentUtils {
 
     public static void add(FragmentManager manager, Fragment fragment,
                            int addId, String tag, boolean stack) {
+        if (fragment == null) {
+            return;
+        }
         if (fragment.isAdded()) {
             return;
         }
@@ -90,6 +93,9 @@ public class FragmentUtils {
 
     public static void replace(FragmentManager manager, Fragment fragment,
                                int replaceId, String tag, boolean stack) {
+        if (fragment == null) {
+            return;
+        }
         if (fragment.isVisible()) { // isAdd && noHidden && isVisible
             return;
         }
@@ -110,6 +116,9 @@ public class FragmentUtils {
      * remove会执行到detach
      */
     public static void remove(FragmentManager manager, Fragment fragment, boolean stack) {
+        if (fragment == null) {
+            return;
+        }
         if (fragment.isAdded() || !fragment.isRemoving()) {
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.remove(fragment);
@@ -122,6 +131,9 @@ public class FragmentUtils {
      * 只执行onPrepareOptionsMenu
      */
     public static void hide(FragmentManager manager, Fragment fragment, boolean stack) {
+        if (fragment == null) {
+            return;
+        }
         if (fragment.isVisible()) { // isAdd && noHidden && isVisible
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.hide(fragment);
@@ -134,6 +146,9 @@ public class FragmentUtils {
      * 只执行onPrepareOptionsMenu和onResume
      */
     public static void show(FragmentManager manager, Fragment fragment, boolean stack) {
+        if (fragment == null) {
+            return;
+        }
         if (fragment.isAdded() && fragment.isHidden()) {
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.show(fragment);

@@ -97,7 +97,7 @@ public class UpdateService extends Service {
     }
 
     private void downloadApk(final Version version) {
-        Call<ResponseBody> call = HttpManager.callNullNull().downloadAPK(version.getUpdateUrl());
+        Call<ResponseBody> call = HttpManager.callNullNull().downloadLargeFile(version.getUpdateUrl());
         HttpManager.enqueue(call, new HttpManager.CallBack<ResponseBody>() {
             @Override
             public void onSuccess(final ResponseBody body) { // 回调也是子线程
