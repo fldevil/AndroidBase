@@ -81,12 +81,7 @@ public class UpdateService extends Service {
                 "以后再说", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        MyApp.get().getThread().execute(new Runnable() {
-                            @Override
-                            public void run() { // 子线程下载
-                                downloadApk(version);
-                            }
-                        });
+                       newThreadDown(version);
                     }
                 });
         Window window = dialog.getWindow();
@@ -96,6 +91,17 @@ public class UpdateService extends Service {
         dialog.show();
     }
 
+    /* 子线程下载 */
+    private void newThreadDown(final Version version){
+        MyApp.get().getThread().execute(new Runnable() {
+            @Override
+            public void run() {
+                downloadApk(version);
+            }
+        });
+    }
+
+    /* 下载apk */
     private void downloadApk(final Version version) {
         Call<ResponseBody> call = HttpManager.callNullNull().downloadLargeFile(version.getUpdateUrl());
         HttpManager.enqueue(call, new HttpManager.CallBack<ResponseBody>() {
@@ -116,7 +122,7 @@ public class UpdateService extends Service {
 
             @Override
             public void onFailure() {
-                ViewManager.toast("下载失败");
+                ViewManager.toast("apk下载失败");
             }
         });
     }

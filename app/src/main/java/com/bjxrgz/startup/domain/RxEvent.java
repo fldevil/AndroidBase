@@ -6,8 +6,9 @@ package com.bjxrgz.startup.domain;
  */
 public class RxEvent<T> {
 
+    /* 相当于频道 */
     public enum ID {
-        normal
+        common
     }
 
     private ID id; // 订阅的id (可以在上面的枚举ID中定义)
