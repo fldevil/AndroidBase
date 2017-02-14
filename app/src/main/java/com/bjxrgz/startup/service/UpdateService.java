@@ -113,6 +113,7 @@ public class UpdateService extends Service {
                         public void run() {
                             File apkFile = FileManager.createAPKInRes(version.getVersionName());
                             FileUtils.writeFileFromIS(apkFile, body.byteStream(), false);
+                            // 启动安装
                             Intent installIntent = AppUtils.getInstallIntent(apkFile);
                             UpdateService.this.startActivity(installIntent);
                         }

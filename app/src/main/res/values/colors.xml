@@ -18,5 +18,7 @@
     <color name="font_black">@color/text_color</color>
     <color name="font_gray">#7F7F7F</color>
     <color name="font_white">@android:color/white</color>
+    <color name="font_hint">#cbcbcb</color>
+    <color name="line_gray">#cbcbcb</color>
 
 </resources>

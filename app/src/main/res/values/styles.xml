@@ -67,14 +67,14 @@
     <style name="mLineHorizontal">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1px</item>
-        <item name="android:background">#cccccc</item>
+        <item name="android:background">@color/line_gray</item>
     </style>
 
     <!-- 竖线 -->
     <style name="mLineVertical">
         <item name="android:layout_width">1px</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:background">#cccccc</item>
+        <item name="android:background">@color/line_gray</item>
     </style>
 
     <!-- 黑色字体 -->
