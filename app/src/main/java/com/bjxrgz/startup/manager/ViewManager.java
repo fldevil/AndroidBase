@@ -55,7 +55,6 @@ public class ViewManager {
     public static void initTop(Activity activity, String title) {
         TextView tvCenter = (TextView) activity.findViewById(R.id.tvCenter);
         tvCenter.setVisibility(View.VISIBLE);
-        tvCenter.setTextColor(Color.WHITE);
         tvCenter.setText(title);
     }
 

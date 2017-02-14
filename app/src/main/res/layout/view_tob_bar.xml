@@ -1,24 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/tbTop"
-    style="@style/toolBarStyle"
+    android:id="@+id/rlTop"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?attr/colorPrimary"
-    android:minHeight="?attr/actionBarSize"
-    app:contentInsetEnd="0dp"
-    app:contentInsetLeft="0dp"
-    app:contentInsetRight="0dp"
-    app:contentInsetStart="0dp"
-    app:layout_scrollFlags="scroll|enterAlways">
+    android:layout_height="45dp"
+    android:background="@color/color_primary">
 
     <TextView
         android:id="@+id/tvLeft"
         style="@style/FontWhiteBig"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:maxLines="1"
         android:padding="5dp"
         android:visibility="gone"
@@ -30,6 +23,7 @@
         style="@style/FontWhiteBig"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_gravity="center"
         android:maxLines="1"
         android:padding="5dp"
@@ -42,11 +36,13 @@
         style="@style/FontWhiteBig"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right|end"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:maxLines="1"
         android:padding="5dp"
         android:visibility="gone"
         tools:text="标题"
         tools:visibility="visible" />
 
-</android.support.v7.widget.Toolbar>
+</RelativeLayout>
