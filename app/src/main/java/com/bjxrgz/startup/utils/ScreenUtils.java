@@ -98,7 +98,7 @@ public class ScreenUtils {
     }
 
     /**
-     * 着色模式: 为status着色 必须是16进制 ,Status底部为白色,所以这个不能全屏模式
+     * 着色模式: 为status着色 ContextCompat.getColor(id) ,Status底部为白色,所以这个不能全屏模式
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void setStatusColor(Activity activity, int statusColor) {
