@@ -13,6 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.bjxrgz.startup.manager.PushManager;
 import com.bjxrgz.startup.manager.ViewManager;
 import com.bjxrgz.startup.utils.ActivityUtils;
+import com.bjxrgz.startup.utils.FragmentUtils;
 import com.bjxrgz.startup.utils.NetUtils;
 
 import java.lang.reflect.ParameterizedType;
@@ -116,6 +117,13 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!FragmentUtils.goBack(mFragmentManager)) {
+            super.onBackPressed();
+        }
     }
 
     /* 获取当前类的 */
