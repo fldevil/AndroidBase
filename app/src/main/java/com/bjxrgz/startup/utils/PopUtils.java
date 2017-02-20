@@ -19,6 +19,7 @@ import android.widget.PopupWindow;
 public class PopUtils {
 
     /**
+     * @param window LayoutInflater.from(activity).inflate(R.layout.id, null);
      * @param width  WindowManager.LayoutParams.WRAP_CONTENT
      * @param height WindowManager.LayoutParams.WRAP_CONTENT
      * @return 下面的代码放到onTouchEvent中来点击外部dismiss也行

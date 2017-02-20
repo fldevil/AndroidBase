@@ -19,7 +19,7 @@ import java.util.List;
 public class AdapterManager {
 
     public interface MoreListener {
-        void onMore(int itemCount);
+        void onMore(int currentCount);
     }
 
     public interface RefreshListener {
