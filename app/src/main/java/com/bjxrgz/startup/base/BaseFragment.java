@@ -34,7 +34,7 @@ public abstract class BaseFragment<T> extends Fragment {
     private Unbinder unbinder;
 
     /* 子类重写类似方法 获取对象 */
-    public static BaseFragment newFragment() {
+    private static BaseFragment newFragment() {
         Bundle bundle = new Bundle();
         // bundle.putData();
         return BaseFragment.newInstance(BaseFragment.class, bundle);

@@ -35,7 +35,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     private Unbinder unbinder;
 
     /* 子类重写类似方法 实现跳转 */
-    public static void goActivity(Activity from) {
+    private static void goActivity(Activity from) {
         Intent intent = new Intent(from, BaseActivity.class);
         // intent.putData();
         ActivityUtils.startActivity(from, intent);
