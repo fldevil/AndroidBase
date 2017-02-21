@@ -16,12 +16,12 @@ import java.io.File;
  */
 public class LogUtils {
 
-    public static void initApp(boolean IS_LOG) {
+    public static void initApp() {
         String logTag = MyApp.get().getString(R.string.app_name);
         Logger.Settings settings = Logger.init(logTag); // 打印tag
         settings.setMethodCount(3);// 3以上才能显示调用方法
         settings.hideThreadInfo(); // 隐藏线程显示
-        if (IS_LOG) { // log开关
+        if (MyApp.LOG) { // log开关
             settings.setLogLevel(LogLevel.FULL);
         } else {
             settings.setLogLevel(LogLevel.NONE);

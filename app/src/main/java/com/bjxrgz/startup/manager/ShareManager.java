@@ -36,10 +36,10 @@ public class ShareManager {
 
     private static UMShareAPI umShareAPI;
 
-    public static void initApp(boolean isLog) {
+    public static void initApp() {
         MyApp myApp = MyApp.get();
-        Log.LOG = isLog;
-        Config.IsToastTip = isLog;
+        Log.LOG = MyApp.LOG;
+        Config.IsToastTip = MyApp.LOG;
 //        Config.dialogSwitch = true; // 是否使用默认dialog
 //        Config.dialog = null;
 //        Config.REDIRECT_URL = "您新浪后台的回调地址";

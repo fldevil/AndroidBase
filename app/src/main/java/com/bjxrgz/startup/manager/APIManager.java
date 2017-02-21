@@ -1,5 +1,6 @@
 package com.bjxrgz.startup.manager;
 
+import com.bjxrgz.startup.base.MyApp;
 import com.bjxrgz.startup.domain.User;
 import com.bjxrgz.startup.domain.Version;
 
@@ -32,6 +33,7 @@ public interface APIManager {
     /* BaseURL最好以/结尾 */
     String HOST_DEBUG = ""; // 测试
     String HOST_RELEASE = ""; // 正式
+    String BASE_URL = (MyApp.DEBUG ? HOST_DEBUG : HOST_RELEASE) + "后缀/" ;
 
     String CHECK_UPDATE = "update/check";
 

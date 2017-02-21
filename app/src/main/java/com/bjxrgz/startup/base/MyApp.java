@@ -26,9 +26,8 @@ import java.util.concurrent.Executors;
 import butterknife.ButterKnife;
 
 public class MyApp extends MultiDexApplication {
-
-    private static final boolean DEBUG = true; // 测试模式(上线为false)
-    private static final boolean LOG = true; // 打印日志(上线为false)
+    public static final boolean DEBUG = true; // 测试模式(上线为false)
+    public static final boolean LOG = true; // 打印日志(上线为false)
 
     private static MyApp instance;  // MyApp实例
 
@@ -43,11 +42,10 @@ public class MyApp extends MultiDexApplication {
         instance = this;
         initListener();
 
-        HttpManager.initApp(DEBUG); // 网络
-        LogUtils.initApp(LOG); // 打印
         ButterKnife.setDebug(LOG); // 注解
-        PushManager.initAPP(LOG); // 推送
-        ShareManager.initApp(LOG); // 分享/授权
+        LogUtils.initApp(); // 打印
+        PushManager.initAPP(); // 推送
+        ShareManager.initApp(); // 分享/授权
     }
 
     @Override

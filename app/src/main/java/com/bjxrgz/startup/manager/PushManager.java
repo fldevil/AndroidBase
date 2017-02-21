@@ -23,14 +23,14 @@ public class PushManager {
     private static String DEVICE_TOKEN; // 友盟标识
     private static PushAgent mPushAgent;
 
-    public static void initAPP(boolean isLog) {
+    public static void initAPP() {
         Context context = MyApp.get().getApplicationContext();
         // 获取mPushAgent
         mPushAgent = PushAgent.getInstance(context);
         // 统计应用启动数据
         mPushAgent.onAppStart();
         // 打印日志
-        mPushAgent.setDebugMode(isLog);
+        mPushAgent.setDebugMode(MyApp.LOG);
         // 检查配置文件,会弹错误信息的toast
 //        mPushAgent.setPushCheck(isLog);
         // 收集奔溃日志

@@ -33,8 +33,6 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  */
 public class HttpManager {
 
-    private static String HOST;
-
     private static APIManager callNullNull;
     private static APIManager callNullGson;
     private static APIManager callNullStr;
@@ -42,14 +40,6 @@ public class HttpManager {
     private static APIManager callHeaderStr;
     private static APIManager callTokenGson;
     private static APIManager callTokenStr;
-
-    public static void initApp(boolean isDebug) {
-        if (isDebug) {
-            HOST = APIManager.HOST_DEBUG;
-        } else {
-            HOST = APIManager.HOST_RELEASE;
-        }
-    }
 
     /* 没登陆 */
     private static Interceptor getHeader() {
@@ -145,7 +135,7 @@ public class HttpManager {
                 }
             }
         }
-        return callTokenGson;
+        return callNullNull;
     }
 
     public interface CallBack<T> {
@@ -279,7 +269,7 @@ public class HttpManager {
     /* 获取Retrofit实例 */
     private static Retrofit getRetrofit(Interceptor header, Converter.Factory factory) {
         Retrofit.Builder builder = new Retrofit.Builder();
-        builder.baseUrl(HOST); // host
+        builder.baseUrl(APIManager.BASE_URL); // host
         if (factory != null) {
             builder.addConverterFactory(factory); //解析构造器
         }
