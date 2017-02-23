@@ -1,10 +1,12 @@
 package com.bjxrgz.startup.domain;
 
+import java.io.Serializable;
+
 /**
  * Created by Fan on 2016/9/13.
  * describe 版本实体类
  */
-public class Version {
+public class Version implements Serializable {
 
     private int versionCode;
     private String versionName;
