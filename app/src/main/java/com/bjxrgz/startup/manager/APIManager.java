@@ -35,8 +35,6 @@ public interface APIManager {
     String HOST_RELEASE = ""; // 正式
     String BASE_URL = (MyApp.DEBUG ? HOST_DEBUG : HOST_RELEASE) + "后缀/" ;
 
-    String CHECK_UPDATE = "update/check";
-
     @Streaming // 下载大文件(请求需要放在子线程中)
     @Multipart // 上传文件
     @GET("demo/{path}")
@@ -51,7 +49,7 @@ public interface APIManager {
     @GET // 底下的url前面不会有host
     Call<ResponseBody> downloadLargeFile(@Url String url);
 
-    @GET(CHECK_UPDATE)
+    @GET("update/check")
     Call<Version> checkUpdate();
 
 }

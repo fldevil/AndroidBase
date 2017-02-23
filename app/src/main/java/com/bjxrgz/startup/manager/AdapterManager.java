@@ -29,6 +29,9 @@ public class AdapterManager {
     /* 刷新监听 回调时newData() 记得offset重置 */
     public static void setRefreshListener(final SwipeRefreshLayout srl,
                                           final RefreshListener listener) {
+        if (srl == null) {
+            return;
+        }
         srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -47,6 +50,9 @@ public class AdapterManager {
     /* 加载更多监听 回调时addData() 记得offset叠加 */
     public static <T> void setMoreListener(final BaseQuickAdapter<T> adapter, final RecyclerView rv,
                                            final MoreListener listener) {
+        if (adapter == null) {
+            return;
+        }
         adapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
             @Override
             public void onLoadMoreRequested() {
@@ -65,11 +71,17 @@ public class AdapterManager {
 
     /* RecyclerView的item点击监听 */
     public static void setClickListener(RecyclerView rv, RecyclerView.OnItemTouchListener listener) {
+        if (rv == null) {
+            return;
+        }
         rv.addOnItemTouchListener(listener);
     }
 
     /* 刷新 页面进入时调用 记得offset重置 */
     public static void refresh(final SwipeRefreshLayout srl, final RefreshListener listener) {
+        if (srl == null) {
+            return;
+        }
         srl.post(new Runnable() {
             @Override
             public void run() {
@@ -100,6 +112,9 @@ public class AdapterManager {
     /* 刷新数据 */
     public static <T> void newData(BaseQuickAdapter<T> adapter, SwipeRefreshLayout srl,
                                    List<T> list, int totalCount) {
+        if (adapter == null) {
+            return;
+        }
         if (null == list || 0 == list.size()) { // 没有数据
             adapter.setNewData(new ArrayList<T>());
             adapter.loadComplete(); // 关闭更多
@@ -121,6 +136,9 @@ public class AdapterManager {
 
     /* 更多数据 */
     public static <T> void addData(BaseQuickAdapter<T> adapter, List<T> list, int totalCount) {
+        if (adapter == null) {
+            return;
+        }
         if (null == list || 0 == list.size()) { // 没有数据
             adapter.loadComplete();
         } else { // 有数据
@@ -141,41 +159,45 @@ public class AdapterManager {
 
     /* 无Data时显示的view */
     public static void setEmpty(BaseQuickAdapter adapter, View emptyView) {
-        if (null != emptyView) {
+        if (null != adapter && null != emptyView) {
             adapter.setEmptyView(emptyView);
         }
     }
 
     public static void addHeader(BaseQuickAdapter adapter, View view) {
-        if (null != view) {
+        if (null != adapter && null != view) {
             adapter.addHeaderView(view);
         }
     }
 
     public static void removeHeader(BaseQuickAdapter adapter, View view) {
-        if (null != view) {
+        if (null != adapter && null != view) {
             adapter.removeHeaderView(view);
         }
     }
 
     public static void removeHeader(BaseQuickAdapter adapter) {
-        adapter.removeAllHeaderView();
+        if (adapter != null) {
+            adapter.removeAllHeaderView();
+        }
     }
 
     public static void addFooter(BaseQuickAdapter adapter, View view) {
-        if (null != view) {
+        if (null != adapter && null != view) {
             adapter.addFooterView(view);
         }
     }
 
     public static void removeFooter(BaseQuickAdapter adapter, View view) {
-        if (null != view) {
+        if (null != adapter && null != view) {
             adapter.removeFooterView(view);
         }
     }
 
     public static void removeFooter(BaseQuickAdapter adapter) {
-        adapter.removeAllFooterView();
+        if (adapter != null) {
+            adapter.removeAllFooterView();
+        }
     }
 
 }
