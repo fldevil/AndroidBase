@@ -7,7 +7,7 @@ android {
         targetSdkVersion 25 // 最高支持(7.1.1)
         minSdkVersion 14 // 最低兼容(4.0)
         multiDexEnabled true // 允许分包
-        applicationId "com.bjxrgz.startup" // 要和manifest一致
+        applicationId "com.bjxrgz.project" // 要和manifest一致
         versionCode 1
         versionName "1.0.0"
     }
@@ -15,7 +15,7 @@ android {
         bjxrgz_debug {
 //            storeFile file('/Users/mengfd/Documents/projects/kaola/launch/android/bjxrgz_android_debug.jks')
 //            storeFile file('E:/android_key/bjxrgz_android_debug.jks')
-            storeFile file('D:/gitRep/Android/key/bjxrgz_android_debug.jks')
+            storeFile file('/Users/gg/Documents/bjxrgz/key/bjxrgz_android_debug.jks')
             keyAlias 'Bjxrgz'
             keyPassword 'Bjxrgz998'
             storePassword 'Bjxrgz998'
@@ -75,34 +75,20 @@ apply plugin: 'org.greenrobot.greendao' // greenDao
 
 greendao { // 数据库配置
     schemaVersion 1
-    daoPackage 'com.bjxrgz.startup.db'
+    daoPackage 'com.bjxrgz.project.db'
     targetGenDir 'src/main/java'
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs') // 编译本地 jar 包
-    testCompile 'junit:junit:4.12' // 仅仅针对单元测试的代码编译打包
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0' // 注解
-    compile 'com.jakewharton:butterknife:8.4.0' // 注解
-    compile 'com.orhanobut:logger:1.3' // 打印
-    compile 'com.android.support:multidex:1.0.1' // 分包(大项目必加)
-    compile 'com.android.support:design:25.1.1'
-    compile 'com.android.support:recyclerview-v7:25.1.1'
-    compile 'com.android.support:cardview-v7:25.1.1'
-    compile 'com.android.support:appcompat-v7:25.1.1'
-    compile 'com.android.support:support-v4:25.1.1'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testCompile 'junit:junit:4.12'
 
+    compile project(':startup')
     compile project(':PushSDK') // 友盟推送
-    compile 'com.umeng.analytics:analytics:latest.integration' // 友盟统计
-    compile 'com.google.code.gson:gson:2.4' // json解析
-    compile 'com.github.bumptech.glide:glide:3.7.0' // 图片加载缓存
-    compile 'com.squareup.retrofit2:retrofit:2.1.0' // retrofit2
-    compile 'com.squareup.retrofit2:converter-gson:2.0.1' // retrofit2构造器
-    compile 'com.squareup.retrofit2:converter-scalars:2.1.0' // retrofit2构造器
-    compile 'io.reactivex:rxandroid:1.2.1' // rxAndroid
-    compile 'io.reactivex:rxjava:1.1.6' // rxJava
+
     compile 'org.greenrobot:greendao:3.2.0' // greenDao 数据库
     compile 'org.greenrobot:greendao-generator:3.2.0' // greenDao 数据库
-    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.8.2@aar' // 权限验证框架
-    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:v2.0.0' // recyclerView适配器
 }
