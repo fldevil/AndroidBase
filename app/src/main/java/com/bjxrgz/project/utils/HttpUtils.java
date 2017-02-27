@@ -1,9 +1,9 @@
-package com.bjxrgz.project.manager;
+package com.bjxrgz.project.utils;
 
 import android.content.Context;
 
 import com.bjxrgz.startup.R;
-import com.bjxrgz.startup.manager.GsonManager;
+import com.bjxrgz.startup.utils.GsonUtils;
 import com.bjxrgz.startup.utils.ActivityUtils;
 import com.bjxrgz.startup.utils.LogUtils;
 import com.bjxrgz.startup.utils.ToastUtils;
@@ -33,15 +33,15 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  * Created by JiangZhiGuo on 2016/10/13.
  * describe Retrofit管理工具类
  */
-public class HttpManager {
+public class HttpUtils {
 
-    private static APIManager callNullNull;
-    private static APIManager callNullGson;
-    private static APIManager callNullStr;
-    private static APIManager callHeaderGson;
-    private static APIManager callHeaderStr;
-    private static APIManager callTokenGson;
-    private static APIManager callTokenStr;
+    private static APIUtils callNullNull;
+    private static APIUtils callNullGson;
+    private static APIUtils callNullStr;
+    private static APIUtils callHeaderGson;
+    private static APIUtils callHeaderStr;
+    private static APIUtils callTokenGson;
+    private static APIUtils callTokenStr;
 
     /* 没登陆 */
     private static Interceptor getHeader() {
@@ -58,14 +58,14 @@ public class HttpManager {
         options.put("API_KEY", "330892d73e5f1171be4d8df7550bc2f3");
         options.put("Content-Type", "application/json;charset=utf-8");
         options.put("Accept", "application/json");
-        String userToken = UserManager.getUser().getUserToken();
+        String userToken = UserUtils.getUser().getUserToken();
         options.put("userToken", userToken);
         return getHeader(options);
     }
 
-    public static APIManager callTokenGson() {
+    public static APIUtils callTokenGson() {
         if (callTokenGson == null) {
-            synchronized (HttpManager.class) {
+            synchronized (HttpUtils.class) {
                 if (callTokenGson == null) {
                     callTokenGson = getService(getHeaderToken(), getGsonFactory());
                 }
@@ -74,9 +74,9 @@ public class HttpManager {
         return callTokenGson;
     }
 
-    public static APIManager callTokenStr() {
+    public static APIUtils callTokenStr() {
         if (callTokenStr == null) {
-            synchronized (HttpManager.class) {
+            synchronized (HttpUtils.class) {
                 if (callTokenStr == null) {
                     callTokenStr = getService(getHeaderToken(), getStringFactory());
                 }
@@ -85,9 +85,9 @@ public class HttpManager {
         return callTokenStr;
     }
 
-    public static APIManager callHeaderGson() {
+    public static APIUtils callHeaderGson() {
         if (callHeaderGson == null) {
-            synchronized (HttpManager.class) {
+            synchronized (HttpUtils.class) {
                 if (callHeaderGson == null) {
                     callHeaderGson = getService(getHeader(), getGsonFactory());
                 }
@@ -96,9 +96,9 @@ public class HttpManager {
         return callHeaderGson;
     }
 
-    public static APIManager callHeaderStr() {
+    public static APIUtils callHeaderStr() {
         if (callHeaderStr == null) {
-            synchronized (HttpManager.class) {
+            synchronized (HttpUtils.class) {
                 if (callHeaderStr == null) {
                     callHeaderStr = getService(getHeader(), getStringFactory());
                 }
@@ -107,9 +107,9 @@ public class HttpManager {
         return callHeaderStr;
     }
 
-    public static APIManager callNullGson() {
+    public static APIUtils callNullGson() {
         if (callNullGson == null) {
-            synchronized (HttpManager.class) {
+            synchronized (HttpUtils.class) {
                 if (callNullGson == null) {
                     callNullGson = getService(null, getGsonFactory());
                 }
@@ -118,9 +118,9 @@ public class HttpManager {
         return callNullGson;
     }
 
-    public static APIManager callNullStr() {
+    public static APIUtils callNullStr() {
         if (callNullStr == null) {
-            synchronized (HttpManager.class) {
+            synchronized (HttpUtils.class) {
                 if (callNullStr == null) {
                     callNullStr = getService(null, getStringFactory());
                 }
@@ -129,9 +129,9 @@ public class HttpManager {
         return callNullStr;
     }
 
-    public static APIManager callNullNull() {
+    public static APIUtils callNullNull() {
         if (callNullNull == null) {
-            synchronized (HttpManager.class) {
+            synchronized (HttpUtils.class) {
                 if (callNullNull == null) {
                     callNullNull = getService(null, null);
                 }
@@ -164,7 +164,7 @@ public class HttpManager {
                     if (result instanceof String) {
                         json = result.toString();
                     } else {
-                        json = GsonManager.get().toJson(result);
+                        json = GsonUtils.get().toJson(result);
                     }
                     LogUtils.json(json);
                     if (callBack != null) {
@@ -271,7 +271,7 @@ public class HttpManager {
     /* 获取Retrofit实例 */
     private static Retrofit getRetrofit(Interceptor header, Converter.Factory factory) {
         Retrofit.Builder builder = new Retrofit.Builder();
-        builder.baseUrl(APIManager.BASE_URL); // host
+        builder.baseUrl(APIUtils.BASE_URL); // host
         if (factory != null) {
             builder.addConverterFactory(factory); //解析构造器
         }
@@ -280,9 +280,9 @@ public class HttpManager {
     }
 
     /* 获取service 开始请求网络 */
-    private static APIManager getService(Interceptor header, Converter.Factory factory) {
+    private static APIUtils getService(Interceptor header, Converter.Factory factory) {
         Retrofit retrofit = getRetrofit(header, factory);
-        return retrofit.create(APIManager.class);
+        return retrofit.create(APIUtils.class);
     }
 
     /* 语言环境 */

@@ -1,4 +1,4 @@
-package com.bjxrgz.startup.manager;
+package com.bjxrgz.startup.utils;
 
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,7 +16,7 @@ import java.util.List;
  * Created by JiangZhiGuo on 2016-11-9.
  * describe BaseRecyclerViewAdapterHelper管理类
  */
-public class AdapterManager {
+public class AdapterUtils {
 
     public interface MoreListener {
         void onMore(int currentCount);

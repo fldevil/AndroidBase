@@ -1,4 +1,4 @@
-package com.bjxrgz.startup.manager;
+package com.bjxrgz.startup.utils;
 
 import android.support.annotation.NonNull;
 
@@ -21,17 +21,17 @@ import rx.subjects.Subject;
  * Created by JiangZhiGuo on 2016-11-24.
  * describe RxBus管理类
  */
-public class RxManager {
+public class RxUtils {
 
     // object是订阅的类型 ,List<Subject>里时候所有订阅此频道的订阅者
     private HashMap<Object, List<Subject>> maps = new HashMap<>();
-    private static RxManager instance;
+    private static RxUtils instance;
 
-    public static RxManager get() {
+    public static RxUtils get() {
         if (instance == null) {
-            synchronized (RxManager.class) {
+            synchronized (RxUtils.class) {
                 if (instance == null) {
-                    instance = new RxManager();
+                    instance = new RxUtils();
                 }
             }
         }

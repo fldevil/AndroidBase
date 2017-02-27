@@ -1,4 +1,4 @@
-package com.bjxrgz.project.manager;
+package com.bjxrgz.project.utils;
 
 import com.bjxrgz.startup.base.MyApp;
 import com.bjxrgz.startup.utils.FileUtils;
@@ -10,7 +10,7 @@ import java.io.File;
  * Created by JiangZhiGuo on 2016-10-31.
  * describe 文件管理
  */
-public class FileManager {
+public class FilesUtils {
 
     public static File createJPGInRes() {
         String fileName = StringUtils.getRandom(8) + ".jpg";

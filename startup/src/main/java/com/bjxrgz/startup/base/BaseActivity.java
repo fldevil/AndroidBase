@@ -11,7 +11,7 @@ import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
 
 import com.bjxrgz.startup.utils.ActivityUtils;
-import com.bjxrgz.startup.manager.AnalyManager;
+import com.bjxrgz.startup.utils.AnalyUtils;
 import com.bjxrgz.startup.utils.DialogUtils;
 import com.bjxrgz.startup.utils.FragmentUtils;
 import com.bjxrgz.startup.utils.NetUtils;
@@ -81,13 +81,13 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        AnalyManager.analysisOnResume(this);
+        AnalyUtils.analysisOnResume(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        AnalyManager.analysisOnPause(this);
+        AnalyUtils.analysisOnPause(this);
     }
 
     @Override

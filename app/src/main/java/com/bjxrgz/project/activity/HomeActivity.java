@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 
 import com.bjxrgz.project.R;
-import com.bjxrgz.project.manager.ViewManager;
+import com.bjxrgz.project.utils.ViewUtils;
 import com.bjxrgz.startup.base.BaseActivity;
 import com.bjxrgz.startup.utils.ActivityUtils;
 import com.bjxrgz.startup.utils.ToastUtils;
@@ -31,7 +31,7 @@ public class HomeActivity extends BaseActivity<HomeActivity> {
 
     @Override
     protected void initView() {
-        ViewManager.initTop(mActivity, "主页面");
+        ViewUtils.initTop(mActivity, "主页面");
 
     }
 

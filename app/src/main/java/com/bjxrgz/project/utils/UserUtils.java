@@ -1,4 +1,4 @@
-package com.bjxrgz.project.manager;
+package com.bjxrgz.project.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -7,7 +7,7 @@ import android.text.TextUtils;
 
 import com.bjxrgz.project.domain.User;
 import com.bjxrgz.startup.base.MyApp;
-import com.bjxrgz.startup.manager.GsonManager;
+import com.bjxrgz.startup.utils.GsonUtils;
 import com.bjxrgz.startup.utils.LogUtils;
 
 import java.util.Map;
@@ -16,7 +16,7 @@ import java.util.Map;
  * Created by Fan on 2016/6/16.
  * Preference User管理类
  */
-public class UserManager {
+public class UserUtils {
 
     private static final String SHARE_NAME = "userInfo";
     private static SharedPreferences preferences;
@@ -56,7 +56,7 @@ public class UserManager {
     }
 
     public static void setUser(User user) {
-        LogUtils.json("setUser", GsonManager.get().toJson(user));
+        LogUtils.json("setUser", GsonUtils.get().toJson(user));
         SharedPreferences.Editor editor = getPreference().edit();
         editor.putString(userToken, user.getUserToken());
         editor.apply();
@@ -66,7 +66,7 @@ public class UserManager {
         SharedPreferences preference = getPreference();
         User user = new User();
         user.setUserToken(preference.getString(userToken, ""));
-        LogUtils.json("getUser", GsonManager.get().toJson(user));
+        LogUtils.json("getUser", GsonUtils.get().toJson(user));
         return user;
     }
 

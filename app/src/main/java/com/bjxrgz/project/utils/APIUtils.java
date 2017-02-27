@@ -1,4 +1,4 @@
-package com.bjxrgz.project.manager;
+package com.bjxrgz.project.utils;
 
 import com.bjxrgz.project.domain.User;
 import com.bjxrgz.project.domain.Version;
@@ -28,7 +28,7 @@ import retrofit2.http.Url;
  * Created by JiangZhiGuo on 2016/10/14.
  * describe Retrofit接口
  */
-public interface APIManager {
+public interface APIUtils {
 
     /* BaseURL最好以/结尾 */
     String HOST_DEBUG = ""; // 测试

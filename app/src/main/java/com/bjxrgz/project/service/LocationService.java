@@ -7,7 +7,7 @@ import android.os.IBinder;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
-import com.bjxrgz.project.manager.MapManager;
+import com.bjxrgz.project.utils.MapUtils;
 import com.bjxrgz.startup.base.MyApp;
 import com.bjxrgz.startup.utils.DeviceUtils;
 
@@ -20,9 +20,9 @@ public class LocationService extends Service {
 
     @Override
     public void onCreate() {
-        MapManager.get().initLocation(this);
+        MapUtils.get().initLocation(this);
 
-        AMapLocationListener locationListener = MapManager.get().getAMapLocationListener(new MapManager.LocationCallBack() {
+        AMapLocationListener locationListener = MapUtils.get().getAMapLocationListener(new MapUtils.LocationCallBack() {
             @Override
             public void onSuccess(AMapLocation aMapLocation) {
                 double longitude = aMapLocation.getLongitude();
@@ -37,7 +37,7 @@ public class LocationService extends Service {
                 int errorCode = aMapLocation.getErrorCode();
             }
         });
-        MapManager.get().startLocation(locationListener);
+        MapUtils.get().startLocation(locationListener);
     }
 
     @Override

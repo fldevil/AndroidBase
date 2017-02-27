@@ -1,4 +1,4 @@
-package com.bjxrgz.startup.manager;
+package com.bjxrgz.startup.utils;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
@@ -15,14 +15,14 @@ import java.util.List;
  * Created by Fan-pc on 2015/11/13.
  * describe Gson工具类
  */
-public class GsonManager {
+public class GsonUtils {
 
     private static Gson GSON;
     private static Gson GSON_BUILDER;
 
     public static Gson get() {
         if (GSON == null) {
-            synchronized (GsonManager.class) {
+            synchronized (GsonUtils.class) {
                 if (GSON == null) {
                     GSON = new Gson();
                 }
@@ -33,7 +33,7 @@ public class GsonManager {
 
     public static Gson getNoDataInstance() {
         if (GSON_BUILDER == null) {
-            synchronized (GsonManager.class) {
+            synchronized (GsonUtils.class) {
                 if (GSON_BUILDER == null) {
                     GSON_BUILDER = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
                         @Override

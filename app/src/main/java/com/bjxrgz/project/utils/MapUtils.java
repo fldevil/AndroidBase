@@ -1,4 +1,4 @@
-package com.bjxrgz.project.manager;
+package com.bjxrgz.project.utils;
 
 import android.Manifest;
 import android.content.Context;
@@ -27,7 +27,7 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
-import com.bjxrgz.startup.manager.PermManager;
+import com.bjxrgz.startup.utils.PermUtils;
 import com.bjxrgz.startup.utils.LogUtils;
 
 import java.util.ArrayList;
@@ -36,24 +36,24 @@ import java.util.ArrayList;
  * Created by JiangZhiGuo on 2016/08/05.
  * describe 高德地图管理 (不用的话，删掉lib下的几个jar 并去掉manifest下的配置)
  */
-public class MapManager {
+public class MapUtils {
 
-    private static MapManager mapManager;
+    private static MapUtils mapUtils;
 
-    public static MapManager get() {
-        if (mapManager == null) {
-            synchronized (MapManager.class) {
-                if (mapManager == null) {
-                    mapManager = new MapManager();
+    public static MapUtils get() {
+        if (mapUtils == null) {
+            synchronized (MapUtils.class) {
+                if (mapUtils == null) {
+                    mapUtils = new MapUtils();
                 }
             }
         }
-        return mapManager;
+        return mapUtils;
     }
 
     /* 权限 */
-    public void request(Context context, PermManager.PermissionListener listener) {
-        PermManager.request(context, listener, Manifest.permission.ACCESS_COARSE_LOCATION,
+    public void request(Context context, PermUtils.PermissionListener listener) {
+        PermUtils.request(context, listener, Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION);
     }
 

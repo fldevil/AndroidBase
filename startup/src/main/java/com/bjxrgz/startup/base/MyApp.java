@@ -11,7 +11,7 @@ import android.os.Looper;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
-import com.bjxrgz.startup.manager.PermManager;
+import com.bjxrgz.startup.utils.PermUtils;
 import com.bjxrgz.startup.utils.ActivityUtils;
 import com.bjxrgz.startup.utils.AppUtils;
 import com.bjxrgz.startup.utils.DeviceUtils;
@@ -41,8 +41,7 @@ public class MyApp extends MultiDexApplication {
 
         ButterKnife.setDebug(LOG); // 注解
         LogUtils.initApp(); // 打印
-//        PushManager.initAPP(); // 推送
-//        ShareManager.initApp(); // 分享/授权
+
     }
 
     @Override
@@ -71,7 +70,7 @@ public class MyApp extends MultiDexApplication {
 
     public AppUtils.AppInfo getAppInfo() {
         if (null == appInfo) {
-            PermManager.requestApp(instance, new PermManager.PermissionListener() {
+            PermUtils.requestApp(instance, new PermUtils.PermissionListener() {
                 @Override
                 public void onAgree() {
                     appInfo = AppUtils.getAppInfo(instance);
@@ -83,7 +82,7 @@ public class MyApp extends MultiDexApplication {
 
     public DeviceUtils.DeviceInfo getDeviceInfo() {
         if (null == deviceInfo) { // 需要动态权限
-            PermManager.requestDevice(instance, new PermManager.PermissionListener() {
+            PermUtils.requestDevice(instance, new PermUtils.PermissionListener() {
                 @Override
                 public void onAgree() {
                     deviceInfo = DeviceUtils.getDeviceInfo();

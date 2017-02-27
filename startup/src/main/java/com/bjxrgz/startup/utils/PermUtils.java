@@ -1,4 +1,4 @@
-package com.bjxrgz.startup.manager;
+package com.bjxrgz.startup.utils;
 
 import android.Manifest;
 import android.content.Context;
@@ -14,7 +14,7 @@ import rx.functions.Action1;
  * Created by Fan on 2016/11/18.
  * 权限验证框架管理
  */
-public class PermManager {
+public class PermUtils {
 
     public interface PermissionListener {
         /* 同意使用权限 */

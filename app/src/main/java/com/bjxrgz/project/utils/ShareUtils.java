@@ -1,4 +1,4 @@
-package com.bjxrgz.project.manager;
+package com.bjxrgz.project.utils;
 
 import android.Manifest;
 import android.app.Activity;
@@ -8,7 +8,7 @@ import android.text.TextUtils;
 
 import com.bjxrgz.project.R;
 import com.bjxrgz.startup.base.MyApp;
-import com.bjxrgz.startup.manager.PermManager;
+import com.bjxrgz.startup.utils.PermUtils;
 import com.bjxrgz.startup.utils.LogUtils;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
@@ -33,7 +33,7 @@ import java.util.Map;
  * 4.并去掉manifest下的配置)
  * 5.删除java里的微信activity
  */
-public class ShareManager {
+public class ShareUtils {
 
     private static UMShareAPI umShareAPI;
 
@@ -51,14 +51,14 @@ public class ShareManager {
     }
 
     /* 权限请求 */
-    public static void request(Context context, PermManager.PermissionListener listener) {
+    public static void request(Context context, PermUtils.PermissionListener listener) {
         String[] mPermissionList = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE,
                 Manifest.permission.READ_LOGS, Manifest.permission.READ_PHONE_STATE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.SET_DEBUG_APP,
                 Manifest.permission.SYSTEM_ALERT_WINDOW, Manifest.permission.GET_ACCOUNTS,
                 Manifest.permission.WRITE_APN_SETTINGS};
-        PermManager.request(context, listener, mPermissionList);
+        PermUtils.request(context, listener, mPermissionList);
     }
 
     /* 检查是否支持分享和授权 */
@@ -78,7 +78,7 @@ public class ShareManager {
      * 先授权，再获取用户信息 这里获取的信息比授权的多
      */
     public static void auth(final Activity activity, final SHARE_MEDIA platform) {
-        request(activity, new PermManager.PermissionListener() {
+        request(activity, new PermUtils.PermissionListener() {
             @Override
             public void onAgree() {
                 toAuth(activity, platform);
@@ -141,7 +141,7 @@ public class ShareManager {
      */
 
     public static void share(final Activity activity, final SHARE_MEDIA platform, final String imgUrl) {
-        request(activity, new PermManager.PermissionListener() {
+        request(activity, new PermUtils.PermissionListener() {
             @Override
             public void onAgree() {
                 goShare(activity, platform, imgUrl);

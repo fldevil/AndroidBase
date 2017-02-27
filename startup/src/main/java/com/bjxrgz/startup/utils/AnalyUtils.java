@@ -1,4 +1,4 @@
-package com.bjxrgz.startup.manager;
+package com.bjxrgz.startup.utils;
 
 import android.content.Context;
 
@@ -8,7 +8,7 @@ import com.umeng.analytics.MobclickAgent;
  * Created by gg on 2017/2/27.
  * 友盟统计
  */
-public class AnalyManager {
+public class AnalyUtils {
 
     /**
      * 数据统计(崩溃日志) 在activity中的OnResume中调用

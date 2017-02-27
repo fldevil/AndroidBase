@@ -1,4 +1,4 @@
-package com.bjxrgz.startup.manager;
+package com.bjxrgz.startup.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -23,7 +23,7 @@ import java.io.File;
  * Created by JiangZhiGuo on 2016/7/25.
  * describe Glide工具类
  */
-public class GlideManager {
+public class GlideUtils {
 
     /* 清除内存缓存 */
     public static void clearMemory(Context context) {

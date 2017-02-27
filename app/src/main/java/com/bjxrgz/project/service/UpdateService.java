@@ -10,12 +10,11 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.bjxrgz.project.domain.Version;
-import com.bjxrgz.project.manager.FileManager;
-import com.bjxrgz.project.manager.HttpManager;
+import com.bjxrgz.project.utils.FilesUtils;
+import com.bjxrgz.project.utils.HttpUtils;
 import com.bjxrgz.startup.base.MyApp;
 import com.bjxrgz.startup.utils.AppUtils;
 import com.bjxrgz.startup.utils.DialogUtils;
-import com.bjxrgz.startup.utils.FileUtils;
 import com.bjxrgz.startup.utils.ToastUtils;
 
 import java.io.File;
@@ -51,8 +50,8 @@ public class UpdateService extends Service {
     }
 
     private void checkUpdate() {
-        Call<Version> call = HttpManager.callHeaderGson().checkUpdate();
-        HttpManager.enqueue(call, new HttpManager.CallBack<Version>() {
+        Call<Version> call = HttpUtils.callHeaderGson().checkUpdate();
+        HttpUtils.enqueue(call, new HttpUtils.CallBack<Version>() {
             @Override
             public void onSuccess(Version result) {
                 if (result != null) {
@@ -103,16 +102,16 @@ public class UpdateService extends Service {
 
     /* 下载apk */
     private void downloadApk(final Version version) {
-        Call<ResponseBody> call = HttpManager.callNullNull().downloadLargeFile(version.getUpdateUrl());
-        HttpManager.enqueue(call, new HttpManager.CallBack<ResponseBody>() {
+        Call<ResponseBody> call = HttpUtils.callNullNull().downloadLargeFile(version.getUpdateUrl());
+        HttpUtils.enqueue(call, new HttpUtils.CallBack<ResponseBody>() {
             @Override
             public void onSuccess(final ResponseBody body) { // 回调也是子线程
                 if (body != null && body.byteStream() != null) {
                     MyApp.get().getThread().execute(new Runnable() {
                         @Override
                         public void run() {
-                            File apkFile = FileManager.createAPKInRes(version.getVersionName());
-                            FileUtils.writeFileFromIS(apkFile, body.byteStream(), false);
+                            File apkFile = FilesUtils.createAPKInRes(version.getVersionName());
+                            com.bjxrgz.startup.utils.FileUtils.writeFileFromIS(apkFile, body.byteStream(), false);
                             // 启动安装
                             Intent installIntent = AppUtils.getInstallIntent(apkFile);
                             UpdateService.this.startActivity(installIntent);
