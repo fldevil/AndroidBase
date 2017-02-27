@@ -34,7 +34,6 @@ public interface APIManager {
     String HOST_DEBUG = ""; // 测试
     String HOST_RELEASE = ""; // 正式
     String BASE_URL = (MyApp.DEBUG ? HOST_DEBUG : HOST_RELEASE) + "后缀/";
-    String FORE_IMG = "";
 
     @Streaming // 下载大文件(请求需要放在子线程中)
     @Multipart // 上传文件
