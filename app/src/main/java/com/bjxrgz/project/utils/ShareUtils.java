@@ -6,10 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.bjxrgz.project.MyApp;
 import com.bjxrgz.project.R;
-import com.bjxrgz.startup.base.MyApp;
-import com.bjxrgz.startup.utils.PermUtils;
 import com.bjxrgz.startup.utils.LogUtils;
+import com.bjxrgz.startup.utils.PermUtils;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.ShareAction;
@@ -37,14 +37,13 @@ public class ShareUtils {
 
     private static UMShareAPI umShareAPI;
 
-    public static void initApp() {
-        MyApp myApp = MyApp.get();
-        Log.LOG = MyApp.LOG;
-        Config.IsToastTip = MyApp.LOG;
+    public static void initApp(boolean log) {
+        Log.LOG = log;
+        Config.IsToastTip = log;
 //        Config.dialogSwitch = true; // 是否使用默认dialog
 //        Config.dialog = null;
 //        Config.REDIRECT_URL = "您新浪后台的回调地址";
-        umShareAPI = UMShareAPI.get(myApp);
+        umShareAPI = UMShareAPI.get(MyApp.get());
         PlatformConfig.setWeixin("wx967daebe835fbeac", "5bb696d9ccd75a38c8a0bfe0675559b3");
         PlatformConfig.setSinaWeibo("3921700954", "04b48b094faeb16683c32669824ebdad");
         PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba");

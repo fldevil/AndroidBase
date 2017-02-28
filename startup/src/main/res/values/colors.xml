@@ -14,10 +14,10 @@
     <color name="dialog_custom_text_color">@color/color_primary</color>
 
     <!-- 字体颜色 -->
-    <color name="font_primary">@color/color_primary</color>
     <color name="font_black">@color/text_color</color>
-    <color name="font_gray">#7F7F7F</color>
     <color name="font_white">#ffffff</color>
+    <color name="font_gray">#7F7F7F</color>
+    <color name="font_primary">@color/color_primary</color>
     <color name="font_hint">#cbcbcb</color>
     <color name="line_gray">#cbcbcb</color>
 

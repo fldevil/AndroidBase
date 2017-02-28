@@ -1,4 +1,4 @@
-package com.bjxrgz.startup.adapter;
+package com.bjxrgz.project.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

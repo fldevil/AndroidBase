@@ -11,22 +11,17 @@ import android.os.Looper;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
-import com.bjxrgz.startup.utils.PermUtils;
 import com.bjxrgz.startup.utils.ActivityUtils;
 import com.bjxrgz.startup.utils.AppUtils;
 import com.bjxrgz.startup.utils.DeviceUtils;
 import com.bjxrgz.startup.utils.LogUtils;
+import com.bjxrgz.startup.utils.PermUtils;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import butterknife.ButterKnife;
-
-public class MyApp extends MultiDexApplication {
-    public static final boolean DEBUG = true; // 测试模式(上线为false)
-    public static final boolean LOG = true; // 打印日志(上线为false)
-
-    private static MyApp instance;  // MyApp实例
+public class BaseApp extends MultiDexApplication {
+    private static BaseApp instance;  // MyApp实例
 
     private Handler mainHandler; // 主线程handler
     private ExecutorService threadPool; // 缓冲线程池
@@ -38,10 +33,6 @@ public class MyApp extends MultiDexApplication {
         super.onCreate();
         instance = this;
         initListener();
-
-        ButterKnife.setDebug(LOG); // 注解
-        LogUtils.initApp(); // 打印
-
     }
 
     @Override
@@ -50,7 +41,7 @@ public class MyApp extends MultiDexApplication {
         MultiDex.install(this); // 大项目需要分包
     }
 
-    public static MyApp get() {
+    public static BaseApp get() {
         return instance;
     }
 

@@ -1,6 +1,6 @@
 package com.bjxrgz.project.utils;
 
-import com.bjxrgz.startup.base.MyApp;
+import com.bjxrgz.project.MyApp;
 import com.bjxrgz.startup.utils.FileUtils;
 import com.bjxrgz.startup.utils.StringUtils;
 

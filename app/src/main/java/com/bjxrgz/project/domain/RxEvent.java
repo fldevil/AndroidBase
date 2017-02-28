@@ -1,10 +1,12 @@
-package com.bjxrgz.startup.domain;
+package com.bjxrgz.project.domain;
+
+import java.io.Serializable;
 
 /**
  * Created by JiangZhiGuo on 2016-11-25.
  * describe 用来RxBUs传输的实体类
  */
-public class RxEvent<T> {
+public class RxEvent<T> implements Serializable {
 
     /* 相当于频道 */
     public enum ID {

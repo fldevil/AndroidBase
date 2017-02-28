@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import com.bjxrgz.project.MyApp;
 import com.bjxrgz.project.domain.User;
-import com.bjxrgz.startup.base.MyApp;
 import com.bjxrgz.startup.utils.GsonUtils;
 import com.bjxrgz.startup.utils.LogUtils;
 

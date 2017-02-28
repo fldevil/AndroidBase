@@ -6,8 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.widget.ImageView;
 
-import com.bjxrgz.startup.utils.ConvertUtils;
-import com.bjxrgz.startup.utils.StringUtils;
 import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
@@ -142,14 +140,14 @@ public class GlideUtils {
 
     /* 加载图片 */
     public static void load(Context context, String url, ImageView view) {
-        load(context, url, view, null);
+        load(context, url, 0, view);
     }
 
     public static void load(FragmentActivity activity, String url, ImageView view) {
-        load(activity, url, view, null);
+        load(activity, url, 0, view);
     }
 
     public static void load(Fragment fragment, String url, ImageView view) {
-        load(fragment, url, view, null);
+        load(fragment, url, 0, view);
     }
 }

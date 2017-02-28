@@ -12,7 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 
-import com.bjxrgz.startup.base.MyApp;
+import com.bjxrgz.startup.base.BaseApp;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -74,13 +74,13 @@ public class MediaUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-            if (intent.resolveActivity(MyApp.get().getPackageManager()) == null) {
+            if (intent.resolveActivity(BaseApp.get().getPackageManager()) == null) {
                 intent.setAction(Intent.ACTION_GET_CONTENT);
             }
         } else {
             intent.setAction(Intent.ACTION_GET_CONTENT);
         }
-        if (intent.resolveActivity(MyApp.get().getPackageManager()) == null) {
+        if (intent.resolveActivity(BaseApp.get().getPackageManager()) == null) {
             intent = new Intent(Intent.ACTION_PICK,
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         }

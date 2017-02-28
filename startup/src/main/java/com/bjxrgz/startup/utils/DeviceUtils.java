@@ -6,7 +6,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 
-import com.bjxrgz.startup.base.MyApp;
+import com.bjxrgz.startup.base.BaseApp;
 
 import java.net.Inet6Address;
 import java.net.InetAddress;
@@ -205,7 +205,7 @@ public class DeviceUtils {
      */
     private static String getMacAddress() {
         String macAddress = "";
-        WifiManager wifi = (WifiManager) MyApp.get().getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) BaseApp.get().getSystemService(Context.WIFI_SERVICE);
         WifiInfo info = wifi.getConnectionInfo();
         if (info != null) {
             macAddress = info.getMacAddress();
@@ -217,7 +217,7 @@ public class DeviceUtils {
     }
 
     public static boolean isTable() {
-        int screenLayout = MyApp.get().getResources().getConfiguration().screenLayout;
+        int screenLayout = BaseApp.get().getResources().getConfiguration().screenLayout;
         boolean xlarge = ((screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
         boolean large = ((screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
         return (xlarge || large);

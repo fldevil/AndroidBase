@@ -28,7 +28,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 
-import com.bjxrgz.startup.base.MyApp;
+import com.bjxrgz.startup.base.BaseApp;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -127,7 +127,7 @@ public class ImageUtils {
      * 获取bitmap 相册
      */
     public static Bitmap getBitmap(InputStream is, double maxSize) {
-        String dir = MyApp.get().getAppInfo().getResDir();
+        String dir = BaseApp.get().getAppInfo().getResDir();
         String fileName = StringUtils.getRandom(8) + ".jpg";
         File file = new File(dir, fileName);
         FileUtils.writeFileFromIS(file, is, false);

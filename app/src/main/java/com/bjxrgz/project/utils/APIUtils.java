@@ -1,8 +1,8 @@
 package com.bjxrgz.project.utils;
 
+import com.bjxrgz.project.MyApp;
 import com.bjxrgz.project.domain.User;
 import com.bjxrgz.project.domain.Version;
-import com.bjxrgz.startup.base.MyApp;
 
 import java.util.List;
 import java.util.Map;

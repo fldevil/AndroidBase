@@ -3,7 +3,7 @@ package com.bjxrgz.startup.utils;
 import android.text.TextUtils;
 
 import com.bjxrgz.startup.R;
-import com.bjxrgz.startup.base.MyApp;
+import com.bjxrgz.startup.base.BaseApp;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
 
@@ -16,12 +16,12 @@ import java.io.File;
  */
 public class LogUtils {
 
-    public static void initApp() {
-        String logTag = MyApp.get().getString(R.string.app_name);
+    public static void initApp(boolean log) {
+        String logTag = BaseApp.get().getString(R.string.app_name);
         Logger.Settings settings = Logger.init(logTag); // 打印tag
         settings.setMethodCount(3);// 3以上才能显示调用方法
         settings.hideThreadInfo(); // 隐藏线程显示
-        if (MyApp.LOG) { // log开关
+        if (log) { // log开关
             settings.setLogLevel(LogLevel.FULL);
         } else {
             settings.setLogLevel(LogLevel.NONE);
@@ -93,22 +93,13 @@ public class LogUtils {
     }
 
     /**
-     * 生命周期
-     */
-    public static void lifeCycle(boolean open, String tag) {
-        if (open) {
-            Logger.e(tag, tag);
-        }
-    }
-
-    /**
      * 记录日志
      */
     public static void writeLogFile(String content) {
         if (TextUtils.isEmpty(content)) {
             return;
         }
-        String logDir = MyApp.get().getAppInfo().getLogDir();
+        String logDir = BaseApp.get().getAppInfo().getLogDir();
         String logFileName = TimeUtils.genBillTime() + ".txt";
         File logFile = new File(logDir, logFileName);
         FileUtils.createFileByDeleteOldFile(logFile);

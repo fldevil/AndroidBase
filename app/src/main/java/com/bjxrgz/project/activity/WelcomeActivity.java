@@ -3,9 +3,9 @@ package com.bjxrgz.project.activity;
 import android.os.Bundle;
 import android.widget.ImageView;
 
+import com.bjxrgz.project.MyApp;
 import com.bjxrgz.project.R;
 import com.bjxrgz.startup.base.BaseActivity;
-import com.bjxrgz.startup.base.MyApp;
 import com.bjxrgz.startup.utils.ScreenUtils;
 
 import butterknife.BindView;

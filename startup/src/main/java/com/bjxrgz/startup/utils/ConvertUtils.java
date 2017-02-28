@@ -12,7 +12,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
-import com.bjxrgz.startup.base.MyApp;
+import com.bjxrgz.startup.base.BaseApp;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -37,7 +37,7 @@ public class ConvertUtils {
      * setStatusColor(int)的参数不是资源文件的索引，所以要转换
      */
     private static int get0xColor(int colorID) {
-        return ContextCompat.getColor(MyApp.get().getBaseContext(), colorID);
+        return ContextCompat.getColor(BaseApp.get().getBaseContext(), colorID);
     }
 
     private static final char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
@@ -423,7 +423,7 @@ public class ConvertUtils {
      */
     public static int getpx(int type, float value) {
 
-        DisplayMetrics metrics = MyApp.get().getResources().getDisplayMetrics();
+        DisplayMetrics metrics = BaseApp.get().getResources().getDisplayMetrics();
         return (int) TypedValue.applyDimension(type, value, metrics);
     }
 
@@ -434,7 +434,7 @@ public class ConvertUtils {
      * @return px值
      */
     public static int dp2px(float dpValue) {
-        final float scale = MyApp.get().getResources().getDisplayMetrics().density;
+        final float scale = BaseApp.get().getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
 
@@ -445,7 +445,7 @@ public class ConvertUtils {
      * @return dp值
      */
     public static int px2dp(float pxValue) {
-        final float scale = MyApp.get().getResources().getDisplayMetrics().density;
+        final float scale = BaseApp.get().getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
     }
 
@@ -456,7 +456,7 @@ public class ConvertUtils {
      * @return px值
      */
     public static int sp2px(float spValue) {
-        final float fontScale = MyApp.get().getResources().getDisplayMetrics().scaledDensity;
+        final float fontScale = BaseApp.get().getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
     }
 
@@ -467,7 +467,7 @@ public class ConvertUtils {
      * @return sp值
      */
     public static int px2sp(float pxValue) {
-        final float fontScale = MyApp.get().getResources().getDisplayMetrics().scaledDensity;
+        final float fontScale = BaseApp.get().getResources().getDisplayMetrics().scaledDensity;
         return (int) (pxValue / fontScale + 0.5f);
     }
 

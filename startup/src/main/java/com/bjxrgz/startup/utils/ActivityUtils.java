@@ -59,6 +59,16 @@ public class ActivityUtils {
     }
 
     /**
+     * 关闭顶部activity
+     */
+    public static void closeTopActivitie() {
+        Activity top = activities.get(activities.size() - 1);
+        if (top != null) {
+            top.finish();
+        }
+    }
+
+    /**
      * 关闭所有activity，应用于一键退出
      */
     public static void closeActivities() {

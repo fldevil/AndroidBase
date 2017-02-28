@@ -18,7 +18,7 @@ import android.provider.Settings;
 import android.text.format.Formatter;
 import android.webkit.MimeTypeMap;
 
-import com.bjxrgz.startup.base.MyApp;
+import com.bjxrgz.startup.base.BaseApp;
 
 import java.io.File;
 import java.util.Arrays;
@@ -285,14 +285,14 @@ public class AppUtils {
      * /data/data/<application package>/files
      */
     private static String getFilesDir(String path) {
-        MyApp myApp = MyApp.get();
+        BaseApp baseApp = BaseApp.get();
         if (isSDCardEnable()) {
-            File filesDir = myApp.getExternalFilesDir(path);
+            File filesDir = baseApp.getExternalFilesDir(path);
             if (filesDir != null) {
                 return filesDir.getAbsolutePath();
             }
         }
-        return myApp.getFilesDir().getAbsolutePath();
+        return baseApp.getFilesDir().getAbsolutePath();
     }
 
     /**
@@ -302,21 +302,21 @@ public class AppUtils {
      * /data/data/<application package>/cache
      */
     private static String getCacheDir() {
-        MyApp myApp = MyApp.get();
+        BaseApp baseApp = BaseApp.get();
         if (isSDCardEnable()) {
-            File cacheDir = myApp.getExternalCacheDir();
+            File cacheDir = baseApp.getExternalCacheDir();
             if (cacheDir != null) {
                 return cacheDir.getAbsolutePath();
             }
         }
-        return myApp.getCacheDir().getAbsolutePath();
+        return baseApp.getCacheDir().getAbsolutePath();
     }
 
     /**
      * 清除所有资源
      */
     public static void clearRes() {
-        String resDir = MyApp.get().getAppInfo().getResDir();
+        String resDir = BaseApp.get().getAppInfo().getResDir();
         List<File> fileList = FileUtils.listFilesAndDirInDir(resDir, true);
         for (File file : fileList) {
             FileUtils.deleteDir(file);
@@ -327,13 +327,13 @@ public class AppUtils {
      * 清除缓存(Glide手动清)
      */
     public static void clearSys() {
-        MyApp myApp = MyApp.get();
-        String filesDir = myApp.getAppInfo().getFilesDir();
-        String cacheDir = myApp.getAppInfo().getCacheDir();
+        BaseApp baseApp = BaseApp.get();
+        String filesDir = baseApp.getAppInfo().getFilesDir();
+        String cacheDir = baseApp.getAppInfo().getCacheDir();
         File externalFilesDir = new File(filesDir);
         File externalCacheDir = new File(cacheDir);
-        File internalFilesDir = myApp.getFilesDir();
-        File internalCacheDir = myApp.getCacheDir();
+        File internalFilesDir = baseApp.getFilesDir();
+        File internalCacheDir = baseApp.getCacheDir();
 
         FileUtils.deleteFilesAndDirInDir(externalFilesDir);
         FileUtils.deleteFilesAndDirInDir(externalCacheDir);
@@ -373,7 +373,7 @@ public class AppUtils {
      * 内存，进程，服务，任务
      */
     private static ActivityManager getActivityManager() {
-        return (ActivityManager) MyApp.get().getSystemService(Context.ACTIVITY_SERVICE);
+        return (ActivityManager) BaseApp.get().getSystemService(Context.ACTIVITY_SERVICE);
     }
 
     /**
@@ -390,14 +390,14 @@ public class AppUtils {
      */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public static String getTotalMem() {
-        return Formatter.formatFileSize(MyApp.get(), getMemoryInfo().totalMem);
+        return Formatter.formatFileSize(BaseApp.get(), getMemoryInfo().totalMem);
     }
 
     /**
      * 获取可用运存
      */
     public static String getAvailMem() {
-        return Formatter.formatFileSize(MyApp.get(), getMemoryInfo().availMem);
+        return Formatter.formatFileSize(BaseApp.get(), getMemoryInfo().availMem);
     }
 
     /**
@@ -415,7 +415,7 @@ public class AppUtils {
         Intent intent = new Intent();
         intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
-        String packageName = MyApp.get().getAppInfo().getPackageName();
+        String packageName = BaseApp.get().getAppInfo().getPackageName();
         intent.setData(Uri.parse("package:" + packageName));
         return intent;
     }
@@ -432,7 +432,7 @@ public class AppUtils {
      * 跳转应用市场的意图
      */
     public static Intent getMarketIntent() {
-        String str = "market://details?id=" + MyApp.get().getPackageName();
+        String str = "market://details?id=" + BaseApp.get().getPackageName();
         return new Intent("android.intent.action.VIEW", Uri.parse(str));
     }
 
@@ -466,8 +466,8 @@ public class AppUtils {
      * 获取打开当前App的意图
      */
     public static Intent getOpenIntent() {
-        MyApp myApp = MyApp.get();
-        return myApp.getPackageManager().getLaunchIntentForPackage(myApp.getPackageName());
+        BaseApp baseApp = BaseApp.get();
+        return baseApp.getPackageManager().getLaunchIntentForPackage(baseApp.getPackageName());
     }
 
     /**
@@ -485,15 +485,15 @@ public class AppUtils {
      * <uses-permission android:name="android.permission.GET_TASKS" />
      */
     public static boolean isAppOnForeground() {
-        MyApp myApp = MyApp.get();
+        BaseApp baseApp = BaseApp.get();
         ActivityManager activityManager = (ActivityManager)
-                myApp.getSystemService(Context.ACTIVITY_SERVICE);
+                baseApp.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> appProcesses =
                 activityManager.getRunningAppProcesses();
         if (appProcesses != null && appProcesses.size() > 0) {
             for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
                 if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
-                        && appProcess.processName.equals(myApp.getPackageName())) {
+                        && appProcess.processName.equals(baseApp.getPackageName())) {
                     return true;
                 }
             }
@@ -508,7 +508,7 @@ public class AppUtils {
      * @param className   activity全路径类名
      */
     public static boolean isActivityExist(String packageName, String className) {
-        PackageManager packageManager = MyApp.get().getPackageManager();
+        PackageManager packageManager = BaseApp.get().getPackageManager();
         Intent intent = new Intent();
         intent.setClassName(packageName, className);
         ResolveInfo resolveInfo = packageManager.resolveActivity(intent, 0);
@@ -523,7 +523,7 @@ public class AppUtils {
      * @param serviceName 是包名+服务的类名（例如：net.loonggg.testbackstage.TestService）
      */
     public static boolean isServiceWork(String serviceName) {
-        ActivityManager myAM = (ActivityManager) MyApp.get()
+        ActivityManager myAM = (ActivityManager) BaseApp.get()
                 .getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningServiceInfo> myList = myAM.getRunningServices(100);
         if (myList != null && myList.size() > 0) {

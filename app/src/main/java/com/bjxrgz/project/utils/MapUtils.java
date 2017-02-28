@@ -162,7 +162,7 @@ public class MapUtils {
                         String errText = "定位失败," + aMapLocation.getErrorCode()
                                 + ": " + aMapLocation.getErrorInfo();
                         LogUtils.e(errText);
-//                        WidgetUtils.toast(MyApp.instance, R.string.map_location_error);
+//                        WidgetUtils.toast(BaseApp.instance, R.string.map_location_error);
                         if (locationCallBack != null) {
                             locationCallBack.onFailed(aMapLocation);
                         }

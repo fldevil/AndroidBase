@@ -11,7 +11,7 @@ import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
 import com.bjxrgz.startup.R;
-import com.bjxrgz.startup.base.MyApp;
+import com.bjxrgz.startup.base.BaseApp;
 
 /**
  * Created by jiang on 2016/10/12
@@ -116,7 +116,7 @@ public class NetUtils {
     }
 
     public static ConnectivityManager getConnectivityManager() {
-        return (ConnectivityManager) MyApp.get().getSystemService(Context.CONNECTIVITY_SERVICE);
+        return (ConnectivityManager) BaseApp.get().getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
     public static NetworkInfo getNetworkInfo() {
@@ -127,12 +127,12 @@ public class NetUtils {
      * 网络是否可用
      */
     public static boolean isAvailable() {
-        final MyApp myApp = MyApp.get();
+        final BaseApp baseApp = BaseApp.get();
         NetworkInfo networkInfo = getNetworkInfo();
         boolean available = (networkInfo != null && getNetworkInfo().isAvailable());
         if (!available) {
-            String show = myApp.getString(R.string.no_network_title);
-            Toast.makeText(MyApp.get(), show, Toast.LENGTH_SHORT).show();
+            String show = baseApp.getString(R.string.no_network_title);
+            Toast.makeText(BaseApp.get(), show, Toast.LENGTH_SHORT).show();
             return false;
         } else {
             return true;
@@ -191,7 +191,7 @@ public class NetUtils {
      * @return 移动网络运营商名称
      */
     public static String getNetworkOperatorName() {
-        TelephonyManager tm = (TelephonyManager) MyApp.get().getSystemService(Context.TELEPHONY_SERVICE);
+        TelephonyManager tm = (TelephonyManager) BaseApp.get().getSystemService(Context.TELEPHONY_SERVICE);
         return tm != null ? tm.getNetworkOperatorName() : null;
     }
 
@@ -207,7 +207,7 @@ public class NetUtils {
      * </ul>
      */
     public static int getPhoneType() {
-        TelephonyManager tm = (TelephonyManager) MyApp.get().getSystemService(Context.TELEPHONY_SERVICE);
+        TelephonyManager tm = (TelephonyManager) BaseApp.get().getSystemService(Context.TELEPHONY_SERVICE);
         return tm != null ? tm.getPhoneType() : -1;
     }
 

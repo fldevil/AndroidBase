@@ -94,24 +94,24 @@
         <item name="android:textSize">@dimen/font_huge</item>
     </style>
 
-    <!-- 主题色字体 -->
-    <style name="FontPrimarySmall">
-        <item name="android:textColor">@color/font_primary</item>
+    <!-- 白色字体 -->
+    <style name="FontWhiteSmall">
+        <item name="android:textColor">@color/font_white</item>
         <item name="android:textSize">@dimen/font_small</item>
     </style>
 
-    <style name="FontPrimaryNormal">
-        <item name="android:textColor">@color/font_primary</item>
+    <style name="FontWhiteNormal">
+        <item name="android:textColor">@color/font_white</item>
         <item name="android:textSize">@dimen/font_normal</item>
     </style>
 
-    <style name="FontPrimaryBig">
-        <item name="android:textColor">@color/font_primary</item>
+    <style name="FontWhiteBig">
+        <item name="android:textColor">@color/font_white</item>
         <item name="android:textSize">@dimen/font_big</item>
     </style>
 
-    <style name="FontPrimaryHuge">
-        <item name="android:textColor">@color/font_primary</item>
+    <style name="FontWhiteHuge">
+        <item name="android:textColor">@color/font_white</item>
         <item name="android:textSize">@dimen/font_huge</item>
     </style>
 
@@ -136,24 +136,24 @@
         <item name="android:textSize">@dimen/font_huge</item>
     </style>
 
-    <!-- 白色字体 -->
-    <style name="FontWhiteSmall">
-        <item name="android:textColor">@color/font_white</item>
+    <!-- 主题色字体 -->
+    <style name="FontPrimarySmall">
+        <item name="android:textColor">@color/font_primary</item>
         <item name="android:textSize">@dimen/font_small</item>
     </style>
 
-    <style name="FontWhiteNormal">
-        <item name="android:textColor">@color/font_white</item>
+    <style name="FontPrimaryNormal">
+        <item name="android:textColor">@color/font_primary</item>
         <item name="android:textSize">@dimen/font_normal</item>
     </style>
 
-    <style name="FontWhiteBig">
-        <item name="android:textColor">@color/font_white</item>
+    <style name="FontPrimaryBig">
+        <item name="android:textColor">@color/font_primary</item>
         <item name="android:textSize">@dimen/font_big</item>
     </style>
 
-    <style name="FontWhiteHuge">
-        <item name="android:textColor">@color/font_white</item>
+    <style name="FontPrimaryHuge">
+        <item name="android:textColor">@color/font_primary</item>
         <item name="android:textSize">@dimen/font_huge</item>
     </style>
 

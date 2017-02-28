@@ -16,7 +16,7 @@ import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
-import com.bjxrgz.startup.base.MyApp;
+import com.bjxrgz.startup.base.BaseApp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +33,7 @@ public class PhoneUtils {
      * SIM信息，服务商，数据连接
      */
     public static TelephonyManager getTelephonyManager() {
-        return (TelephonyManager) MyApp.get().getSystemService(Context.TELEPHONY_SERVICE);
+        return (TelephonyManager) BaseApp.get().getSystemService(Context.TELEPHONY_SERVICE);
     }
 
     public static boolean isPhone() {
@@ -48,7 +48,7 @@ public class PhoneUtils {
         if (isPhone()) {
             deviceId = getTelephonyManager().getDeviceId();
         } else {
-            ContentResolver contentResolver = MyApp.get().getContentResolver();
+            ContentResolver contentResolver = BaseApp.get().getContentResolver();
             deviceId = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID);
         }
         return deviceId;
@@ -82,7 +82,7 @@ public class PhoneUtils {
      * VoiceMailNumber = *86<br>
      */
     public static String getPhoneStatus() {
-        TelephonyManager tm = (TelephonyManager) MyApp.get()
+        TelephonyManager tm = (TelephonyManager) BaseApp.get()
                 .getSystemService(Context.TELEPHONY_SERVICE);
         String str = "";
         str += "DeviceId(IMEI) = " + tm.getDeviceId() + "\n";
@@ -163,7 +163,7 @@ public class PhoneUtils {
      * 需添加权限 <uses-permission android:name="android.permission.READ_CONTACTS"/>
      */
     public static List<Map<String, String>> getContacts() {
-        ContentResolver resolver = MyApp.get().getContentResolver();
+        ContentResolver resolver = BaseApp.get().getContentResolver();
 
         List<Map<String, String>> list = new ArrayList<>();
         Cursor cursorID = resolver.query(contacts_uri, new String[]{"_id"}, null, null, null);
@@ -236,7 +236,7 @@ public class PhoneUtils {
         list.add(addEmail);
 
         try {
-            MyApp.get().getContentResolver().applyBatch("com.android.contacts", list);
+            BaseApp.get().getContentResolver().applyBatch("com.android.contacts", list);
             return true;
         } catch (RemoteException | OperationApplicationException e) {
             e.printStackTrace();
@@ -263,7 +263,7 @@ public class PhoneUtils {
         if (data != null) {
             Uri uri = data.getData();
             // 创建内容解析者
-            ContentResolver contentResolver = MyApp.get().getContentResolver();
+            ContentResolver contentResolver = BaseApp.get().getContentResolver();
             Cursor cursor = contentResolver.query(uri, null, null, null, null);
             if (cursor == null) {
                 return num;
@@ -284,7 +284,7 @@ public class PhoneUtils {
     public static List<Map<String, String>> getSMS() {
         List<Map<String, String>> list = new ArrayList<>();
         String[] pros = new String[]{"_id", "address", "person", "body", "date", "type"};
-        Cursor cursor = MyApp.get().getContentResolver().query(sms_uri, pros, null, null, "date desc");
+        Cursor cursor = BaseApp.get().getContentResolver().query(sms_uri, pros, null, null, "date desc");
         if (cursor == null) {
             return null;
         }
@@ -320,7 +320,7 @@ public class PhoneUtils {
         values.put("type", String.valueOf(type));
         values.put("date", String.valueOf(date));
         try {
-            MyApp.get().getContentResolver().insert(sms_uri, values);
+            BaseApp.get().getContentResolver().insert(sms_uri, values);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -334,7 +334,7 @@ public class PhoneUtils {
      */
     public static void sendSMS(String phoneNumber, String content) {
         if (StringUtils.isEmpty(content)) return;
-        PendingIntent sentIntent = PendingIntent.getBroadcast(MyApp.get(), 0, new Intent(), 0);
+        PendingIntent sentIntent = PendingIntent.getBroadcast(BaseApp.get(), 0, new Intent(), 0);
         SmsManager smsManager = SmsManager.getDefault();
         if (content.length() >= 70) {
             List<String> ms = smsManager.divideMessage(content);

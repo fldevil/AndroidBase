@@ -3,7 +3,7 @@ package com.bjxrgz.project.utils;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.bjxrgz.startup.base.MyApp;
+import com.bjxrgz.project.MyApp;
 import com.bjxrgz.startup.utils.AppUtils;
 import com.bjxrgz.startup.utils.LogUtils;
 import com.umeng.analytics.MobclickAgent;
@@ -23,14 +23,14 @@ public class PushUtils {
     private static String DEVICE_TOKEN; // 友盟标识
     private static PushAgent mPushAgent;
 
-    public static void initAPP() {
+    public static void initAPP(boolean log) {
         Context context = MyApp.get().getApplicationContext();
         // 获取mPushAgent
         mPushAgent = PushAgent.getInstance(context);
         // 统计应用启动数据
         mPushAgent.onAppStart();
         // 打印日志
-        mPushAgent.setDebugMode(MyApp.LOG);
+        mPushAgent.setDebugMode(log);
         // 检查配置文件,会弹错误信息的toast
 //        mPushAgent.setPushCheck(isLog);
         // 收集奔溃日志

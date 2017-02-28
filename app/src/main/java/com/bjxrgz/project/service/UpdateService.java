@@ -9,10 +9,10 @@ import android.support.v7.app.AlertDialog;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.bjxrgz.project.MyApp;
 import com.bjxrgz.project.domain.Version;
 import com.bjxrgz.project.utils.FilesUtils;
 import com.bjxrgz.project.utils.HttpUtils;
-import com.bjxrgz.startup.base.MyApp;
 import com.bjxrgz.startup.utils.AppUtils;
 import com.bjxrgz.startup.utils.DialogUtils;
 import com.bjxrgz.startup.utils.ToastUtils;

@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.bjxrgz.startup.base.MyApp;
+import com.bjxrgz.startup.base.BaseApp;
 
 /**
  * Created by JiangZhiGuo on 2016/10/13.
@@ -19,7 +19,7 @@ import com.bjxrgz.startup.base.MyApp;
 public class InputUtils {
 
     private static InputMethodManager getInputManager() {
-        return (InputMethodManager) MyApp.get().getSystemService(Context.INPUT_METHOD_SERVICE);
+        return (InputMethodManager) BaseApp.get().getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     /**
@@ -68,7 +68,7 @@ public class InputUtils {
      * **********************************剪切板************************************
      */
     public static ClipboardManager getClipboardManager() {
-        return (ClipboardManager) MyApp.get().getSystemService(Context.CLIPBOARD_SERVICE);
+        return (ClipboardManager) BaseApp.get().getSystemService(Context.CLIPBOARD_SERVICE);
     }
 
     /**
@@ -85,7 +85,7 @@ public class InputUtils {
     public static CharSequence getCopy() {
         ClipData clip = getClipboardManager().getPrimaryClip();
         if (clip != null && clip.getItemCount() > 0) {
-            return clip.getItemAt(0).coerceToText(MyApp.get());
+            return clip.getItemAt(0).coerceToText(BaseApp.get());
         }
         return "";
     }
@@ -94,7 +94,7 @@ public class InputUtils {
      * 复制uri到剪贴板
      */
     public static void copyUri(Uri uri) {
-        ClipData clipData = ClipData.newUri(MyApp.get().getContentResolver(), "uri", uri);
+        ClipData clipData = ClipData.newUri(BaseApp.get().getContentResolver(), "uri", uri);
         getClipboardManager().setPrimaryClip(clipData);
     }
 

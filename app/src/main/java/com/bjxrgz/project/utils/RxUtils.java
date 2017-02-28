@@ -1,8 +1,8 @@
-package com.bjxrgz.startup.utils;
+package com.bjxrgz.project.utils;
 
 import android.support.annotation.NonNull;
 
-import com.bjxrgz.startup.domain.RxEvent;
+import com.bjxrgz.project.domain.RxEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
