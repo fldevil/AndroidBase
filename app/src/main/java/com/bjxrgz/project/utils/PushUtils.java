@@ -3,9 +3,9 @@ package com.bjxrgz.project.utils;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.bjxrgz.project.MyApp;
-import com.bjxrgz.startup.utils.AppUtils;
-import com.bjxrgz.startup.utils.LogUtils;
+import com.bjxrgz.base.utils.AppUtils;
+import com.bjxrgz.start.base.MyApp;
+import com.bjxrgz.start.utils.LogUtils;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.IUmengCallback;
 import com.umeng.message.IUmengRegisterCallback;

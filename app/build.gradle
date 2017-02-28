@@ -71,20 +71,10 @@ android {
     aaptOptions.useNewCruncher = false
 }
 
-apply plugin: 'org.greenrobot.greendao' // greenDao
-
-greendao { // 数据库配置
-    schemaVersion 1
-    daoPackage 'com.bjxrgz.project.db'
-    targetGenDir 'src/main/java'
-}
-
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0' // 注解(R)
-    compile project(':startup')
+    compile project(':xrgzStart')
     compile project(':PushSDK')
 
-    compile 'org.greenrobot:greendao:3.2.0' // greenDao 数据库
-    compile 'org.greenrobot:greendao-generator:3.2.0' // greenDao 数据库
 }

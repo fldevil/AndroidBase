@@ -6,10 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
-import com.bjxrgz.project.MyApp;
 import com.bjxrgz.project.R;
-import com.bjxrgz.startup.utils.LogUtils;
-import com.bjxrgz.startup.utils.PermUtils;
+import com.bjxrgz.start.base.MyApp;
+import com.bjxrgz.start.utils.LogUtils;
+import com.bjxrgz.start.utils.PermUtils;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.ShareAction;

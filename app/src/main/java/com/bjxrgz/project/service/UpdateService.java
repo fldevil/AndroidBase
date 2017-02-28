@@ -9,13 +9,13 @@ import android.support.v7.app.AlertDialog;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.bjxrgz.project.MyApp;
-import com.bjxrgz.project.domain.Version;
-import com.bjxrgz.project.utils.FilesUtils;
-import com.bjxrgz.project.utils.HttpUtils;
-import com.bjxrgz.startup.utils.AppUtils;
-import com.bjxrgz.startup.utils.DialogUtils;
-import com.bjxrgz.startup.utils.ToastUtils;
+import com.bjxrgz.base.utils.AppUtils;
+import com.bjxrgz.base.utils.DialogUtils;
+import com.bjxrgz.base.utils.ToastUtils;
+import com.bjxrgz.start.base.MyApp;
+import com.bjxrgz.start.domain.Version;
+import com.bjxrgz.start.utils.FilesUtils;
+import com.bjxrgz.start.utils.HttpUtils;
 
 import java.io.File;
 
@@ -111,7 +111,7 @@ public class UpdateService extends Service {
                         @Override
                         public void run() {
                             File apkFile = FilesUtils.createAPKInRes(version.getVersionName());
-                            com.bjxrgz.startup.utils.FileUtils.writeFileFromIS(apkFile, body.byteStream(), false);
+                            com.bjxrgz.base.utils.FileUtils.writeFileFromIS(apkFile, body.byteStream(), false);
                             // 启动安装
                             Intent installIntent = AppUtils.getInstallIntent(apkFile);
                             UpdateService.this.startActivity(installIntent);

@@ -7,9 +7,9 @@ import android.view.KeyEvent;
 
 import com.bjxrgz.project.R;
 import com.bjxrgz.project.utils.ViewUtils;
-import com.bjxrgz.startup.base.BaseActivity;
-import com.bjxrgz.startup.utils.ActivityUtils;
-import com.bjxrgz.startup.utils.ToastUtils;
+import com.bjxrgz.base.utils.ActivityUtils;
+import com.bjxrgz.base.utils.ToastUtils;
+import com.bjxrgz.start.base.BaseActivity;
 
 import java.util.Date;
 

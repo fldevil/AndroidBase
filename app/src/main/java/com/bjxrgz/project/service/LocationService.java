@@ -7,9 +7,9 @@ import android.os.IBinder;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
-import com.bjxrgz.project.MyApp;
 import com.bjxrgz.project.utils.MapUtils;
-import com.bjxrgz.startup.utils.DeviceUtils;
+import com.bjxrgz.base.utils.DeviceUtils;
+import com.bjxrgz.start.base.MyApp;
 
 public class LocationService extends Service {
 
