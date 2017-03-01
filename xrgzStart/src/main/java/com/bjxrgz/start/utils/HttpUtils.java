@@ -6,6 +6,7 @@ import android.content.Context;
 import com.bjxrgz.base.utils.ActivityUtils;
 import com.bjxrgz.base.utils.ToastUtils;
 import com.bjxrgz.base.R;
+import com.bjxrgz.start.base.MyApp;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -174,8 +175,10 @@ public class HttpUtils {
                     ResponseBody error = response.errorBody();
                     if (null != error) {
                         try {
-                            LogUtils.e(code + "\n" + headers.toString() + "\n" + error.string());
-                            responseError(code, error.string());
+                            String headerString = headers.toString();
+                            String errorString = error.string(); // 不能执行两次
+                            LogUtils.e(code + "\n" + headerString + "\n" + errorString);
+                            responseError(code, errorString);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -200,21 +203,32 @@ public class HttpUtils {
      * http响应错误处理
      */
     private static void responseError(int code, String errorMessage) {
-        String message = "";
-        try {
-            JSONObject object = new JSONObject(errorMessage);
-            message = (String) object.get("message"); // 错误信息
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        if (code == 401 || code == 409 || code == 417) { // 跳转登录
-//            LoginActivity.goActivity(context, message); // 跳转登录界面
-
-        } else if (code == 410) { // 退出app
-            ActivityUtils.closeActivities();
-
-        } else { // 弹出提示
-            ToastUtils.toast(message);
+        switch (code) {
+            case 401: // 用户验证失败
+//                LoginActivity.goActivity(MyApp.get());
+                break;
+            case 403: // API Key 不正确 或者没给
+                ToastUtils.toast("Key错误");
+                break;
+            case 404:
+                ToastUtils.toast("资源未找到");
+                break;
+            case 409: // 用户版本过低, 应该禁止用户登录，并提示用户升级
+//                UpdateService.goService(MyApp.get());
+                break;
+            case 410: // 用户被禁用,请求数据的时候得到该 ErrorCode, 应该退出应用
+                ActivityUtils.closeActivities();
+                break;
+            case 417: // 逻辑错误，必须返回错误信息 errorCode: 1001: 用户被锁定
+//                HttpError httpError = GsonUtils.get().fromJson(errorMessage, HttpError.class);
+//                if (httpError != null) {
+//                    String message = httpError.getMessage();
+//                    ToastUtils.toast(message);
+//                }
+                break;
+            case 500:
+                ToastUtils.toast("服务器异常");
+                break;
         }
     }
 
