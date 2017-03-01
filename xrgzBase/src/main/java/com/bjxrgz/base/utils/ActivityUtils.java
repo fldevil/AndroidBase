@@ -66,7 +66,6 @@ public class ActivityUtils {
         Activity top = activities.get(index);
         if (top != null) {
             top.finish();
-            activities.remove(index);
         }
     }
 
