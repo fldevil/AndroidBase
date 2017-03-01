@@ -61,10 +61,12 @@ public class ActivityUtils {
     /**
      * 关闭顶部activity
      */
-    public static void closeTopActivitie() {
-        Activity top = activities.get(activities.size() - 1);
+    public static void closeTopActivity() {
+        int index = activities.size() - 1;
+        Activity top = activities.get(index);
         if (top != null) {
             top.finish();
+            activities.remove(index);
         }
     }
 

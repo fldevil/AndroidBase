@@ -46,6 +46,7 @@ public class UserUtils {
     /* 清除信息 */
     public static void clear() {
         getPreference().edit().clear().apply();
+        HttpUtils.clearToken();
     }
 
     /* 获取所有存储的键值对 */
@@ -64,7 +65,6 @@ public class UserUtils {
         SharedPreferences preference = getPreference();
         User user = new User();
         user.setUserToken(preference.getString(userToken, ""));
-        LogUtils.json("getUser", GsonUtils.get().toJson(user));
         return user;
     }
 

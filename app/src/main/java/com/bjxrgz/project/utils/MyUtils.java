@@ -25,7 +25,7 @@ public class MyUtils {
             case 417:
                 switch (errorCode) {
                     case 1001:
-                        ActivityUtils.closeTopActivitie();
+                        ActivityUtils.closeTopActivity();
                         break;
                 }
                 break;

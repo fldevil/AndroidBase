@@ -13,9 +13,11 @@ import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.Headers;
+import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -57,6 +59,11 @@ public class HttpUtils {
         String userToken = UserUtils.getUser().getUserToken();
         options.put("userToken", userToken);
         return getHeader(options);
+    }
+
+    public static void clearToken() {
+        callTokenGson = null;
+        callTokenStr = null;
     }
 
     public static APIUtils callTokenGson() {
@@ -153,10 +160,41 @@ public class HttpUtils {
         call.enqueue(new Callback<T>() {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
+                // request
+                Request request = response.raw().networkResponse().request();
+                String method = request.method();
+                HttpUrl url = request.url();
+                Headers headers = request.headers();
+                RequestBody body = request.body();
+                // response
                 int code = response.code();
                 T result = response.body();
-                Headers headers = response.headers();
                 ResponseBody error = response.errorBody();
+                String headerString = ""; // 头部信息
+                String bodyString = ""; // 请求信息
+                String errorString = ""; // 错误信息
+                try {
+                    if (headers != null) {
+                        headerString = headers.toString();
+                    }
+                    if (body != null) {
+                        bodyString = body.toString();
+                    }
+                    if (error != null) {
+                        errorString = error.string(); // error.string()不能执行两次
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                // 打印请求信息
+                if (code == 200) {
+                    LogUtils.d(code + " " + method + "\n" + url + "\n"
+                            + headerString + "\n" + bodyString);
+                } else {
+                    LogUtils.e(code + " " + method + "\n" + url + "\n"
+                            + headerString + "\n" + bodyString + "\n" + errorString);
+                }
+                // 响应处理
                 if (code == 200) { // 200成功
                     if (result != null) {
                         String json;
@@ -171,15 +209,6 @@ public class HttpUtils {
                         callBack.onSuccess(result);
                     }
                 } else { // 非200错误
-                    String errorString = ""; // 错误信息
-                    if (null != error) {
-                        try {
-                            errorString = error.string(); // 不能执行两次
-                            LogUtils.e(code + "\n" + headers.toString() + "\n" + errorString);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
                     int errorCode = -1;
                     String errorMessage = "网络响应异常";
                     if (code == 417) { // 逻辑错误，必须返回错误信息 errorCode: 1001: 用户被锁定
