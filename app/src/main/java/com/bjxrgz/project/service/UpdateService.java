@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import com.bjxrgz.base.utils.AppUtils;
 import com.bjxrgz.base.utils.DialogUtils;
 import com.bjxrgz.base.utils.ToastUtils;
+import com.bjxrgz.project.utils.MyUtils;
 import com.bjxrgz.start.base.MyApp;
 import com.bjxrgz.start.domain.Version;
 import com.bjxrgz.start.utils.FilesUtils;
@@ -67,7 +68,9 @@ public class UpdateService extends Service {
             }
 
             @Override
-            public void onFailure() {
+            public void onFailure(int httpCode, int errorCode, String errorMessage) {
+                MyUtils.httpFailure(httpCode, errorCode, errorMessage);
+                ToastUtils.toast("检查更新失败");
             }
         });
     }
@@ -121,7 +124,8 @@ public class UpdateService extends Service {
             }
 
             @Override
-            public void onFailure() {
+            public void onFailure(int httpCode, int errorCode, String errorMessage) {
+                MyUtils.httpFailure(httpCode, errorCode, errorMessage);
                 ToastUtils.toast("apk下载失败");
             }
         });

@@ -22,6 +22,14 @@ public class MyTabAdapter<T extends Fragment> extends FragmentPagerAdapter {
         fragmentList = new ArrayList<>();
     }
 
+    public void addData(String titles, T fragments) {
+        // fragment
+        fragmentList.add(fragments);
+        // 标题
+        titleList.add(titles);
+        notifyDataSetChanged();
+    }
+
     public void setData(List<String> titles, List<T> fragments) {
         // fragment
         fragmentList.clear();
@@ -34,6 +42,10 @@ public class MyTabAdapter<T extends Fragment> extends FragmentPagerAdapter {
 
     public List<T> getFragmentList() {
         return fragmentList;
+    }
+
+    public List<String> getTitleList() {
+        return titleList;
     }
 
     @Override
