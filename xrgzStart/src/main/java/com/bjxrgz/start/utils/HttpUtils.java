@@ -56,7 +56,7 @@ public class HttpUtils {
         options.put("API_KEY", "330892d73e5f1171be4d8df7550bc2f3");
         options.put("Content-Type", "application/json;charset=utf-8");
         options.put("Accept", "application/json");
-        String userToken = UserUtils.getUser().getUserToken();
+        String userToken = PreferencesUtils.getUser().getUserToken();
         options.put("userToken", userToken);
         return getHeader(options);
     }

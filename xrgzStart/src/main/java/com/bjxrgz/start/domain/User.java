@@ -6,6 +6,9 @@ package com.bjxrgz.start.domain;
  */
 public class User extends BaseObj {
 
+    /* 储存字段 */
+    public static final String USER_TOKEN = "userToken";
+
     private String userToken;
 
     public String getUserToken() {
