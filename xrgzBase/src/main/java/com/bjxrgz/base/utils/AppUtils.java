@@ -239,28 +239,28 @@ public class AppUtils {
     /**
      * 获取根目录
      */
-    private static String getRootPath() {
+    public static String getRootPath() {
         return Environment.getRootDirectory() + File.separator;
     }
 
     /**
      * 判断SD卡是否可用
      */
-    private static boolean isSDCardEnable() {
+    public static boolean isSDCardEnable() {
         return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
     }
 
     /**
      * 获取SD卡路径 一般是/storage/emulated/0/
      */
-    private static String getSDCardPath() {
+    public static String getSDCardPath() {
         return Environment.getExternalStorageDirectory().getPath() + File.separator;
     }
 
     /**
      * 自定义资源路径(部分手机有差别)
      */
-    private static String getResDir(String name) {
+    public static String getResDir(String name) {
         String resDir;
         if (isSDCardEnable()) {
             resDir = getSDCardPath() + name + File.separator;
@@ -273,7 +273,7 @@ public class AppUtils {
     /**
      * 自定义Log路径
      */
-    private static String getLogDir(String resDir) {
+    public static String getLogDir(String resDir) {
         return resDir + "log" + File.separator;
     }
 
@@ -283,7 +283,7 @@ public class AppUtils {
      * 如果不存在，则获取
      * /data/data/<application package>/files
      */
-    private static String getFilesDir(String path) {
+    public static String getFilesDir(String path) {
         BaseApp baseApp = BaseApp.get();
         if (isSDCardEnable()) {
             File filesDir = baseApp.getExternalFilesDir(path);
@@ -300,7 +300,7 @@ public class AppUtils {
      * 如果不存在，则获取
      * /data/data/<application package>/cache
      */
-    private static String getCacheDir() {
+    public static String getCacheDir() {
         BaseApp baseApp = BaseApp.get();
         if (isSDCardEnable()) {
             File cacheDir = baseApp.getExternalCacheDir();
