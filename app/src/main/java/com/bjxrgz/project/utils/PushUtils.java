@@ -20,7 +20,7 @@ import com.umeng.message.entity.UMessage;
  */
 public class PushUtils {
 
-    private static String DEVICE_TOKEN; // 友盟标识
+    private static String DEVICE_TOKEN = ""; // 友盟标识
     private static PushAgent mPushAgent;
 
     public static void initAPP(boolean log) {

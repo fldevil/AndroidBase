@@ -61,7 +61,7 @@ public class HttpUtils {
         return getHeader(options);
     }
 
-    public static void clearToken() {
+    static void clearToken() {
         callTokenGson = null;
         callTokenStr = null;
     }
