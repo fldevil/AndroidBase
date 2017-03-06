@@ -3,7 +3,7 @@ package com.bjxrgz.start.utils;
 import android.content.Context;
 
 import com.bjxrgz.base.R;
-import com.bjxrgz.base.utils.ToastUtils;
+import com.bjxrgz.base.utils.StringUtils;
 import com.bjxrgz.start.base.MyApp;
 import com.bjxrgz.start.domain.HttpError;
 
@@ -33,124 +33,56 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  */
 public class HttpUtils {
 
-    private static APIUtils callNullNull;
-    private static APIUtils callNullGson;
-    private static APIUtils callNullStr;
-    private static APIUtils callHeaderGson;
-    private static APIUtils callHeaderStr;
-    private static APIUtils callTokenGson;
-    private static APIUtils callTokenStr;
-
-    /* 没登陆 */
-    private static Interceptor getHeader() {
-        HashMap<String, String> options = new HashMap<>();
-        options.put("API_KEY", "330892d73e5f1171be4d8df7550bc2f3");
-        options.put("Content-Type", "application/json;charset=utf-8");
-        options.put("Accept", "application/json");
-        return getHeader(options);
-    }
-
-    /* 已登陆 */
-    private static Interceptor getHeaderToken() {
-        HashMap<String, String> options = new HashMap<>();
-        options.put("API_KEY", "330892d73e5f1171be4d8df7550bc2f3");
-        options.put("Content-Type", "application/json;charset=utf-8");
-        options.put("Accept", "application/json");
-        String userToken = PreferencesUtils.getUser().getUserToken();
-        options.put("userToken", userToken);
-        return getHeader(options);
-    }
+    private static final HashMap<String, APIUtils> callMap = new HashMap<>();
 
     static void clearToken() {
-        callTokenGson = null;
-        callTokenStr = null;
+        callMap.clear();
     }
 
-    public static APIUtils callTokenGson() {
-        if (callTokenGson == null) {
-            synchronized (HttpUtils.class) {
-                if (callTokenGson == null) {
-                    callTokenGson = getService(getHeaderToken(), getGsonFactory());
-                }
-            }
-        }
-        return callTokenGson;
+    public enum Head {
+        empty, common, token
     }
 
-    public static APIUtils callTokenStr() {
-        if (callTokenStr == null) {
-            synchronized (HttpUtils.class) {
-                if (callTokenStr == null) {
-                    callTokenStr = getService(getHeaderToken(), getStringFactory());
-                }
-            }
-        }
-        return callTokenStr;
+    public enum Factory {
+        empty, string, gson
     }
 
-    public static APIUtils callHeaderGson() {
-        if (callHeaderGson == null) {
-            synchronized (HttpUtils.class) {
-                if (callHeaderGson == null) {
-                    callHeaderGson = getService(getHeader(), getGsonFactory());
-                }
-            }
+    public static APIUtils call(Head head, Factory factory) {
+        String key = head.name() + factory.name();
+        APIUtils call = callMap.get(key);
+        if (call != null) {
+            return call;
         }
-        return callHeaderGson;
-    }
-
-    public static APIUtils callHeaderStr() {
-        if (callHeaderStr == null) {
-            synchronized (HttpUtils.class) {
-                if (callHeaderStr == null) {
-                    callHeaderStr = getService(getHeader(), getStringFactory());
-                }
-            }
+        Interceptor hea;
+        if (head == Head.common) {
+            hea = getHeader("");
+        } else if (head == Head.token) {
+            String userToken = PreferencesUtils.getUser().getUserToken();
+            hea = getHeader(userToken);
+        } else {
+            hea = null;
         }
-        return callHeaderStr;
-    }
-
-    public static APIUtils callNullGson() {
-        if (callNullGson == null) {
-            synchronized (HttpUtils.class) {
-                if (callNullGson == null) {
-                    callNullGson = getService(null, getGsonFactory());
-                }
-            }
+        Converter.Factory fac;
+        if (factory == Factory.string) {
+            fac = getStringFactory();
+        } else if (factory == Factory.gson) {
+            fac = getGsonFactory();
+        } else {
+            fac = null;
         }
-        return callNullGson;
-    }
-
-    public static APIUtils callNullStr() {
-        if (callNullStr == null) {
-            synchronized (HttpUtils.class) {
-                if (callNullStr == null) {
-                    callNullStr = getService(null, getStringFactory());
-                }
-            }
-        }
-        return callNullStr;
-    }
-
-    public static APIUtils callNullNull() {
-        if (callNullNull == null) {
-            synchronized (HttpUtils.class) {
-                if (callNullNull == null) {
-                    callNullNull = getService(null, null);
-                }
-            }
-        }
-        return callNullNull;
+        APIUtils newCall = getService(hea, fac);
+        callMap.put(key, newCall);
+        return newCall;
     }
 
     public interface CallBack<T> {
         void onSuccess(T result);
 
-        void onFailure(int httpCode, int errorCode, String errorMessage);
+        void onFailure(int httpCode, String errorMessage);
     }
 
     /**
-     * 先调用getCall ,再调用此方法
+     * 先调用call ,再调用此方法
      *
      * @param call     APIService接口调用
      * @param callBack 回调接口
@@ -209,32 +141,8 @@ public class HttpUtils {
                         callBack.onSuccess(result);
                     }
                 } else { // 非200错误
-                    int errorCode = -1;
-                    String errorMessage = "网络响应异常";
-                    if (code == 417) { // 逻辑错误，必须返回错误信息 errorCode: 1001: 用户被锁定
-                        HttpError httpError = GsonUtils.get().fromJson(errorString, HttpError.class);
-                        if (httpError != null) {
-                            errorCode = httpError.getErrorCode();
-                            errorMessage = "";
-                            ToastUtils.toast(httpError.getMessage()); // 必须返回
-                        }
-                    } else {
-                        if (code == 401) { // 用户验证失败
-                            errorMessage = "用户验证失败";
-                        } else if (code == 403) { // API Key 不正确 或者没给
-                            errorMessage = "Key错误";
-                        } else if (code == 404) { // 404
-                            errorMessage = "资源未找到";
-                        } else if (code == 409) { // 用户版本过低, 应该禁止用户登录，并提示用户升级
-                            errorMessage = "用户版本过低";
-                        } else if (code == 410) { // 用户被禁用,请求数据的时候得到该 ErrorCode, 应该退出应用
-                            errorMessage = "用户被禁用";
-                        } else if (code == 500) { // 500
-                            errorMessage = "服务器异常";
-                        }
-                    }
                     if (callBack != null) {
-                        callBack.onFailure(code, errorCode, errorMessage);
+                        callBack.onFailure(code, errorString);
                     }
                 }
             }
@@ -248,14 +156,30 @@ public class HttpUtils {
                 } else if (aClass.equals(java.net.SocketTimeoutException.class)) { // 超时错误
                     errorMessage = MyApp.get().getString(R.string.http_error_time);
                 } else { // 其他网络错误
-                    errorMessage = "网络请求异常";
+                    errorMessage = MyApp.get().getString(R.string.http_error_request);
                     LogUtils.e(t.toString());
                 }
                 if (callBack != null) {
-                    callBack.onFailure(-1, -1, errorMessage);
+                    HttpError httpError = new HttpError();
+                    httpError.setErrorCode(-1);
+                    httpError.setMessage(errorMessage);
+                    String errorString = GsonUtils.get().toJson(httpError);
+                    callBack.onFailure(417, errorString);
                 }
             }
         });
+    }
+
+    /* 构建头信息 */
+    private static Interceptor getHeader(String token) {
+        HashMap<String, String> options = new HashMap<>();
+        options.put("API_KEY", "330892d73e5f1171be4d8df7550bc2f3");
+        options.put("Content-Type", "application/json;charset=utf-8");
+        options.put("Accept", "application/json");
+        if (!StringUtils.isEmpty(token)) {
+            options.put("Authorization", token);
+        }
+        return getHeader(options);
     }
 
     /* 构建头信息 */

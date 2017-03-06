@@ -11,7 +11,7 @@ import android.view.WindowManager;
 
 import com.bjxrgz.base.utils.AppUtils;
 import com.bjxrgz.base.utils.DialogUtils;
-import com.bjxrgz.base.utils.ToastUtils;
+import com.bjxrgz.project.R;
 import com.bjxrgz.project.utils.MyUtils;
 import com.bjxrgz.start.base.MyApp;
 import com.bjxrgz.start.domain.Version;
@@ -51,7 +51,8 @@ public class UpdateService extends Service {
     }
 
     private void checkUpdate() {
-        Call<Version> call = HttpUtils.callHeaderGson().checkUpdate();
+        Call<Version> call = HttpUtils.call(HttpUtils.Head.common, HttpUtils.Factory.gson)
+                .checkUpdate();
         HttpUtils.enqueue(call, new HttpUtils.CallBack<Version>() {
             @Override
             public void onSuccess(Version result) {
@@ -68,19 +69,20 @@ public class UpdateService extends Service {
             }
 
             @Override
-            public void onFailure(int httpCode, int errorCode, String errorMessage) {
-                MyUtils.httpFailure(httpCode, errorCode, errorMessage);
-                ToastUtils.toast("检查更新失败");
+            public void onFailure(int httpCode, String errorMessage) {
+                MyUtils.httpFailure(httpCode, errorMessage);
             }
         });
     }
 
     /* 提示更新 */
     private void showNoticeDialog(final Version version) {
-        String title = "有新版本:" + version.getVersionName();
+        String title = String.format(getString(R.string.find_new_version), version.getVersionName());
         String message = version.getChangeLog();
-        AlertDialog dialog = DialogUtils.createAlert(this, title, message, "立即更新",
-                "以后再说", new DialogInterface.OnClickListener() {
+        String positive = getString(R.string.update_now);
+        String negative = getString(R.string.update_delay);
+        AlertDialog dialog = DialogUtils.createAlert(this, title, message, positive,
+                negative, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         newThreadDown(version);
@@ -105,7 +107,8 @@ public class UpdateService extends Service {
 
     /* 下载apk */
     private void downloadApk(final Version version) {
-        Call<ResponseBody> call = HttpUtils.callNullNull().downloadLargeFile(version.getUpdateUrl());
+        Call<ResponseBody> call = HttpUtils.call(HttpUtils.Head.empty, HttpUtils.Factory.empty)
+                .downloadLargeFile(version.getUpdateUrl());
         HttpUtils.enqueue(call, new HttpUtils.CallBack<ResponseBody>() {
             @Override
             public void onSuccess(final ResponseBody body) { // 回调也是子线程
@@ -124,9 +127,8 @@ public class UpdateService extends Service {
             }
 
             @Override
-            public void onFailure(int httpCode, int errorCode, String errorMessage) {
-                MyUtils.httpFailure(httpCode, errorCode, errorMessage);
-                ToastUtils.toast("apk下载失败");
+            public void onFailure(int httpCode, String errorMessage) {
+                MyUtils.httpFailure(httpCode, errorMessage);
             }
         });
     }

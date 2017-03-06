@@ -49,10 +49,15 @@ public class GlideUtils {
                              String foreUrl, String url, int errorRes,
                              ImageView view, final CompleteListener completeListener) {
         String imgUrl;
-        if (StringUtils.isEmpty(foreUrl))
+        if (StringUtils.isEmpty(foreUrl)) {
             imgUrl = url;
-        else
-            imgUrl = foreUrl + url;
+        } else {
+            if (url.startsWith("http")) {
+                imgUrl = url;
+            } else {
+                imgUrl = foreUrl + url;
+            }
+        }
         DrawableTypeRequest<String> load = requestManager.load(imgUrl);
         if (errorRes != 0) //设置错误图片
             load.error(errorRes);

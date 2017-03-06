@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 
-import com.bjxrgz.project.R;
-import com.bjxrgz.project.utils.ViewUtils;
 import com.bjxrgz.base.utils.ActivityUtils;
 import com.bjxrgz.base.utils.ToastUtils;
+import com.bjxrgz.project.R;
+import com.bjxrgz.project.utils.ViewUtils;
 import com.bjxrgz.start.base.BaseActivity;
 
 import java.util.Date;
@@ -49,7 +49,7 @@ public class HomeActivity extends BaseActivity<HomeActivity> {
             Long nowTime = new Date().getTime();
 
             if (nowTime - lastExitTime > 2000) { // 第一次按
-                ToastUtils.toast("再按一次退出");
+                ToastUtils.toast(R.string.press_again_exit);
             } else { // 返回键连按两次
                 System.exit(0); // 真正退出程序
             }
