@@ -17,6 +17,7 @@ public class MyUtils {
         switch (httpCode) {
             case 401: // 用户验证失败
                 toast = "用户验证失败";
+                // LoginActivity.goActivity();
                 break;
             case 403: // API Key 不正确 或者没给
                 toast = "Key错误";

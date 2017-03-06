@@ -81,8 +81,8 @@ public class UpdateService extends Service {
         String message = version.getChangeLog();
         String positive = getString(R.string.update_now);
         String negative = getString(R.string.update_delay);
-        AlertDialog dialog = DialogUtils.createAlert(this, title, message, positive,
-                negative, new DialogInterface.OnClickListener() {
+        AlertDialog dialog = DialogUtils.createAlert(this, title, message, positive, negative,
+                new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         newThreadDown(version);

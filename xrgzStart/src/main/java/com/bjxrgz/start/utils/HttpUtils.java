@@ -57,7 +57,7 @@ public class HttpUtils {
         if (head == Head.common) {
             hea = getHeader("");
         } else if (head == Head.token) {
-            String userToken = PreferencesUtils.getUser().getUserToken();
+            String userToken = SPUtils.getUser().getUserToken();
             hea = getHeader(userToken);
         } else {
             hea = null;
