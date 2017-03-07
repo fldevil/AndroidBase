@@ -12,12 +12,6 @@ import com.bjxrgz.project.R;
  */
 public class ViewUtils {
 
-    public static void initTop(Activity activity, int title) {
-        TextView tvCenter = (TextView) activity.findViewById(R.id.tvCenter);
-        tvCenter.setVisibility(View.VISIBLE);
-        tvCenter.setText(title);
-    }
-
     public static void initTop(Activity activity, String title) {
         TextView tvCenter = (TextView) activity.findViewById(R.id.tvCenter);
         tvCenter.setVisibility(View.VISIBLE);
