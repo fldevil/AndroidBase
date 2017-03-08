@@ -25,7 +25,6 @@ public class DeviceUtils {
      * 封装设备信息的Bean类
      */
     public static class DeviceInfo {
-
         private String deviceId; // 当前移动终端的唯一标识(IMEI),如果是GSM网络，返回IMEI；如果是CDMA网络，返回MEID
         private String macAddress; // MAC地址
         private String model; // 设备型号
@@ -37,8 +36,13 @@ public class DeviceUtils {
         private String phoneNumber; // 手机号
         private String simSerial; // sim卡序号
         private String ipAddress; // ip地址 eg:127.168.x.x
+        // map
         private double longitude; // 经度
         private double latitude; // 纬度
+        private String province; // 省信息
+        private String city; // 城市信息
+        private String district; // 区
+        private String address; // 详细地址
 
         public String getIpAddress() {
             try {
@@ -63,6 +67,38 @@ public class DeviceUtils {
                 e.printStackTrace();
             }
             return ipAddress;
+        }
+
+        public String getProvince() {
+            return province;
+        }
+
+        public void setProvince(String province) {
+            this.province = province;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public void setCity(String city) {
+            this.city = city;
+        }
+
+        public String getDistrict() {
+            return district;
+        }
+
+        public void setDistrict(String district) {
+            this.district = district;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
         }
 
         public double getLongitude() {
@@ -205,7 +241,8 @@ public class DeviceUtils {
      */
     private static String getMacAddress() {
         String macAddress = "";
-        WifiManager wifi = (WifiManager) BaseApp.get().getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) BaseApp.get()
+                .getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo info = wifi.getConnectionInfo();
         if (info != null) {
             macAddress = info.getMacAddress();

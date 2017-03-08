@@ -73,8 +73,10 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0' // 注解(R)
     compile project(':xrgzStart')
     compile project(':PushSDK')
+
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.1'
 
 }

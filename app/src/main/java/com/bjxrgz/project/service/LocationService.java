@@ -7,8 +7,8 @@ import android.os.IBinder;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
-import com.bjxrgz.project.utils.MapUtils;
 import com.bjxrgz.base.utils.DeviceUtils;
+import com.bjxrgz.project.utils.MapUtils;
 import com.bjxrgz.start.base.MyApp;
 
 public class LocationService extends Service {
@@ -27,9 +27,19 @@ public class LocationService extends Service {
             public void onSuccess(AMapLocation aMapLocation) {
                 double longitude = aMapLocation.getLongitude();
                 double latitude = aMapLocation.getLatitude();
+                String province = aMapLocation.getProvince();
+                String city = aMapLocation.getCity();
+                String district = aMapLocation.getDistrict();
+                String address = aMapLocation.getAddress();
                 DeviceUtils.DeviceInfo deviceInfo = MyApp.get().getDeviceInfo();
-                deviceInfo.setLongitude(longitude);
-                deviceInfo.setLatitude(latitude);
+                if (deviceInfo != null) {
+                    deviceInfo.setLongitude(longitude);
+                    deviceInfo.setLatitude(latitude);
+                    deviceInfo.setProvince(province);
+                    deviceInfo.setCity(city);
+                    deviceInfo.setDistrict(district);
+                    deviceInfo.setAddress(address);
+                }
             }
 
             @Override
