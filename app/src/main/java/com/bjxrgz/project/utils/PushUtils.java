@@ -4,8 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.bjxrgz.base.utils.AppUtils;
-import com.bjxrgz.start.base.MyApp;
-import com.bjxrgz.start.utils.LogUtils;
+import com.bjxrgz.base.utils.LogUtils;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.IUmengCallback;
 import com.umeng.message.IUmengRegisterCallback;
@@ -23,14 +22,13 @@ public class PushUtils {
     private static String DEVICE_TOKEN = ""; // 友盟标识
     private static PushAgent mPushAgent;
 
-    public static void initAPP(boolean log) {
-        Context context = MyApp.get().getApplicationContext();
+    public static void initAPP(Context context) {
         // 获取mPushAgent
         mPushAgent = PushAgent.getInstance(context);
         // 统计应用启动数据
         mPushAgent.onAppStart();
         // 打印日志
-        mPushAgent.setDebugMode(log);
+        mPushAgent.setDebugMode(true);
         // 检查配置文件,会弹错误信息的toast
 //        mPushAgent.setPushCheck(isLog);
         // 收集奔溃日志

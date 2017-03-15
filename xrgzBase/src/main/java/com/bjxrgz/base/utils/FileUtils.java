@@ -54,6 +54,20 @@ public class FileUtils {
     }
 
     /**
+     * 判断文件是否为空
+     */
+    public static boolean isFileEmpty(File file) {
+        return !isFileExists(file) || file.length() == 0;
+    }
+
+    /**
+     * 判断文件是否为空
+     */
+    public static boolean isFileEmpty(String filepath) {
+        return !isFileExists(filepath) || new File(filepath).length() == 0;
+    }
+
+    /**
      * 判断是否是文件
      */
     public static boolean isFile(String filePath) {

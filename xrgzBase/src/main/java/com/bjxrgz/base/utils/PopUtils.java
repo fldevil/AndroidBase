@@ -29,9 +29,8 @@ public class PopUtils {
     private static PopupWindow getPop(View window, int width, int height, int anim) {
         PopupWindow pop = new PopupWindow(window, width, height);
         pop.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        if (0 != anim) {
+        if (0 != anim)
             pop.setAnimationStyle(anim);
-        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             pop.setEnterTransition(new AutoTransition());
             pop.setExitTransition(new AutoTransition());

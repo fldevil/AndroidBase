@@ -27,10 +27,9 @@ public class InputUtils {
      */
     public static void hideSoftInput(Activity activity) {
         View view = activity.getWindow().peekDecorView();
-        if (view != null) {
-            InputMethodManager inputManager = getInputManager();
-            inputManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
+        if (view == null) return;
+        InputMethodManager inputManager = getInputManager();
+        inputManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     /**
@@ -83,11 +82,11 @@ public class InputUtils {
      * 获取剪贴板的文本
      */
     public static CharSequence getCopy() {
+        CharSequence copy = "";
         ClipData clip = getClipboardManager().getPrimaryClip();
-        if (clip != null && clip.getItemCount() > 0) {
-            return clip.getItemAt(0).coerceToText(BaseApp.get());
-        }
-        return "";
+        if (clip != null && clip.getItemCount() > 0)
+            copy = clip.getItemAt(0).coerceToText(BaseApp.get());
+        return copy;
     }
 
     /**
@@ -102,11 +101,11 @@ public class InputUtils {
      * 获取剪贴板的uri
      */
     public static Uri getUri() {
+        Uri uri = null;
         ClipData clip = getClipboardManager().getPrimaryClip();
-        if (clip != null && clip.getItemCount() > 0) {
-            return clip.getItemAt(0).getUri();
-        }
-        return null;
+        if (clip != null && clip.getItemCount() > 0)
+            uri = clip.getItemAt(0).getUri();
+        return uri;
     }
 
     /**
@@ -121,10 +120,10 @@ public class InputUtils {
      * 获取剪贴板的意图
      */
     public static Intent getIntent() {
+        Intent intent = null;
         ClipData clip = getClipboardManager().getPrimaryClip();
-        if (clip != null && clip.getItemCount() > 0) {
-            return clip.getItemAt(0).getIntent();
-        }
-        return null;
+        if (clip != null && clip.getItemCount() > 0)
+            intent = clip.getItemAt(0).getIntent();
+        return intent;
     }
 }

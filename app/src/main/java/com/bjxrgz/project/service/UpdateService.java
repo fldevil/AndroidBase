@@ -9,14 +9,16 @@ import android.support.v7.app.AlertDialog;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.bjxrgz.base.domain.Version;
 import com.bjxrgz.base.utils.AppUtils;
 import com.bjxrgz.base.utils.DialogUtils;
+import com.bjxrgz.base.utils.FileUtils;
+import com.bjxrgz.base.utils.HttpUtils;
+import com.bjxrgz.base.utils.IntentUtils;
+import com.bjxrgz.project.MyApp;
 import com.bjxrgz.project.R;
 import com.bjxrgz.project.utils.MyUtils;
-import com.bjxrgz.start.base.MyApp;
-import com.bjxrgz.start.domain.Version;
-import com.bjxrgz.start.utils.FilesUtils;
-import com.bjxrgz.start.utils.HttpUtils;
+import com.bjxrgz.project.utils.ResUtils;
 
 import java.io.File;
 
@@ -51,18 +53,18 @@ public class UpdateService extends Service {
     }
 
     private void checkUpdate() {
+        final int code = AppUtils.get().getVersionCode();
         Call<Version> call = HttpUtils.call(HttpUtils.Head.common, HttpUtils.Factory.gson)
-                .checkUpdate();
+                .checkUpdate(code);
         HttpUtils.enqueue(call, new HttpUtils.CallBack<Version>() {
             @Override
             public void onSuccess(Version result) {
-                if (result != null) {
-                    int versionCode = MyApp.get().getAppInfo().getVersionCode();
-                    if (versionCode < result.getVersionCode()) { // 小于 有新版本
-                        showNoticeDialog(result); //  提示对话框
-                    } else {
-                        stopSelf(); // 停止服务
-                    }
+                if (result == null) {
+                    stopSelf(); // 停止服务
+                    return;
+                }
+                if (code < result.getVersionCode()) { // 小于 有新版本
+                    showNoticeDialog(result); //  提示对话框
                 } else {
                     stopSelf(); // 停止服务
                 }
@@ -112,18 +114,17 @@ public class UpdateService extends Service {
         HttpUtils.enqueue(call, new HttpUtils.CallBack<ResponseBody>() {
             @Override
             public void onSuccess(final ResponseBody body) { // 回调也是子线程
-                if (body != null && body.byteStream() != null) {
-                    MyApp.get().getThread().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            File apkFile = FilesUtils.createAPKInRes(version.getVersionName());
-                            com.bjxrgz.base.utils.FileUtils.writeFileFromIS(apkFile, body.byteStream(), false);
-                            // 启动安装
-                            Intent installIntent = AppUtils.getInstallIntent(apkFile);
-                            UpdateService.this.startActivity(installIntent);
-                        }
-                    });
-                }
+                if (body == null || body.byteStream() == null) return;
+                MyApp.get().getThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        File apkFile = ResUtils.createAPKInRes(version.getVersionName());
+                        FileUtils.writeFileFromIS(apkFile, body.byteStream(), false);
+                        // 启动安装
+                        Intent installIntent = IntentUtils.getInstallIntent(apkFile);
+                        UpdateService.this.startActivity(installIntent);
+                    }
+                });
             }
 
             @Override

@@ -118,16 +118,16 @@ public class AnimUtils {
      * 旋转动画
      */
     public static RotateAnimation getAnimationRotate(float from, float to, float pivotX, float pivotY) {
-        return new RotateAnimation(from, to,
-                Animation.RELATIVE_TO_SELF, pivotX, Animation.RELATIVE_TO_SELF, pivotY);
+        return new RotateAnimation(from, to, Animation.RELATIVE_TO_SELF,
+                pivotX, Animation.RELATIVE_TO_SELF, pivotY);
     }
 
     /**
      * 缩放动画
      */
     public static ScaleAnimation getAnimationScale(float fromX, float toX, float fromY, float toY, float pivotX, float pivotY) {
-        return new ScaleAnimation(fromX, toX, fromY, toY,
-                Animation.RELATIVE_TO_SELF, pivotX, Animation.RELATIVE_TO_SELF, pivotY);
+        return new ScaleAnimation(fromX, toX, fromY, toY, Animation.RELATIVE_TO_SELF,
+                pivotX, Animation.RELATIVE_TO_SELF, pivotY);
     }
 
     /**

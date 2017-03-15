@@ -39,9 +39,7 @@ public class StringUtils {
      * demo (num,4,3,*) 1860*********241
      */
     public static String replace(String old, int start, int end, CharSequence replace) {
-        if (isEmpty(old)) {
-            return "";
-        }
+        if (isEmpty(old)) return "";
         StringBuilder result = new StringBuilder(old);
         int length = result.length();
         if (length > start + end) { // 填充
@@ -60,22 +58,17 @@ public class StringUtils {
      */
     public static int getLength(String validateStr) {
         int valueLength = 0;
-        if (validateStr == null) {
-            return valueLength;
-        }
+        if (validateStr == null) return valueLength;
         String chinese = "[\u0391-\uFFE5]";
         /* 获取字段值的长度，如果含中文字符，则每个中文字符长度为2，否则为1 */
         for (int i = 0; i < validateStr.length(); i++) {
             /* 获取一个字符 */
             String temp = validateStr.substring(i, i + 1);
             /* 判断是否为中文字符 */
-            if (temp.matches(chinese)) {
-                /* 中文字符长度为2 */
-                valueLength += 2;
-            } else {
-                /* 其他字符长度为1 */
-                valueLength += 1;
-            }
+            if (temp.matches(chinese))
+                valueLength += 2;  /* 中文字符长度为2 */
+            else
+                valueLength += 1; /* 其他字符长度为1 */
         }
         return valueLength;
     }
@@ -209,18 +202,15 @@ public class StringUtils {
      * @return 半角字符串
      */
     public static String toDBC(String s) {
-        if (isEmpty(s)) {
-            return s;
-        }
+        if (isEmpty(s)) return s;
         char[] chars = s.toCharArray();
         for (int i = 0, len = chars.length; i < len; i++) {
-            if (chars[i] == 12288) {
+            if (chars[i] == 12288)
                 chars[i] = ' ';
-            } else if (65281 <= chars[i] && chars[i] <= 65374) {
+            else if (65281 <= chars[i] && chars[i] <= 65374)
                 chars[i] = (char) (chars[i] - 65248);
-            } else {
+            else
                 chars[i] = chars[i];
-            }
         }
         return new String(chars);
     }
@@ -232,18 +222,15 @@ public class StringUtils {
      * @return 全角字符串
      */
     public static String toSBC(String s) {
-        if (isEmpty(s)) {
-            return s;
-        }
+        if (isEmpty(s)) return s;
         char[] chars = s.toCharArray();
         for (int i = 0, len = chars.length; i < len; i++) {
-            if (chars[i] == ' ') {
+            if (chars[i] == ' ')
                 chars[i] = (char) 12288;
-            } else if (33 <= chars[i] && chars[i] <= 126) {
+            else if (33 <= chars[i] && chars[i] <= 126)
                 chars[i] = (char) (chars[i] + 65248);
-            } else {
+            else
                 chars[i] = chars[i];
-            }
         }
         return new String(chars);
     }
@@ -255,9 +242,7 @@ public class StringUtils {
      * @return 首字母大写字符串
      */
     public static String upperFirstLetter(String s) {
-        if (isEmpty(s) || !Character.isLowerCase(s.charAt(0))) {
-            return s;
-        }
+        if (isEmpty(s) || !Character.isLowerCase(s.charAt(0))) return s;
         return String.valueOf((char) (s.charAt(0) - 32)) + s.substring(1);
     }
 
@@ -268,9 +253,7 @@ public class StringUtils {
      * @return 首字母小写字符串
      */
     public static String lowerFirstLetter(String s) {
-        if (isEmpty(s) || !Character.isUpperCase(s.charAt(0))) {
-            return s;
-        }
+        if (isEmpty(s) || !Character.isUpperCase(s.charAt(0))) return s;
         return String.valueOf((char) (s.charAt(0) + 32)) + s.substring(1);
     }
 

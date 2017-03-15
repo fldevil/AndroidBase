@@ -37,30 +37,15 @@ public class DialogUtils {
     /**
      * 自定义对话框
      */
-    public static Dialog createCustom(Context context, int theme, View view) {
-        final Dialog dialog = new Dialog(context, theme);
-        if (context instanceof Activity) {
-            Activity activity = (Activity) context;
-            WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
-            dialog.setContentView(view, lp);
-        } else {
-            dialog.setContentView(view);
-        }
-        return dialog;
-    }
-
-    /**
-     * 自定义对话框
-     */
     public static Dialog createCustom(Activity activity, int theme, View view, float height, float width) {
         final Dialog dialog = new Dialog(activity, theme);
         WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
         DisplayMetrics d = activity.getResources().getDisplayMetrics(); // 获取屏幕宽、高用
-        if (height != 0) {
-            lp.height = (int) (d.heightPixels * height); // 高度设置为屏幕的0.x
+        if (height != 0) {  // 高度设置为屏幕的0.x（减去statusBar高度）
+            lp.height = (int) (d.heightPixels * height) - ScreenUtils.getStatusBarHeight(activity);
         }
-        if (width != 0) {
-            lp.width = (int) (d.widthPixels * width); // 高度设置为屏幕的0.x
+        if (width != 0) {  // 宽度设置为屏幕的0.x
+            lp.width = (int) (d.widthPixels * width);
         }
         dialog.setContentView(view, lp);
         return dialog;
@@ -77,12 +62,10 @@ public class DialogUtils {
         } else {
             loading = new ProgressDialog(context, theme);
         }
-        if (!TextUtils.isEmpty(title)) {
+        if (!TextUtils.isEmpty(title))
             loading.setTitle(title);
-        }
-        if (!TextUtils.isEmpty(message)) {
+        if (!TextUtils.isEmpty(message))
             loading.setMessage(message);
-        }
         loading.setCanceledOnTouchOutside(false);
         loading.setCancelable(cancel);
         return loading;
@@ -92,7 +75,7 @@ public class DialogUtils {
      * 进度对话框
      */
     public static ProgressDialog createProgress(Context context, int theme, String title,
-                                                String message, boolean cancel, int max, int start,
+                                                boolean cancel, int max, int start,
                                                 DialogInterface.OnCancelListener listener) {
         ProgressDialog progress;
         if (theme == 0) {
@@ -102,9 +85,6 @@ public class DialogUtils {
         }
         if (!TextUtils.isEmpty(title)) {
             progress.setTitle(title);
-        }
-        if (!TextUtils.isEmpty(message)) {
-            progress.setMessage(message);
         }
         progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progress.setMax(max);
@@ -199,22 +179,22 @@ public class DialogUtils {
     /**
      * 设置透明度
      */
-    public static void setAlpha(Dialog dialog) {
+    public static void setAlpha(Dialog dialog, float alpha) {
         Window window = dialog.getWindow();
+        if (window == null) return;
         WindowManager.LayoutParams lp = window.getAttributes();
-
-        lp.alpha = 0.5f;
+        lp.alpha = alpha;
         window.setAttributes(lp);
     }
 
     /**
      * 设置暗黑背景层
      */
-    public static void setDimamount(Dialog dialog) {
+    public static void setDimamount(Dialog dialog, float alpha) {
         Window window = dialog.getWindow();
+        if (window == null) return;
         WindowManager.LayoutParams lp = window.getAttributes();
-
-        lp.dimAmount = 1.0f;
+        lp.dimAmount = alpha;
         window.setAttributes(lp);
         window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
     }

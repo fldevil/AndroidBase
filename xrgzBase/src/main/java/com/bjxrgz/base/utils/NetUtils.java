@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
@@ -25,19 +24,6 @@ public class NetUtils {
     private static ConnectListener mListener;
 
     /**
-     * 打开网络设置界面 <p>3.0以下打开设置界面</p>
-     */
-    public static Intent getSettingsIntent() {
-        Intent intent;
-        if (android.os.Build.VERSION.SDK_INT > 10) {
-            intent = new Intent(Settings.ACTION_SETTINGS);
-        } else {
-            intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
-        }
-        return intent;
-    }
-
-    /**
      * listener 先设置电量广播监听器
      */
     public static void setNetListener(ConnectListener listener) {
@@ -51,23 +37,17 @@ public class NetUtils {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (mListener == null)
-                return;
+            if (mListener == null) return;
             if (isAvailable()) {
                 int networkType = getNetworkType();
-
                 if (networkType == FALSE) {
                     mListener.typeNull();
-
                 } else if (networkType == ConnectivityManager.TYPE_MOBILE) {
                     mListener.typeMobile();
-
                 } else if (networkType == ConnectivityManager.TYPE_WIFI) {
                     mListener.typeWifi();
-
                 } else if (networkType == ConnectivityManager.TYPE_BLUETOOTH) {
                     mListener.typeBlueTooth();
-
                 } else {
                     mListener.typeNoKnow();
                 }
@@ -91,9 +71,7 @@ public class NetUtils {
      * context 注销
      */
     public static void unregisterReceiver(Context context) {
-        if (receiver == null) {
-            return;
-        }
+        if (receiver == null) return;
         context.unregisterReceiver(receiver);
         receiver = null;
     }
@@ -144,11 +122,8 @@ public class NetUtils {
      */
     public static int getNetworkType() {
         NetworkInfo networkInfo = getNetworkInfo();
-
-        if (networkInfo == null)
-            return FALSE;
-        else
-            return networkInfo.getType();
+        if (networkInfo == null) return FALSE;
+        else return networkInfo.getType();
     }
 
     /**
@@ -156,11 +131,8 @@ public class NetUtils {
      */
     public static NetworkInfo.State getNetworkState() {
         NetworkInfo networkInfo = getNetworkInfo();
-
-        if (networkInfo == null)
-            return NetworkInfo.State.UNKNOWN;
-        else
-            return networkInfo.getState();
+        if (networkInfo == null) return NetworkInfo.State.UNKNOWN;
+        else return networkInfo.getState();
     }
 
     /**
@@ -170,7 +142,8 @@ public class NetUtils {
      */
     public static boolean is4G() {
         NetworkInfo info = getNetworkInfo();
-        return info != null && info.isAvailable() && info.getSubtype() == TelephonyManager.NETWORK_TYPE_LTE;
+        return info != null && info.isAvailable() &&
+                info.getSubtype() == TelephonyManager.NETWORK_TYPE_LTE;
     }
 
     /**
@@ -191,7 +164,8 @@ public class NetUtils {
      * @return 移动网络运营商名称
      */
     public static String getNetworkOperatorName() {
-        TelephonyManager tm = (TelephonyManager) BaseApp.get().getSystemService(Context.TELEPHONY_SERVICE);
+        TelephonyManager tm = (TelephonyManager) BaseApp.get()
+                .getSystemService(Context.TELEPHONY_SERVICE);
         return tm != null ? tm.getNetworkOperatorName() : null;
     }
 
@@ -207,7 +181,8 @@ public class NetUtils {
      * </ul>
      */
     public static int getPhoneType() {
-        TelephonyManager tm = (TelephonyManager) BaseApp.get().getSystemService(Context.TELEPHONY_SERVICE);
+        TelephonyManager tm = (TelephonyManager) BaseApp.get()
+                .getSystemService(Context.TELEPHONY_SERVICE);
         return tm != null ? tm.getPhoneType() : -1;
     }
 
@@ -271,7 +246,6 @@ public class NetUtils {
         int netType = NETWORK_NO;
         NetworkInfo info = getNetworkInfo();
         if (info != null && info.isAvailable()) {
-
             if (info.getType() == ConnectivityManager.TYPE_WIFI) {
                 netType = NETWORK_WIFI;
             } else if (info.getType() == ConnectivityManager.TYPE_MOBILE) {

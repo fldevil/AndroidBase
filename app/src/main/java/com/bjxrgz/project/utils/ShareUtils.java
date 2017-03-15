@@ -6,10 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.bjxrgz.base.utils.LogUtils;
+import com.bjxrgz.base.utils.PermUtils;
 import com.bjxrgz.project.R;
-import com.bjxrgz.start.base.MyApp;
-import com.bjxrgz.start.utils.LogUtils;
-import com.bjxrgz.start.utils.PermUtils;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.ShareAction;
@@ -37,27 +36,16 @@ public class ShareUtils {
 
     private static UMShareAPI umShareAPI;
 
-    public static void initApp(boolean log) {
-        Log.LOG = log;
-        Config.IsToastTip = log;
+    public static void initApp(Context context) {
+        Log.LOG = true;
+        Config.IsToastTip = true;
 //        Config.dialogSwitch = true; // 是否使用默认dialog
 //        Config.dialog = null;
 //        Config.REDIRECT_URL = "您新浪后台的回调地址";
-        umShareAPI = UMShareAPI.get(MyApp.get());
+        umShareAPI = UMShareAPI.get(context);
         PlatformConfig.setWeixin("wx967daebe835fbeac", "5bb696d9ccd75a38c8a0bfe0675559b3");
         PlatformConfig.setSinaWeibo("3921700954", "04b48b094faeb16683c32669824ebdad");
         PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba");
-    }
-
-    /* 权限请求 */
-    public static void request(Context context, PermUtils.PermissionListener listener) {
-        String[] mPermissionList = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE,
-                Manifest.permission.READ_LOGS, Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.SET_DEBUG_APP,
-                Manifest.permission.SYSTEM_ALERT_WINDOW, Manifest.permission.GET_ACCOUNTS,
-                Manifest.permission.WRITE_APN_SETTINGS};
-        PermUtils.request(context, listener, mPermissionList);
     }
 
     /* 检查是否支持分享和授权 */
@@ -76,15 +64,6 @@ public class ShareUtils {
      * ***********************************登录************************************
      * 先授权，再获取用户信息 这里获取的信息比授权的多
      */
-    public static void auth(final Activity activity, final SHARE_MEDIA platform) {
-        request(activity, new PermUtils.PermissionListener() {
-            @Override
-            public void onAgree() {
-                toAuth(activity, platform);
-            }
-        });
-    }
-
     private static void toAuth(final Activity activity, final SHARE_MEDIA platform) {
         if (check(activity, platform)) {
             umShareAPI.doOauthVerify(activity, platform, new UMAuthListener() {
@@ -138,16 +117,6 @@ public class ShareUtils {
     /**
      * ***********************************分享************************************
      */
-
-    public static void share(final Activity activity, final SHARE_MEDIA platform, final String imgUrl) {
-        request(activity, new PermUtils.PermissionListener() {
-            @Override
-            public void onAgree() {
-                goShare(activity, platform, imgUrl);
-            }
-        });
-    }
-
     private static void goShare(final Activity activity, final SHARE_MEDIA platform, final String imgUrl) {
         String title = "";
         String content = "";

@@ -27,8 +27,8 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
-import com.bjxrgz.start.utils.LogUtils;
-import com.bjxrgz.start.utils.PermUtils;
+import com.bjxrgz.base.utils.LogUtils;
+import com.bjxrgz.base.utils.PermUtils;
 
 import java.util.ArrayList;
 
@@ -49,12 +49,6 @@ public class MapUtils {
             }
         }
         return mapUtils;
-    }
-
-    /* 权限 */
-    public void request(Context context, PermUtils.PermissionListener listener) {
-        PermUtils.request(context, listener, Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION);
     }
 
     /**
@@ -107,7 +101,7 @@ public class MapUtils {
         //设置是否返回地址信息（默认返回地址信息）
         clientOption.setNeedAddress(true);
         //设置是否只定位一次,默认为false
-        clientOption.setOnceLocation(false);
+        clientOption.setOnceLocation(true);
         //设置setOnceLocationLatest(boolean b)接口为true，启动定位时SDK会返回最近3s内精度最高的一次定位结果。
         //如果设置其为true，setOnceLocation(boolean b)接口也会被设置为true，反之不会。
         if (clientOption.isOnceLocationLatest()) {

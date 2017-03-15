@@ -1,25 +1,37 @@
 package com.bjxrgz.project.utils;
 
+import com.bjxrgz.base.domain.HttpError;
 import com.bjxrgz.base.utils.ActivityUtils;
+import com.bjxrgz.base.utils.GsonUtils;
+import com.bjxrgz.base.utils.SPUtils;
+import com.bjxrgz.base.utils.StringUtils;
 import com.bjxrgz.base.utils.ToastUtils;
+import com.bjxrgz.project.MyApp;
 import com.bjxrgz.project.service.UpdateService;
-import com.bjxrgz.start.base.MyApp;
-import com.bjxrgz.start.domain.HttpError;
-import com.bjxrgz.start.utils.GsonUtils;
 
 /**
  * Created by gg on 2017/2/28.
  * 符合本项目的工具类
  */
 public class MyUtils {
+
+    public static final int REQUEST_CAMERA = 191;  // 相机
+    public static final int REQUEST_PICTURE = 192;  // 图库
+    public static final int REQUEST_CROP = 193;  // 裁剪
+
+    public static boolean noLogin() {
+        String userToken = SPUtils.getUser().getUserToken();
+        return StringUtils.isEmpty(userToken);
+    }
+
     public static void httpFailure(int httpCode, String errorMessage) {
         String toast = "网络响应异常";
         switch (httpCode) {
             case 401: // 用户验证失败
                 toast = "用户验证失败";
-                // LoginActivity.goActivity();
+//                LoginActivity.goActivity(MyApp.get());
                 break;
-            case 403: // API Key 不正确 或者没给
+            case 403: // API AliKey 不正确 或者没给
                 toast = "Key错误";
                 break;
             case 404: // 404
@@ -52,4 +64,5 @@ public class MyUtils {
         }
         ToastUtils.toast(toast);
     }
+
 }

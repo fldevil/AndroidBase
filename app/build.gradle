@@ -66,14 +66,14 @@ android {
     dexOptions { // bug value-2
         javaMaxHeapSize "4g"
     }
-    // 以下两句防止图片导入报错
+    // 过滤图片检验
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':xrgzStart')
+    compile project(':xrgzBase')
     compile project(':PushSDK')
 
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'

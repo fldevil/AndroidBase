@@ -163,6 +163,14 @@ public class TimeUtils {
     /**
      * 获取间隔时间 eg: 1分钟，1小时，1天，
      */
+    public static String getUnitByCurrent(long time) {
+        long between = getCurrentLong() - time;
+        return getUnit(between);
+    }
+
+    /**
+     * 获取间隔时间 eg: 1分钟，1小时，1天，
+     */
     public static String getUnit(long time) {
         if (time >= 0 && time < MIN) {
             return time / SEC + BaseApp.get().getString(R.string.second);

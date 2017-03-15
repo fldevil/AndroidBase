@@ -145,9 +145,8 @@ public class ScreenUtils {
         int result = 0;
         int resourceId = context.getResources()
                 .getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
+        if (resourceId > 0)
             result = context.getResources().getDimensionPixelSize(resourceId);
-        }
         return result;
     }
 
@@ -159,7 +158,8 @@ public class ScreenUtils {
      */
     public static boolean isStatusBarExists(Activity activity) {
         WindowManager.LayoutParams params = activity.getWindow().getAttributes();
-        return (params.flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) != WindowManager.LayoutParams.FLAG_FULLSCREEN;
+        return (params.flags & WindowManager.LayoutParams.FLAG_FULLSCREEN)
+                != WindowManager.LayoutParams.FLAG_FULLSCREEN;
     }
 
     /**
@@ -169,11 +169,12 @@ public class ScreenUtils {
      * @return ActionBar高度
      */
     public static int getActionBarHeight(Activity activity) {
+        int height = 0;
         TypedValue tv = new TypedValue();
-        if (activity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-            return TypedValue.complexToDimensionPixelSize(tv.data, activity.getResources().getDisplayMetrics());
-        }
-        return 0;
+        if (activity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+            height = TypedValue.complexToDimensionPixelSize(tv.data, activity.getResources()
+                    .getDisplayMetrics());
+        return height;
     }
 
     /**

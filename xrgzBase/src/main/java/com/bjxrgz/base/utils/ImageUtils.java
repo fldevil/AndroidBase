@@ -28,8 +28,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 
-import com.bjxrgz.base.base.BaseApp;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -60,9 +58,7 @@ public class ImageUtils {
      * @return {@code true}: 成功<br>{@code false}: 失败
      */
     public static boolean save(Bitmap src, String file, Bitmap.CompressFormat format, boolean recycle) {
-        if (isEmptyBitmap(src) || !FileUtils.createOrExistsFile(file)) {
-            return false;
-        }
+        if (isEmptyBitmap(src) || !FileUtils.createOrExistsFile(file)) return false;
         OutputStream os = null;
         boolean ret = false;
         try {
@@ -106,11 +102,10 @@ public class ImageUtils {
         if (length > maxSize) { // 这么算比较准
             int ratio = (int) (length / maxSize);
             int sample;
-            if (ratio > 4) {
+            if (ratio > 4)
                 sample = ratio / 2 + 1;
-            } else {
+            else
                 sample = 4;
-            }
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
             BitmapFactory.decodeFile(file.getAbsolutePath(), options);
@@ -126,7 +121,7 @@ public class ImageUtils {
      * 获取bitmap 相册
      */
     public static Bitmap getBitmap(InputStream is, double maxSize) {
-        String dir = BaseApp.get().getAppInfo().getResDir();
+        String dir = AppUtils.get().getResDir();
         String fileName = StringUtils.getRandom(8) + ".jpg";
         File file = new File(dir, fileName);
         FileUtils.writeFileFromIS(file, is, false);

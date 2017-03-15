@@ -8,14 +8,19 @@ import android.os.IBinder;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
 import com.bjxrgz.base.utils.DeviceUtils;
+import com.bjxrgz.base.utils.PermUtils;
 import com.bjxrgz.project.utils.MapUtils;
-import com.bjxrgz.start.base.MyApp;
 
 public class LocationService extends Service {
 
-    public static void goService(Context from) {
-        Intent intent = new Intent(from, LocationService.class);
-        from.startService(intent);
+    public static void goService(final Context from) {
+        PermUtils.requestMap(from, new PermUtils.PermissionListener() {
+            @Override
+            public void onAgree() {
+                Intent intent = new Intent(from, LocationService.class);
+                from.startService(intent);
+            }
+        });
     }
 
     @Override
@@ -31,15 +36,14 @@ public class LocationService extends Service {
                 String city = aMapLocation.getCity();
                 String district = aMapLocation.getDistrict();
                 String address = aMapLocation.getAddress();
-                DeviceUtils.DeviceInfo deviceInfo = MyApp.get().getDeviceInfo();
-                if (deviceInfo != null) {
-                    deviceInfo.setLongitude(longitude);
-                    deviceInfo.setLatitude(latitude);
-                    deviceInfo.setProvince(province);
-                    deviceInfo.setCity(city);
-                    deviceInfo.setDistrict(district);
-                    deviceInfo.setAddress(address);
-                }
+
+                DeviceUtils deviceUtils = DeviceUtils.get();
+                deviceUtils.setLongitude(longitude);
+                deviceUtils.setLatitude(latitude);
+                deviceUtils.setProvince(province);
+                deviceUtils.setCity(city);
+                deviceUtils.setDistrict(district);
+                deviceUtils.setAddress(address);
             }
 
             @Override
