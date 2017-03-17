@@ -11,6 +11,7 @@ import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.Fade;
 import android.view.Window;
@@ -159,12 +160,13 @@ public class ActivityUtils {
     /**
      * fragment启动activity
      */
-    public static void startActivity(Fragment from, Activity to, Intent intent) {
-        if (intent == null) return;
-        if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+    public static void startActivity(Fragment from, Intent intent) {
+        if (intent == null || from == null) return;
+        FragmentActivity activity = from.getActivity();
+        if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && activity != null) {
             try { // 有些机型会报错
                 from.startActivity(intent, ActivityOptions
-                        .makeSceneTransitionAnimation(to).toBundle());
+                        .makeSceneTransitionAnimation(activity).toBundle());
             } catch (Exception e) {
                 e.printStackTrace();
                 from.startActivity(intent);
@@ -198,20 +200,21 @@ public class ActivityUtils {
     /**
      * Fragment启动activity，setResult设置回传的resultCode和intent
      */
-    public static void startActivity(Fragment from, Activity to, Intent intent, int requestCode) {
-        if (intent == null) return;
-        if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+    public static void startActivity(Fragment from, Intent intent, int requestCode) {
+        if (intent == null || from == null) return;
+        FragmentActivity activity = from.getActivity();
+        if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && activity != null) {
             try { // 有些机型会报错
                 from.startActivityForResult(intent, requestCode,
-                        ActivityOptions.makeSceneTransitionAnimation(to).toBundle());
+                        ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
             } catch (Exception e) {
                 e.printStackTrace();
                 from.startActivityForResult(intent, requestCode);
             }
         } else {
             from.startActivityForResult(intent, requestCode);
-            if (anim) { // 4.4跳转效果
-                to.overridePendingTransition(animIn, animOut);
+            if (anim && activity != null) { // 4.4跳转效果
+                activity.overridePendingTransition(animIn, animOut);
             }
         }
     }
@@ -219,19 +222,20 @@ public class ActivityUtils {
     /**
      * 多层fragment时，第二级fragment是无法在startActivityForResult上时候收到回传intent的
      */
-    public static void startActivityForFragment(AppCompatActivity activity, Fragment fragment,
-                                                Intent intent, int requestCode) {
-        if (intent == null) return;
+    public static void startActivityForFragment(Fragment from, Intent intent, int requestCode) {
+        if (intent == null || from == null) return;
+        FragmentActivity activity = from.getActivity();
+        if (activity == null) return;
         if (anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             try {
-                activity.startActivityFromFragment(fragment, intent, requestCode,
+                activity.startActivityFromFragment(from, intent, requestCode,
                         ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
             } catch (Exception e) {
                 e.printStackTrace();
-                activity.startActivityFromFragment(fragment, intent, requestCode);
+                activity.startActivityFromFragment(from, intent, requestCode);
             }
         } else {
-            activity.startActivityFromFragment(fragment, intent, requestCode);
+            activity.startActivityFromFragment(from, intent, requestCode);
             if (anim) { // 4.4跳转效果
                 activity.overridePendingTransition(animIn, animOut);
             }

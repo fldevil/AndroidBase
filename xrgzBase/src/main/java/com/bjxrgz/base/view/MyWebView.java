@@ -21,6 +21,8 @@ import com.bjxrgz.base.base.BaseApp;
 import com.bjxrgz.base.utils.AppUtils;
 import com.bjxrgz.base.utils.FileUtils;
 
+import java.util.Map;
+
 /**
  * Created by JiangZhiGuo on 2016-11-7.
  * 通用WebView
@@ -161,6 +163,11 @@ public class MyWebView extends WebView {
     /* 外部调用 */
     public void load(String url) {
         loadUrl(url);
+    }
+
+    /* 外部调用 */
+    public void load(String url, Map<String, String> headers) {
+        loadUrl(url, headers);
     }
 
     /* 带cookie的加载url */

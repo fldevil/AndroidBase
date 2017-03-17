@@ -209,6 +209,9 @@ public class DeviceUtils {
     }
 
     public String getAddress() {
+        if (StringUtils.isEmpty(address)) {
+            address = "";
+        }
         return address;
     }
 
@@ -217,6 +220,9 @@ public class DeviceUtils {
     }
 
     public String getDistrict() {
+        if (StringUtils.isEmpty(district)) {
+            district = "";
+        }
         return district;
     }
 
@@ -225,6 +231,9 @@ public class DeviceUtils {
     }
 
     public String getProvince() {
+        if (StringUtils.isEmpty(province)) {
+            province = "";
+        }
         return province;
     }
 
@@ -233,6 +242,9 @@ public class DeviceUtils {
     }
 
     public String getCity() {
+        if (StringUtils.isEmpty(city)) {
+            city = "";
+        }
         return city;
     }
 
