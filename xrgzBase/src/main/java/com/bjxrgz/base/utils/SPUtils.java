@@ -42,6 +42,7 @@ public class SPUtils {
      */
     public static void setUser(User user) {
         LogUtils.json("setUser", GsonUtils.get().toJson(user));
+        clearUser();
         SharedPreferences.Editor editor = getSharedPreferences(SHARE_USER).edit();
         editor.putString(id, user.getId());
         editor.putString(userToken, user.getUserToken());
