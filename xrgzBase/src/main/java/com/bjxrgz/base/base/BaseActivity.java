@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
 
+import com.bjxrgz.base.R;
 import com.bjxrgz.base.utils.ActivityUtils;
 import com.bjxrgz.base.utils.AnalyUtils;
 import com.bjxrgz.base.utils.DialogUtils;
@@ -42,6 +44,13 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
         ActivityUtils.startActivity(from, intent);
     }
 
+    /* 子类重写类似方法 实现跳转 */
+    private static void goActivity(Fragment from) {
+        Intent intent = new Intent(from.getActivity(), BaseActivity.class);
+        // intent.putExtra();
+        ActivityUtils.startActivity(from, intent);
+    }
+
     /* 初始layout(setContent之前调用) */
     protected abstract int initLayout(Bundle savedInstanceState);
 
@@ -59,7 +68,8 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mFragmentManager = getSupportFragmentManager();
         loading = DialogUtils.createLoading(this); // Fragment也调用父Activity的Loading
-        progress = DialogUtils.createProgress(mActivity, 0, "正在上传", true, 100, 0, null);
+        progress = DialogUtils.createProgress(mActivity, 0,
+                getString(R.string.push_ing), true, 100, 0, null);
         mIntent = getIntent();
         setContentView(initLayout(savedInstanceState)); // 这之后 页面才会加载出来
     }

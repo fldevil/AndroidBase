@@ -46,7 +46,7 @@ public class AppUtils {
             Signature[] signatures = pi.signatures;
             boolean isSystem = (ApplicationInfo.FLAG_SYSTEM & ai.flags)
                     == ApplicationInfo.FLAG_SYSTEM;
-            // 赋初始值
+            // 赋初始值(不需要权限)
             instance.setName(ai.loadLabel(pm).toString());
             instance.setIcon(ai.loadIcon(pm));
             instance.setPackageName(pi.packageName);
@@ -205,17 +205,17 @@ public class AppUtils {
     }
 
     /**
-     * 判断SD卡是否可用
-     */
-    public boolean isSDCardEnable() {
-        return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
-    }
-
-    /**
      * 获取SD卡路径 一般是/storage/emulated/0/
      */
     public String getSDCardPath() {
         return Environment.getExternalStorageDirectory().getPath() + File.separator;
+    }
+
+    /**
+     * 判断SD卡是否可用
+     */
+    public boolean isSDCardEnable() {
+        return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
     }
 
     /**

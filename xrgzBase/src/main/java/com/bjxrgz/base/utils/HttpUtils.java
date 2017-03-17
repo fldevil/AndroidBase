@@ -163,7 +163,7 @@ public class HttpUtils {
     /* 构建头信息 */
     public static HashMap<String, String> getHeaderMap(String token) {
         HashMap<String, String> options = new HashMap<>();
-        options.put("API_KEY", "8557a557dbb0e66ce051106dd2fefe72");
+        options.put("API_KEY", "");
         options.put("Content-Type", "application/json;charset=utf-8");
         options.put("Accept", "application/json");
         if (!StringUtils.isEmpty(token)) {

@@ -30,9 +30,10 @@ import retrofit2.http.Url;
 public interface APIUtils {
 
     /* BaseURL最好以/结尾 */
-//    String HOST = "http://192.168.0.8:8080/kljiyou-web/"; // 测试
-    String HOST = "http://www.bjxrgz.com:808/kljiyou/"; // 正式
+//    String HOST = ""; // 测试
+    String HOST = ""; // 正式
     String BASE_URL = HOST + "api/v1/zh-CN/";
+    String IMG_FORE_URL = ""; // 图片前缀
 
     @Streaming // 下载大文件(请求需要放在子线程中)
     @Multipart // 上传文件

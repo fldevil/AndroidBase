@@ -42,11 +42,17 @@ import static com.bjxrgz.base.utils.ConstantUtils.MB;
  */
 public class ConvertUtils {
 
+    /**
+     * file转uri（拍照时调用）
+     */
     public static Uri File2URI(File file) {
         if (file == null) return null;
         return Uri.fromFile(file);
     }
 
+    /**
+     * uri转file（相册返回调用）
+     */
     public static File URI2File(Uri uri) {
         String[] project = new String[]{MediaStore.Images.ImageColumns.DATA}; // 字段名
         if (uri == null) return null;

@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.telephony.SmsManager;
@@ -27,10 +28,15 @@ public class IntentUtils {
     /**
      * 拍照 ,不加保存路径，图片会被压缩
      */
-    public static Intent getCameraIntent(File cameraFile) {
+    public static Intent getCameraIntent() {
         PermUtils.requestCamera(BaseApp.get(), null);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.Images.Media.ORIENTATION, 0);
+        return intent;
+    }
+
+    public static Intent getCameraIntent(File cameraFile) {
+        Intent intent = getCameraIntent();
         if (cameraFile == null) return intent;
         Uri uri = ConvertUtils.File2URI(cameraFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
@@ -38,7 +44,7 @@ public class IntentUtils {
     }
 
     /**
-     * 相册
+     * 相册 ,可以自定义保存路径
      */
     public static Intent getPictureIntent() {
         Intent intent = new Intent();
@@ -59,15 +65,32 @@ public class IntentUtils {
         return intent;
     }
 
+    public static Intent getPictureIntent(String picturePath) {
+        Intent intent = getPictureIntent();
+        if (StringUtils.isEmpty(picturePath)) return intent;
+        Bundle bundle = new Bundle();
+        bundle.putString("path", picturePath);
+        intent.putExtras(bundle);
+        return intent;
+    }
+
     /**
      * 裁剪(通用) 1.启动拍照/相册 2.在onActivityForResult里调用此方法，启动裁剪功能
      */
-    public static Intent getCropIntent(File from, File save) {
-        return getCropIntent(from, save, 0, 0);
+    public static Intent getCropIntent(File from, File save, int aspectX, int aspectY) {
+        if (aspectX == 0 || aspectY == 0) return getCropIntent(from, save);
+        int outputX = 300;
+        int outputY = 300;
+        if (aspectX > aspectY) {
+            outputX = 300 / aspectY * aspectX;
+        } else if (aspectX < aspectY) {
+            outputY = 300 / aspectX * aspectY;
+        }
+        return getCropIntent(from, save, aspectX, aspectY, outputX, outputY);
     }
 
-    public static Intent getCropIntent(File from, File save, int aspectX, int aspectY) {
-        return getCropIntent(from, save, aspectX, aspectY, 300, 300);
+    public static Intent getCropIntent(File from, File save) {
+        return getCropIntent(from, save, 0, 0, 300, 300);
     }
 
     public static Intent getCropIntent(File from, File save, int aspectX, int aspectY,
@@ -124,18 +147,18 @@ public class IntentUtils {
         return intent;
     }
 
-    public static Intent getShareIntent(String content, File image) {
-        if (!FileUtils.isFileExists(image)) return null;
-        return getShareIntent(content, Uri.fromFile(image));
-    }
-
     public static Intent getShareIntent(String content, Uri uri) {
-        if (uri == null) return null;
+        if (uri == null) return getShareIntent(content);
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_TEXT, content);
         intent.putExtra(Intent.EXTRA_STREAM, uri);
         intent.setType("image/*");
         return intent;
+    }
+
+    public static Intent getShareIntent(String content, File image) {
+        if (!FileUtils.isFileExists(image)) return null;
+        return getShareIntent(content, Uri.fromFile(image));
     }
 
     /**
@@ -225,8 +248,8 @@ public class IntentUtils {
      * 在onActivityResult中调用，获取选中的号码
      */
     public static String getSelectContact(Intent data) {
-        if (data == null) return "";
         String num = "";
+        if (data == null) return num;
         Uri uri = data.getData();
         // 创建内容解析者
         ContentResolver contentResolver = BaseApp.get().getContentResolver();

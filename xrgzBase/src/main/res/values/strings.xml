@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Startup</string>
+    <string name="app_name">Base</string>
 
     <string name="select_email_sender">请先设定一个默认的Email地址</string>
     <string name="prompt">提示</string>
@@ -7,6 +7,7 @@
     <string name="confirm">确定</string>
     <string name="cancel">取消</string>
     <string name="wait">等待…</string>
+    <string name="push_ing">正在上传</string>
     <string name="no_network_title">网络不能访问</string>
 
     <string name="http_error_connect">网络连接错误</string>

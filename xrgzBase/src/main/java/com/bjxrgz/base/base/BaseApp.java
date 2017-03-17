@@ -18,7 +18,6 @@ import java.util.concurrent.Executors;
 import butterknife.ButterKnife;
 
 public class BaseApp extends MultiDexApplication {
-
     protected static BaseApp instance;  // MyApp实例
     protected Handler mainHandler; // 主线程handler
     protected ExecutorService threadPool; // 缓冲线程池

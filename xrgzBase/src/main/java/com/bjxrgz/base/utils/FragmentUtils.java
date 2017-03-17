@@ -139,6 +139,7 @@ public class FragmentUtils {
         }
     }
 
+    /* onBackPress里已经处理了 */
     public static boolean canGoBack(FragmentManager manager) {
         if (manager != null && manager.getBackStackEntryCount() > 0) {
             manager.popBackStack(); // fragment栈中有fragment时，回退fragment

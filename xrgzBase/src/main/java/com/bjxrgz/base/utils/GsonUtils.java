@@ -23,7 +23,7 @@ public class GsonUtils {
     public static Gson get() {
         if (GSON == null) {
             synchronized (GsonUtils.class) {
-                if (GSON == null){
+                if (GSON == null) {
                     GSON = new Gson();
                 }
             }
@@ -52,9 +52,13 @@ public class GsonUtils {
         return GSON_BUILDER;
     }
 
+    /**
+     * @param object
+     * @param key
+     * @param type   Type t = new TypeToken<List<xls>>() {}.getType();
+     * @param <T>
+     */
     public static <T> List<T> getList(JSONObject object, String key, Type type) {
-//        Type type = new TypeToken<List<xls>>() {
-//        }.getType();
         JSONArray array = object.optJSONArray(key);
         return getList(array, type);
     }

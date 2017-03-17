@@ -23,9 +23,9 @@ import java.io.File;
  */
 public class GlideUtils {
 
-    /* 清除内存缓存 */
-    public static void clearMemory(Context context) {
-        Glide.get(context).clearMemory();
+    /* 获取缓存目录 */
+    public static File getCacheFile(Context context) {
+        return new File(context.getCacheDir(), DiskCache.Factory.DEFAULT_DISK_CACHE_DIR);
     }
 
     /* 清除磁盘缓存 */
@@ -33,9 +33,9 @@ public class GlideUtils {
         Glide.get(context.getApplicationContext()).clearDiskCache();
     }
 
-    /* 获取缓存目录 */
-    public static File getCacheFile(Context context) {
-        return new File(context.getCacheDir(), DiskCache.Factory.DEFAULT_DISK_CACHE_DIR);
+    /* 清除内存缓存 */
+    public static void clearMemory(Context context) {
+        Glide.get(context).clearMemory();
     }
 
     /* 图片加载完毕监听 */
@@ -58,9 +58,9 @@ public class GlideUtils {
             }
         }
         DrawableTypeRequest<String> load = requestManager.load(imgUrl);
-        if (errorRes != 0) //设置错误图片
+        if (errorRes != 0) { //设置错误图片
             load.error(errorRes);
-//        load.thumbnail(0.1f); // 先加载缩略图，再加载完整的(最好别用)
+        }
         load.crossFade(100); // 设置淡入淡出效果，默认300ms(load.dontAnimate();取消效果)
         load.skipMemoryCache(false); // 不跳过内存缓存
         load.diskCacheStrategy(DiskCacheStrategy.SOURCE); // 磁盘缓存

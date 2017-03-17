@@ -26,7 +26,9 @@ import java.util.Calendar;
  */
 public class DialogUtils {
 
-    /* 等待对话框 默认DialogUtils.createLoading(); */
+    /**
+     * 等待对话框 (一般用于baseActivity)
+     */
     public static ProgressDialog createLoading(Context context) {
         ProgressDialog loading = new MyLoading(context);
         loading.setCanceledOnTouchOutside(false);
@@ -36,8 +38,12 @@ public class DialogUtils {
 
     /**
      * 自定义对话框
+     *
+     * @param theme R.style.DialogCustom
+     * @param view  LayoutInflater.from(activity).inflate(layoutId, null);
      */
-    public static Dialog createCustom(Activity activity, int theme, View view, float height, float width) {
+    public static Dialog createCustom(Activity activity, int theme, View view,
+                                      float height, float width) {
         final Dialog dialog = new Dialog(activity, theme);
         WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
         DisplayMetrics d = activity.getResources().getDisplayMetrics(); // 获取屏幕宽、高用
@@ -49,6 +55,20 @@ public class DialogUtils {
         }
         dialog.setContentView(view, lp);
         return dialog;
+    }
+
+    /**
+     * 警告对话框
+     */
+    public static AlertDialog createAlert(Context context, String title, String message,
+                                          String positive, String negative,
+                                          final DialogInterface.OnClickListener positiveListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setPositiveButton(positive, positiveListener);
+        builder.setNegativeButton(negative, null);
+        return builder.create();
     }
 
     /**
@@ -72,7 +92,7 @@ public class DialogUtils {
     }
 
     /**
-     * 进度对话框
+     * 进度对话框(没有message)
      */
     public static ProgressDialog createProgress(Context context, int theme, String title,
                                                 boolean cancel, int max, int start,
@@ -93,20 +113,6 @@ public class DialogUtils {
         progress.setCancelable(cancel);
         progress.setOnCancelListener(listener);
         return progress;
-    }
-
-    /**
-     * 警告对话框
-     */
-    public static AlertDialog createAlert(Context context, String title, String message,
-                                          String positive, String negative,
-                                          final DialogInterface.OnClickListener positiveListener) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(title);
-        builder.setMessage(message);
-        builder.setPositiveButton(positive, positiveListener);
-        builder.setNegativeButton(negative, null);
-        return builder.create();
     }
 
     /**
