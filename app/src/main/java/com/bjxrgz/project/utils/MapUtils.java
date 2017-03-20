@@ -1,6 +1,5 @@
 package com.bjxrgz.project.utils;
 
-import android.Manifest;
 import android.content.Context;
 import android.graphics.Color;
 import android.location.Location;
@@ -28,7 +27,6 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.bjxrgz.base.utils.LogUtils;
-import com.bjxrgz.base.utils.PermUtils;
 
 import java.util.ArrayList;
 
@@ -98,19 +96,19 @@ public class MapUtils {
         AMapLocationClientOption clientOption = new AMapLocationClientOption();
         //设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
         clientOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-        //设置是否返回地址信息（默认返回地址信息）
-        clientOption.setNeedAddress(true);
-        //设置是否只定位一次,默认为false
-        clientOption.setOnceLocation(true);
-        //设置setOnceLocationLatest(boolean b)接口为true，启动定位时SDK会返回最近3s内精度最高的一次定位结果。
         //如果设置其为true，setOnceLocation(boolean b)接口也会被设置为true，反之不会。
         if (clientOption.isOnceLocationLatest()) {
             clientOption.setOnceLocationLatest(true);
         }
+        //设置是否返回地址信息（默认返回地址信息）
+        clientOption.setNeedAddress(true);
         //设置是否强制刷新WIFI，默认为强制刷新
         clientOption.setWifiActiveScan(true);
         //设置是否允许模拟位置,默认为false，不允许模拟位置
         clientOption.setMockEnable(false);
+        //设置setOnceLocationLatest(boolean b)接口为true，启动定位时SDK会返回最近3s内精度最高的一次定位结果。
+        //设置是否只定位一次,默认为false
+        clientOption.setOnceLocation(true);
         //设置定位间隔,单位毫秒,默认为2000ms
         clientOption.setInterval(10000);
         return clientOption;

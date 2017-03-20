@@ -44,6 +44,7 @@ public class LocationService extends Service {
                 deviceUtils.setCity(city);
                 deviceUtils.setDistrict(district);
                 deviceUtils.setAddress(address);
+                stopSelf();
             }
 
             @Override
