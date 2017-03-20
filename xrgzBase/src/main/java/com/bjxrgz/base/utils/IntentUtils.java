@@ -77,18 +77,6 @@ public class IntentUtils {
     /**
      * 裁剪(通用) 1.启动拍照/相册 2.在onActivityForResult里调用此方法，启动裁剪功能
      */
-    public static Intent getCropIntent(File from, File save, int aspectX, int aspectY) {
-        if (aspectX == 0 || aspectY == 0) return getCropIntent(from, save);
-        int outputX = 300;
-        int outputY = 300;
-        if (aspectX > aspectY) {
-            outputX = 300 / aspectY * aspectX;
-        } else if (aspectX < aspectY) {
-            outputY = 300 / aspectX * aspectY;
-        }
-        return getCropIntent(from, save, aspectX, aspectY, outputX, outputY);
-    }
-
     public static Intent getCropIntent(File from, File save) {
         return getCropIntent(from, save, 0, 0, 300, 300);
     }
