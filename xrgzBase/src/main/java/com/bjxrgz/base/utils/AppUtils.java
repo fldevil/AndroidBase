@@ -106,9 +106,9 @@ public class AppUtils {
         if (!StringUtils.isEmpty(resDir)) return resDir;
         String resDir;
         if (isSDCardEnable()) {
-            resDir = getSDCardPath() + name + File.separator;
+            resDir = getSDCardPath() + packageName + File.separator;
         } else {
-            resDir = getRootPath() + name + File.separator;
+            resDir = getRootPath() + packageName + File.separator;
         }
         setResDir(resDir);
         FileUtils.createOrExistsDir(resDir); // 并创建

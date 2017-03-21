@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.telephony.SmsManager;
@@ -28,15 +27,10 @@ public class IntentUtils {
     /**
      * 拍照 ,不加保存路径，图片会被压缩
      */
-    public static Intent getCameraIntent() {
+    public static Intent getCameraIntent(File cameraFile) {
         PermUtils.requestCamera(BaseApp.get(), null);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.Images.Media.ORIENTATION, 0);
-        return intent;
-    }
-
-    public static Intent getCameraIntent(File cameraFile) {
-        Intent intent = getCameraIntent();
         if (cameraFile == null) return intent;
         Uri uri = ConvertUtils.File2URI(cameraFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
@@ -62,15 +56,6 @@ public class IntentUtils {
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         }
         intent.setType("image/*");
-        return intent;
-    }
-
-    public static Intent getPictureIntent(String picturePath) {
-        Intent intent = getPictureIntent();
-        if (StringUtils.isEmpty(picturePath)) return intent;
-        Bundle bundle = new Bundle();
-        bundle.putString("path", picturePath);
-        intent.putExtras(bundle);
         return intent;
     }
 
