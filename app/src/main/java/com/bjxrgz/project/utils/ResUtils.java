@@ -13,7 +13,7 @@ import java.io.File;
 public class ResUtils {
 
     public static File createJPGInFiles() {
-        String fileName = StringUtils.getRandom(8) + ".jpg";
+        String fileName = StringUtils.getUUID(8) + ".jpg";
         File jpgFile = new File(AppUtils.get().getFilesDir(), fileName);
         FileUtils.createFileByDeleteOldFile(jpgFile);
         return jpgFile;

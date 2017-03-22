@@ -78,5 +78,5 @@ dependencies {
 
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.1'
-
+    compile 'cn.yipianfengye.android:zxing-library:2.1' // scan
 }

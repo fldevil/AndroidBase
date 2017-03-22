@@ -23,19 +23,19 @@ public class BaseApp extends MultiDexApplication {
     protected ExecutorService threadPool; // 缓冲线程池
 
     @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this); // 大项目需要分包
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
         initListener();
-        ActivityUtils.initApp(instance);
+        ActivityUtils.initApp();
         ButterKnife.setDebug(true); // 注解
-        LogUtils.initApp(instance); // 打印
-    }
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(this); // 大项目需要分包
+        LogUtils.initApp(); // 打印
     }
 
     public static BaseApp get() {

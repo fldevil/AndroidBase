@@ -24,4 +24,5 @@ public class AnalyUtils {
         MobclickAgent.onPause(context);
     }
 
+    /* 应该有账号之类的统计 */
 }

@@ -23,14 +23,14 @@ import static com.bjxrgz.base.utils.ConstantUtils.REGEX_URL;
  */
 public class StringUtils {
 
+    /**
+     * 可作为随机文件名等
+     */
     public static String getUUID() {
         return UUID.randomUUID().toString().replace("-", "");
     }
 
-    /**
-     * 可作为随机文件名等
-     */
-    public static String getRandom(int length) {
+    public static String getUUID(int length) {
         String random = getUUID();
         return random.substring(random.length() - length, random.length());
     }
@@ -38,16 +38,16 @@ public class StringUtils {
     /**
      * demo (num,4,3,*) 1860*********241
      */
-    public static String replace(String old, int start, int end, CharSequence replace) {
+    public static String replace(String old, int left, int right, CharSequence replace) {
         if (isEmpty(old)) return "";
         StringBuilder result = new StringBuilder(old);
         int length = result.length();
-        if (length > start + end) { // 填充
+        if (length > left + right) { // 填充
             StringBuilder beReplace = new StringBuilder();
-            for (int i = 0; i < length - start + end; i++) {
+            for (int i = 0; i < length - left + right; i++) {
                 beReplace.append(replace);
             }
-            result.replace(start, result.length() - end, beReplace.toString());
+            result.replace(left, result.length() - right, beReplace.toString());
             return result.toString();
         }
         return old;

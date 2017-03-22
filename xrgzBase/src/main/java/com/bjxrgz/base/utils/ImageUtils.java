@@ -122,7 +122,7 @@ public class ImageUtils {
      */
     public static Bitmap getBitmap(InputStream is, double maxSize) {
         String dir = AppUtils.get().getResDir();
-        String fileName = StringUtils.getRandom(8) + ".jpg";
+        String fileName = StringUtils.getUUID(8) + ".jpg";
         File file = new File(dir, fileName);
         FileUtils.writeFileFromIS(file, is, false);
         Bitmap result = getBitmap(file, maxSize);

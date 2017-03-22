@@ -33,8 +33,8 @@ public class ActivityUtils {
     private static final int animOut = android.R.anim.fade_out; // 4.4下的退场效果
     private static List<Activity> activities = new LinkedList<>(); // 所有已启动的Activity
 
-    public static void initApp(Application application) {
-        application.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
+    public static void initApp() {
+        BaseApp.get().registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
                 activities.add(activity);

@@ -57,6 +57,7 @@ public class SPUtils {
         User user = new User();
         user.setId(preference.getString(id, ""));
         user.setUserToken(preference.getString(userToken, ""));
+        LogUtils.json("getUser", GsonUtils.get().toJson(user));
         return user;
     }
 

@@ -1,13 +1,11 @@
 package com.bjxrgz.project.utils;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
 import com.bjxrgz.base.utils.LogUtils;
-import com.bjxrgz.base.utils.PermUtils;
 import com.bjxrgz.project.R;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
