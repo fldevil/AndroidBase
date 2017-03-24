@@ -2,6 +2,7 @@ package com.bjxrgz.project.utils;
 
 import com.bjxrgz.base.domain.HttpError;
 import com.bjxrgz.base.utils.ActivityUtils;
+import com.bjxrgz.base.utils.ConstantUtils;
 import com.bjxrgz.base.utils.GsonUtils;
 import com.bjxrgz.base.utils.SPUtils;
 import com.bjxrgz.base.utils.StringUtils;
@@ -14,10 +15,13 @@ import com.bjxrgz.project.service.UpdateService;
  * 符合本项目的工具类
  */
 public class MyUtils {
+    public static final long IMG_SIZE = ConstantUtils.KB * 200; // 图片最大尺寸
 
     public static final int REQUEST_CAMERA = 191;  // 相机
     public static final int REQUEST_PICTURE = 192;  // 图库
     public static final int REQUEST_CROP = 193;  // 裁剪
+    public static final int REQUEST_SCAN = 194;  // 裁剪
+
 
     public static boolean noLogin() {
         String userToken = SPUtils.getUser().getUserToken();

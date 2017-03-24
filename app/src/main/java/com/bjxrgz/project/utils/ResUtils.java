@@ -19,6 +19,13 @@ public class ResUtils {
         return jpgFile;
     }
 
+    public static File createJPGInRes() {
+        String fileName = StringUtils.getUUID(8) + ".jpg";
+        File jpgFile = new File(AppUtils.get().getResDir(), fileName);
+        FileUtils.createFileByDeleteOldFile(jpgFile);
+        return jpgFile;
+    }
+
     public static File createAPKInRes(String versionName) {
         String fileName = versionName + ".apk";
         File apkFile = new File(AppUtils.get().getResDir(), fileName);

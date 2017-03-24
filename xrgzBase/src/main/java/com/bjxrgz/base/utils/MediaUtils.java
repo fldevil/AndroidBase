@@ -1,7 +1,6 @@
 package com.bjxrgz.base.utils;
 
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -17,12 +16,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static com.bjxrgz.base.utils.ImageUtils.getBitmap;
 
 /**
  * Created by jiang on 2016/10/13
@@ -44,12 +37,12 @@ public class MediaUtils {
         return adjust;
     }
 
-    public static Bitmap getCameraBitmap(File cameraFile, double maxSize) {
+    public static Bitmap getCameraBitmap(File cameraFile, long maxByteSize) {
         if (FileUtils.isFileEmpty(cameraFile)) {
             FileUtils.deleteFile(cameraFile); // 删除垃圾文件
             return null;
         }
-        Bitmap small = getBitmap(cameraFile, maxSize); // File转Bitmap(压缩)
+        Bitmap small = ImageUtils.compressFile(cameraFile, maxByteSize); // File转Bitmap(压缩)
         FileUtils.createFileByDeleteOldFile(cameraFile); // 重置源文件
         ImageUtils.save(small, cameraFile.getAbsolutePath(), ImageUtils.FORMAT, true); // 保存图像
         if (small != null && !small.isRecycled()) {
@@ -63,7 +56,7 @@ public class MediaUtils {
             FileUtils.deleteFile(cameraFile); // 删除垃圾文件
             return null;
         }
-        Bitmap small = getBitmap(cameraFile, maxWidth, maxHeight); // File转Bitmap(压缩)
+        Bitmap small = ImageUtils.getBitmap(cameraFile, maxWidth, maxHeight); // File转Bitmap(压缩)
         FileUtils.createFileByDeleteOldFile(cameraFile); // 重置源文件
         ImageUtils.save(small, cameraFile.getAbsolutePath(), ImageUtils.FORMAT, true); // 保存图像
         if (small != null && !small.isRecycled()) {
@@ -109,13 +102,14 @@ public class MediaUtils {
         return uri;
     }
 
-    public static Bitmap getPictureBitmap(Context context, Intent data) {
+    public static Bitmap getPictureBitmap(Intent data) {
         if (data == null) return null;
         Bitmap picture = null;
         Uri uri = getPictureUri(data);
         if (uri != null) {
             try {
-                InputStream stream = context.getContentResolver().openInputStream(uri);
+                InputStream stream = BaseApp.get()
+                        .getContentResolver().openInputStream(uri);
                 picture = BitmapFactory.decodeStream(stream);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -126,34 +120,26 @@ public class MediaUtils {
         return picture;
     }
 
-    public static Bitmap getPictureBitmap(Context context, Intent data, double maxSize) {
+    public static Bitmap getPictureBitmap(Intent data, long maxByteSize) {
         if (data == null) return null;
-        Bitmap picture = null;
+        Bitmap picture;
         Uri uri = getPictureUri(data);
         if (uri != null) {
-            try {
-                InputStream stream = context.getContentResolver().openInputStream(uri);
-                picture = getBitmap(stream, maxSize);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+            File file = ConvertUtils.URI2File(uri);
+            picture = ImageUtils.compressFile(file, maxByteSize);
         } else {
             picture = data.getParcelableExtra("data");
         }
         return picture;
     }
 
-    public static Bitmap getPictureBitmap(Context context, Intent data, int maxWidth, int maxHeight) {
+    public static Bitmap getPictureBitmap(Intent data, int maxWidth, int maxHeight) {
         if (data == null) return null;
-        Bitmap picture = null;
+        Bitmap picture;
         Uri uri = getPictureUri(data);
         if (uri != null) {
-            try {
-                InputStream stream = context.getContentResolver().openInputStream(uri);
-                picture = getBitmap(stream, maxWidth, maxHeight);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+            File file = ConvertUtils.URI2File(uri);
+            picture = ImageUtils.getBitmap(file, maxWidth, maxHeight);
         } else {
             picture = data.getParcelableExtra("data");
         }
@@ -172,12 +158,12 @@ public class MediaUtils {
         }
     }
 
-    public static Bitmap getCropBitmap(File cropFile, double maxSize) {
+    public static Bitmap getCropBitmap(File cropFile, long maxByteSize) {
         if (FileUtils.isFileEmpty(cropFile)) {
             FileUtils.deleteFile(cropFile); // 删除垃圾文件
             return null;
         }
-        Bitmap small = getBitmap(cropFile, maxSize); // File转Bitmap(压缩)
+        Bitmap small = ImageUtils.compressFile(cropFile, maxByteSize); // File转Bitmap(压缩)
         FileUtils.createFileByDeleteOldFile(cropFile); // 重置源文件
         ImageUtils.save(small, cropFile.getAbsolutePath(), ImageUtils.FORMAT, true); // 保存图像
         if (small != null && !small.isRecycled()) {
@@ -191,7 +177,7 @@ public class MediaUtils {
             FileUtils.deleteFile(cropFile); // 重置源文件
             return null;
         }
-        Bitmap small = getBitmap(cropFile, maxWidth, maxHeight); // File转Bitmap(压缩)
+        Bitmap small = ImageUtils.getBitmap(cropFile, maxWidth, maxHeight); // File转Bitmap(压缩)
         FileUtils.createFileByDeleteOldFile(cropFile); // 删除源文件
         ImageUtils.save(small, cropFile.getAbsolutePath(), ImageUtils.FORMAT, true); // 保存图像
         if (small != null && !small.isRecycled()) {
@@ -242,93 +228,6 @@ public class MediaUtils {
             e.printStackTrace();
         }
         return degree;
-    }
-
-    /**
-     * ********************************数据*********************************
-     *
-     * @param uri        查询的uri
-     * @param projection map里的key
-     * @param orderBy    排序
-     * @return 查询到的数据
-     */
-    public static List<Map<String, String>> getProviderColumn(Uri uri, String[] projection,
-                                                              String selection,
-                                                              String[] selectionArgs,
-                                                              String orderBy) {
-        List<Map<String, String>> list = new ArrayList<>();
-        Cursor cursor = BaseApp.get().getContentResolver()
-                .query(uri, projection, selection, selectionArgs, orderBy);
-        if (null == cursor) return list;
-        while (cursor.moveToNext()) {
-            HashMap<String, String> map = new HashMap<>();
-            for (int i = 0; i < projection.length; i++) {
-                map.put(projection[i], cursor.getString(i));
-            }
-            list.add(map);
-        }
-        cursor.close();
-        return list;
-    }
-
-    public static String getProviderColumnTop(Uri uri, String[] projection, String selection,
-                                              String[] selectionArgs, String orderBy) {
-        Cursor cursor = BaseApp.get().getContentResolver()
-                .query(uri, projection, selection, selectionArgs, orderBy);
-
-        if (cursor != null && cursor.moveToFirst()) {
-            int index = cursor.getColumnIndex(projection[0]);
-            if (index > -1) return cursor.getString(index);
-            cursor.close();
-        }
-        return null;
-    }
-
-    /**
-     * 获取设备里的所有图片信息
-     */
-    public static List<Map<String, String>> getImage() {
-        String[] projection = {MediaStore.Images.Media._ID,
-                MediaStore.Images.Media.DISPLAY_NAME,
-                MediaStore.Images.Media.TITLE,
-                MediaStore.Images.Media.MIME_TYPE,
-                MediaStore.Images.Media.DATA,
-                MediaStore.Images.Media.SIZE};
-        String orderBy = MediaStore.Images.Media.DISPLAY_NAME;
-        Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        return getProviderColumn(uri, projection, null, null, orderBy);
-    }
-
-    /**
-     * 获取设备里的所有音频信息
-     */
-    public static List<Map<String, String>> getAudio() {
-        String[] projection = {MediaStore.Audio.Media._ID,
-                MediaStore.Audio.Media.DISPLAY_NAME,
-                MediaStore.Audio.Media.TITLE,
-                MediaStore.Audio.Media.MIME_TYPE,
-                MediaStore.Audio.Media.DURATION,
-                MediaStore.Audio.Media.DATA,
-                MediaStore.Audio.Media.SIZE};
-        String orderBy = MediaStore.Audio.Media.DISPLAY_NAME;
-        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        return getProviderColumn(uri, projection, null, null, orderBy);
-    }
-
-    /**
-     * 获取设备里的所有视频信息
-     */
-    public static List<Map<String, String>> getVideo() {
-        String[] projection = {MediaStore.Video.Media._ID,
-                MediaStore.Video.Media.DISPLAY_NAME,
-                MediaStore.Video.Media.TITLE,
-                MediaStore.Video.Media.MIME_TYPE,
-                MediaStore.Video.Media.DURATION,
-                MediaStore.Video.Media.DATA,
-                MediaStore.Video.Media.SIZE};
-        String orderBy = MediaStore.Video.Media.DISPLAY_NAME;
-        Uri uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-        return getProviderColumn(uri, projection, null, null, orderBy);
     }
 
 }

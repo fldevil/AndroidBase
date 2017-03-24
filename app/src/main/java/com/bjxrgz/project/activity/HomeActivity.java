@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import com.bjxrgz.base.base.BaseActivity;
 import com.bjxrgz.base.utils.ActivityUtils;
@@ -13,11 +15,19 @@ import com.bjxrgz.project.utils.ViewUtils;
 
 import java.util.Date;
 
+import butterknife.BindView;
+import butterknife.OnClick;
+
 /**
  * Created by JiangZhiGuo on 2016/06/01
  * describe 主界面
  */
 public class HomeActivity extends BaseActivity<HomeActivity> {
+
+    @BindView(R.id.btn)
+    Button btn;
+    @BindView(R.id.img)
+    ImageView img;
 
     public static void goActivity(Activity from) {
         Intent intent = new Intent(from, HomeActivity.class);
@@ -37,6 +47,11 @@ public class HomeActivity extends BaseActivity<HomeActivity> {
 
     @Override
     protected void initData() {
+
+    }
+
+    @OnClick(R.id.btn)
+    public void onViewClicked() {
 
     }
 

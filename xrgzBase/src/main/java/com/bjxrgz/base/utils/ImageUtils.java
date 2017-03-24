@@ -82,7 +82,8 @@ public class ImageUtils {
      * @param maxHeight 最大高度
      * @return 采样大小
      */
-    private static int calculateInSampleSize(BitmapFactory.Options options, int maxWidth, int maxHeight) {
+    private static int calculateInSampleSize(BitmapFactory.Options options,
+                                             int maxWidth, int maxHeight) {
         if (maxWidth == 0 || maxHeight == 0) return 1;
         int height = options.outHeight;
         int width = options.outWidth;
@@ -94,48 +95,11 @@ public class ImageUtils {
     }
 
     /**
-     * 获取bitmap 拍照
-     */
-    public static Bitmap getBitmap(File file, double maxSize) {
-        long length = file.length();
-
-        if (length > maxSize) { // 这么算比较准
-            int ratio = (int) (length / maxSize);
-            int sample;
-            if (ratio > 4)
-                sample = ratio / 2 + 1;
-            else
-                sample = 4;
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(file.getAbsolutePath(), options);
-            options.inSampleSize = sample;
-            options.inJustDecodeBounds = false;
-            return BitmapFactory.decodeFile(file.getAbsolutePath(), options);
-        } else {
-            return BitmapFactory.decodeFile(file.getAbsolutePath());
-        }
-    }
-
-    /**
-     * 获取bitmap 相册
-     */
-    public static Bitmap getBitmap(InputStream is, double maxSize) {
-        String dir = AppUtils.get().getResDir();
-        String fileName = StringUtils.getUUID(8) + ".jpg";
-        File file = new File(dir, fileName);
-        FileUtils.writeFileFromIS(file, is, false);
-        Bitmap result = getBitmap(file, maxSize);
-        FileUtils.deleteFile(file);
-        return result;
-    }
-
-    /**
      * 获取bitmap
      *
      * @param file      文件
-     * @param maxWidth  最大宽度
-     * @param maxHeight 最大高度
+     * @param maxWidth  最大宽度 0不变
+     * @param maxHeight 最大高度 0不变
      * @return bitmap
      */
     public static Bitmap getBitmap(File file, int maxWidth, int maxHeight) {
@@ -160,8 +124,8 @@ public class ImageUtils {
      * 获取bitmap
      *
      * @param filePath  文件路径
-     * @param maxWidth  最大宽度
-     * @param maxHeight 最大高度
+     * @param maxWidth  最大宽度 0不变
+     * @param maxHeight 最大高度 0不变
      * @return bitmap
      */
     public static Bitmap getBitmap(String filePath, int maxWidth, int maxHeight) {
@@ -178,8 +142,8 @@ public class ImageUtils {
      * 获取bitmap
      *
      * @param is        输入流
-     * @param maxWidth  最大宽度
-     * @param maxHeight 最大高度
+     * @param maxWidth  最大宽度 0不变
+     * @param maxHeight 最大高度 0不变
      * @return bitmap
      */
     public static Bitmap getBitmap(InputStream is, int maxWidth, int maxHeight) {
@@ -197,8 +161,8 @@ public class ImageUtils {
      *
      * @param data      数据
      * @param offset    偏移量
-     * @param maxWidth  最大宽度
-     * @param maxHeight 最大高度
+     * @param maxWidth  最大宽度 0不变
+     * @param maxHeight 最大高度 0不变
      * @return bitmap
      */
     public static Bitmap getBitmap(byte[] data, int offset, int maxWidth, int maxHeight) {
@@ -216,8 +180,8 @@ public class ImageUtils {
      *
      * @param res       资源对象
      * @param id        资源id
-     * @param maxWidth  最大宽度
-     * @param maxHeight 最大高度
+     * @param maxWidth  最大宽度 0不变
+     * @param maxHeight 最大高度 0不变
      * @return bitmap
      */
     public static Bitmap getBitmap(Resources res, int id, int maxWidth, int maxHeight) {
@@ -232,6 +196,31 @@ public class ImageUtils {
 
     /**
      * ****************************************压缩****************************************
+     * <p>
+     * 获取bitmap(带压缩) 真正的压缩到200KB左右（建议200KB）
+     */
+    public static Bitmap compressFile(File file, long maxByteSize) {
+        long length = file.length(); // 真正的文件大小
+        if (length > maxByteSize) { // 这么算比较准
+            int ratio = (int) (length / maxByteSize);
+            int sample;
+            if (ratio > 4) {
+                sample = ratio / 2 + 1;
+            } else {
+                sample = 4;
+            }
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+            options.inSampleSize = sample;
+            options.inJustDecodeBounds = false;
+            return BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+        } else {
+            return BitmapFactory.decodeFile(file.getAbsolutePath());
+        }
+    }
+
+    /**
      * 按缩放压缩(放大有锯齿)
      *
      * @param src       源图片
@@ -240,7 +229,9 @@ public class ImageUtils {
      * @param recycle   是否回收
      * @return 缩放压缩后的图片
      */
-    public static Bitmap compressByScale(Bitmap src, int newWidth, int newHeight, boolean recycle) {
+
+    public static Bitmap compressByScale(Bitmap src, int newWidth,
+                                         int newHeight, boolean recycle) {
         return scale(src, newWidth, newHeight, recycle);
     }
 
@@ -253,7 +244,8 @@ public class ImageUtils {
      * @param recycle     是否回收
      * @return 缩放压缩后的图片
      */
-    public static Bitmap compressByScale(Bitmap src, float scaleWidth, float scaleHeight, boolean recycle) {
+    public static Bitmap compressByScale(Bitmap src, float scaleWidth,
+                                         float scaleHeight, boolean recycle) {
         return scale(src, scaleWidth, scaleHeight, recycle);
     }
 
@@ -275,32 +267,7 @@ public class ImageUtils {
     }
 
     /**
-     * 按质量压缩
-     *
-     * @param src         源图片
-     * @param maxByteSize 允许最大值字节数
-     * @param recycle     是否回收
-     * @return 质量压缩压缩过的图片
-     */
-    public static Bitmap compressByQuality(Bitmap src, long maxByteSize, boolean recycle) {
-        if (isEmptyBitmap(src) || maxByteSize <= 0) return null;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        int quality = 100;
-        src.compress(FORMAT, quality, baos);
-        while (baos.toByteArray().length > maxByteSize) {
-            if (quality <= 0) {
-                quality = 2;
-            }
-            baos.reset();
-            src.compress(FORMAT, quality -= 5, baos);
-        }
-        byte[] bytes = baos.toByteArray();
-        if (recycle && !src.isRecycled()) src.recycle();
-        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-    }
-
-    /**
-     * 按采样大小压缩(注意  上面的最大尺寸那个不管用！！！)
+     * 按采样大小压缩
      *
      * @param src        源图片
      * @param sampleSize 采样率大小
