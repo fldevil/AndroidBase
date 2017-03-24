@@ -11,6 +11,12 @@ import android.telephony.TelephonyManager;
 import com.bjxrgz.base.R;
 import com.bjxrgz.base.base.BaseApp;
 
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+
 /**
  * Created by jiang on 2016/10/12
  * <p>
@@ -153,6 +159,33 @@ public class NetUtils {
         TelephonyManager tm = (TelephonyManager) BaseApp.get()
                 .getSystemService(Context.TELEPHONY_SERVICE);
         return tm != null ? tm.getNetworkOperatorName() : null;
+    }
+
+    /**
+     * 获取IP地址 eg:127.168.x.x
+     */
+    public String getIpAddress() {
+        String ipAddress = "";
+        try {
+            Enumeration nis = NetworkInterface.getNetworkInterfaces();
+            while (nis.hasMoreElements()) {
+                NetworkInterface ni = (NetworkInterface) nis.nextElement();
+                Enumeration<InetAddress> ias = ni.getInetAddresses();
+                while (ias.hasMoreElements()) {
+                    InetAddress ia = ias.nextElement();
+                    if (ia instanceof Inet6Address) continue; // skip ipv6
+                    String ip = ia.getHostAddress();
+                    String host = "127.0.0.1";
+                    if (!host.equals(ip)) {
+                        ipAddress = ip;
+                        break;
+                    }
+                }
+            }
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        return ipAddress;
     }
 
 }

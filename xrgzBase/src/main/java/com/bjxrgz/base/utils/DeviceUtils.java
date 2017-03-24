@@ -12,12 +12,6 @@ import android.telephony.TelephonyManager;
 
 import com.bjxrgz.base.base.BaseApp;
 
-import java.net.Inet6Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.util.Enumeration;
-
 /**
  * Created by jiang on 2016/10/12
  * <p/>
@@ -37,14 +31,6 @@ public class DeviceUtils {
     private boolean isTable; // 是否是手表
     private String phoneNumber; // 手机号
     private String simSerial; // sim卡序号
-    private String ipAddress; // ip地址 eg:127.168.x.x
-    // location
-    private double longitude; // 经度
-    private double latitude; // 纬度
-    private String province; // 省信息
-    private String city; // 城市信息
-    private String district; // 区
-    private String address; // 详细地址
 
     /* 获取当前Device信息 */
     public static DeviceUtils get() {
@@ -178,94 +164,6 @@ public class DeviceUtils {
 
     public void setOsVersion(String osVersion) {
         this.osVersion = osVersion;
-    }
-
-    public String getIpAddress() {
-        if (!StringUtils.isEmpty(ipAddress)) return ipAddress;
-        try {
-            Enumeration nis = NetworkInterface.getNetworkInterfaces();
-            while (nis.hasMoreElements()) {
-                NetworkInterface ni = (NetworkInterface) nis.nextElement();
-                Enumeration<InetAddress> ias = ni.getInetAddresses();
-                while (ias.hasMoreElements()) {
-                    InetAddress ia = ias.nextElement();
-                    if (ia instanceof Inet6Address) continue; // skip ipv6
-                    String ip = ia.getHostAddress();
-                    String host = "127.0.0.1";
-                    if (!host.equals(ip)) {
-                        setIpAddress(ip);
-                        break;
-                    }
-                }
-            }
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
-        return ipAddress;
-    }
-
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
-    }
-
-    public String getAddress() {
-        if (StringUtils.isEmpty(address)) {
-            address = "";
-        }
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getDistrict() {
-        if (StringUtils.isEmpty(district)) {
-            district = "";
-        }
-        return district;
-    }
-
-    public void setDistrict(String district) {
-        this.district = district;
-    }
-
-    public String getProvince() {
-        if (StringUtils.isEmpty(province)) {
-            province = "";
-        }
-        return province;
-    }
-
-    public void setProvince(String province) {
-        this.province = province;
-    }
-
-    public String getCity() {
-        if (StringUtils.isEmpty(city)) {
-            city = "";
-        }
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
     }
 
 }

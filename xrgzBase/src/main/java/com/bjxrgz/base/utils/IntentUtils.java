@@ -300,4 +300,13 @@ public class IntentUtils {
         return new Intent(Intent.ACTION_VIEW, address);
     }
 
+    /**
+     * 打开Gps设置界面
+     */
+    public static void getGpsIntent() {
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        BaseApp.get().startActivity(intent);
+    }
+
 }
