@@ -13,6 +13,7 @@ import android.location.LocationProvider;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 
+import com.bjxrgz.base.R;
 import com.bjxrgz.base.base.BaseApp;
 
 import java.io.IOException;
@@ -145,7 +146,7 @@ public class LocationUtils {
         if (listener == null) return false;
         mListener = listener;
         if (!isLocationEnabled()) {
-            ToastUtils.toast("无法定位，请打开定位服务");
+            ToastUtils.get().show(R.string.cannot_location_please_open_service);
             return false;
         }
         LocationManager mLocationManager = getLocationManager();

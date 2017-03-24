@@ -48,7 +48,7 @@ public class HomeActivity extends BaseActivity<HomeActivity> {
             Long nowTime = new Date().getTime();
 
             if (nowTime - lastExitTime > 2000) { // 第一次按
-                ToastUtils.toast(R.string.press_again_exit);
+                ToastUtils.get().show(R.string.press_again_exit);
             } else { // 返回键连按两次
                 System.exit(0); // 真正退出程序
             }

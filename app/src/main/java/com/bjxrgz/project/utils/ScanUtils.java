@@ -44,7 +44,7 @@ public class ScanUtils {
                     listener.onSuccess(result);
                 }
             } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                ToastUtils.toast("二维码扫描失败");
+                ToastUtils.get().show("二维码扫描失败");
                 if (listener != null) {
                     listener.onFail();
                 }
@@ -63,12 +63,12 @@ public class ScanUtils {
                         T t1 = new Gson().fromJson(result, t);
                         listener.onSuccess(t1);
                     } catch (JsonSyntaxException e) {
-                        ToastUtils.toast("请扫描正确的二维码");
+                        ToastUtils.get().show("请扫描正确的二维码");
                         listener.onFail();
                     }
                 }
             } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                ToastUtils.toast("二维码扫描失败");
+                ToastUtils.get().show("二维码扫描失败");
                 if (listener != null) {
                     listener.onFail();
                 }

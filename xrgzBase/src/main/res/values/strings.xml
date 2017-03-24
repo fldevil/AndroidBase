@@ -13,6 +13,7 @@
     <string name="http_error_connect">网络连接错误</string>
     <string name="http_error_time">连接超时</string>
     <string name="http_error_request">网络请求异常</string>
+    <string name="cannot_location_please_open_service">无法定位，请打开定位服务</string>
 
     <string name="day1">一</string>
     <string name="day2">二</string>

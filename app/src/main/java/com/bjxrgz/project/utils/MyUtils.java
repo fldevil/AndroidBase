@@ -66,7 +66,7 @@ public class MyUtils {
                 toast = "服务器异常";
                 break;
         }
-        ToastUtils.toast(toast);
+        ToastUtils.get().show(toast);
     }
 
 }
