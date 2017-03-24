@@ -11,7 +11,6 @@ import com.bjxrgz.base.base.BaseApp;
  * describe toast工具类
  */
 public class ToastUtils {
-
     private static Toast toast;
 
     /* Toast 单例 可覆盖 */
@@ -33,8 +32,8 @@ public class ToastUtils {
     }
 
     public static void toast(int message) {
-        String show = BaseApp.get().getString(message);
-        toast(show);
+        String toast = BaseApp.get().getString(message);
+        toast(toast);
     }
 
     /* 应该有自定义的方法 */

@@ -31,20 +31,25 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  */
 public class HttpUtils {
 
+    /* api集合（不同的header参数） */
     private static final HashMap<String, APIUtils> callMap = new HashMap<>();
 
+    /* 清除缓存的api集合 */
     static void clearToken() {
         callMap.clear();
     }
 
+    /* Authorization参数（自定义） */
     public enum Head {
         empty, common, token
     }
 
+    /* 返回数据构造器 */
     public enum Factory {
         empty, string, gson
     }
 
+    /* 获取api */
     public static APIUtils call(Head head, Factory factory) {
         String key = head.name() + factory.name();
         APIUtils call = callMap.get(key);
@@ -71,6 +76,7 @@ public class HttpUtils {
         return newCall;
     }
 
+    /* http请求回调 */
     public interface CallBack<T> {
         void onSuccess(T result);
 

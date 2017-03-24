@@ -16,7 +16,6 @@ import java.util.List;
  * describe Gson工具类
  */
 public class GsonUtils {
-
     private static Gson GSON;
     private static Gson GSON_BUILDER;
 

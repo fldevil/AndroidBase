@@ -58,7 +58,7 @@ public class GlideUtils {
             }
         }
         DrawableTypeRequest<String> load = requestManager.load(imgUrl);
-        if (errorRes != 0) { //设置错误图片
+        if (errorRes != 0) { // 设置错误图片
             load.error(errorRes);
         }
         load.crossFade(100); // 设置淡入淡出效果，默认300ms(load.dontAnimate();取消效果)

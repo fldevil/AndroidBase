@@ -104,10 +104,28 @@ public class IntentUtils {
     }
 
     /**
-     * 打开网络设置界面
+     * 获取安装App(支持6.0)的意图
      */
-    public static Intent getNetSettingsIntent() {
-        return new Intent(Settings.ACTION_SETTINGS);
+    public static Intent getInstallIntent(File file) {
+        if (file == null) return null;
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        String type;
+        if (Build.VERSION.SDK_INT < 23) {
+            type = "application/vnd.android.package-archive";
+        } else {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(FileUtils.getFileExtension(file));
+        }
+        return intent.setDataAndType(Uri.fromFile(file), type);
+    }
+
+    /**
+     * 获取打开当前App的意图
+     */
+    public static Intent getAppIntent() {
+        BaseApp baseApp = BaseApp.get();
+        return baseApp.getPackageManager().getLaunchIntentForPackage(baseApp.getPackageName());
     }
 
     /**
@@ -132,78 +150,6 @@ public class IntentUtils {
     public static Intent getShareIntent(String content, File image) {
         if (!FileUtils.isFileExists(image)) return null;
         return getShareIntent(content, Uri.fromFile(image));
-    }
-
-    /**
-     * 回到Home
-     */
-    public static Intent getHomeIntent() {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-        return intent;
-    }
-
-    /**
-     * 打开app系统设置
-     */
-    public static Intent getSettingsIntent() {
-        Intent intent = new Intent();
-        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
-        String packageName = AppUtils.get().getPackageName();
-        intent.setData(Uri.parse("package:" + packageName));
-        return intent;
-    }
-
-    /**
-     * 获取App信息的意图
-     */
-    public static Intent getInfoIntent(String packageName) {
-        Intent intent = new Intent("android.settings.APPLICATION_DETAILS_SETTINGS");
-        return intent.setData(Uri.parse("package:" + packageName));
-    }
-
-    /**
-     * 跳转应用市场的意图
-     */
-    public static Intent getMarketIntent() {
-        String str = "market://details?id=" + BaseApp.get().getPackageName();
-        return new Intent("android.intent.action.VIEW", Uri.parse(str));
-    }
-
-    /**
-     * 获取安装App(支持6.0)的意图
-     */
-    public static Intent getInstallIntent(File file) {
-        if (file == null) return null;
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        String type;
-        if (Build.VERSION.SDK_INT < 23) {
-            type = "application/vnd.android.package-archive";
-        } else {
-            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(FileUtils.getFileExtension(file));
-        }
-        return intent.setDataAndType(Uri.fromFile(file), type);
-    }
-
-    /**
-     * 获取卸载App的意图
-     */
-    public Intent getUninstallIntent(String packageName) {
-        Intent intent = new Intent(Intent.ACTION_DELETE);
-        intent.setData(Uri.parse("package:" + packageName));
-        return intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    }
-
-    /**
-     * 获取打开当前App的意图
-     */
-    public static Intent getAppIntent() {
-        BaseApp baseApp = BaseApp.get();
-        return baseApp.getPackageManager().getLaunchIntentForPackage(baseApp.getPackageName());
     }
 
     /**
@@ -265,6 +211,16 @@ public class IntentUtils {
     }
 
     /**
+     * 彩信发送界面
+     */
+    public static Intent getSMSIntent(String phoneNumber, String content, File img) {
+        Intent intent = getSMSIntent(phoneNumber, content);
+        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(img));
+        intent.setType("image/png");
+        return intent;
+    }
+
+    /**
      * 直接发送短信
      * <uses-permission android:name="android.permission.SEND_SMS"/>
      */
@@ -280,6 +236,68 @@ public class IntentUtils {
         } else {
             smsManager.sendTextMessage(phoneNumber, null, content, sentIntent, null);
         }
+    }
+
+    /**
+     * 回到Home
+     */
+    public static Intent getHomeIntent() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+        return intent;
+    }
+
+    /**
+     * 打开网络设置界面
+     */
+    public static Intent getNetSettingsIntent() {
+        return new Intent(Settings.ACTION_SETTINGS);
+    }
+
+    /**
+     * 打开app系统设置
+     */
+    public static Intent getSettingsIntent() {
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        String packageName = AppUtils.get().getPackageName();
+        intent.setData(Uri.parse("package:" + packageName));
+        return intent;
+    }
+
+    /**
+     * 获取App信息的意图
+     */
+    public static Intent getInfoIntent(String packageName) {
+        Intent intent = new Intent("android.settings.APPLICATION_DETAILS_SETTINGS");
+        return intent.setData(Uri.parse("package:" + packageName));
+    }
+
+    /**
+     * 跳转应用市场的意图
+     */
+    public static Intent getMarketIntent() {
+        String str = "market://details?id=" + BaseApp.get().getPackageName();
+        return new Intent("android.intent.action.VIEW", Uri.parse(str));
+    }
+
+    /**
+     * 获取卸载App的意图
+     */
+    public Intent getUninstallIntent(String packageName) {
+        Intent intent = new Intent(Intent.ACTION_DELETE);
+        intent.setData(Uri.parse("package:" + packageName));
+        return intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    }
+
+    /**
+     * 获取打开浏览器的意图
+     */
+    public Intent getWebBrowseIntent(String url) {
+        Uri address = Uri.parse(url);
+        return new Intent(Intent.ACTION_VIEW, address);
     }
 
 }

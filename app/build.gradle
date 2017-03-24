@@ -66,9 +66,10 @@ android {
     dexOptions { // bug value-2
         javaMaxHeapSize "4g"
     }
-    // 过滤图片检验
-    aaptOptions.cruncherEnabled = false
-    aaptOptions.useNewCruncher = false
+    aaptOptions { // 过滤PNG图片检验
+        cruncherEnabled = false
+        useNewCruncher = false
+    }
 }
 
 dependencies {

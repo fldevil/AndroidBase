@@ -9,7 +9,6 @@ import com.bjxrgz.base.base.BaseActivity;
 import com.bjxrgz.base.utils.ActivityUtils;
 import com.bjxrgz.base.utils.ToastUtils;
 import com.bjxrgz.project.R;
-import com.bjxrgz.project.service.LocationService;
 import com.bjxrgz.project.utils.ViewUtils;
 
 import java.util.Date;
@@ -38,8 +37,8 @@ public class HomeActivity extends BaseActivity<HomeActivity> {
 
     @Override
     protected void initData() {
-    }
 
+    }
 
     private Long lastExitTime = 0L; //最后一次退出时间
 

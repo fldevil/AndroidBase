@@ -10,6 +10,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.bjxrgz.base.domain.Version;
+import com.bjxrgz.base.utils.ActivityUtils;
 import com.bjxrgz.base.utils.AppUtils;
 import com.bjxrgz.base.utils.DialogUtils;
 import com.bjxrgz.base.utils.FileUtils;
@@ -122,7 +123,7 @@ public class UpdateService extends Service {
                         FileUtils.writeFileFromIS(apkFile, body.byteStream(), false);
                         // 启动安装
                         Intent installIntent = IntentUtils.getInstallIntent(apkFile);
-                        UpdateService.this.startActivity(installIntent);
+                        ActivityUtils.startActivity(UpdateService.this, installIntent);
                     }
                 });
             }

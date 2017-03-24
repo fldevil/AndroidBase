@@ -87,7 +87,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        NetUtils.isAvailable();
+        NetUtils.get().isAvailable();
     }
 
     @Override

@@ -291,4 +291,15 @@ public class AppUtils {
         return false;
     }
 
+    /**
+     * 退出应用程序
+     */
+    public void AppExit() {
+        ActivityUtils.closeActivities();
+        ActivityManager activityMgr = (ActivityManager) BaseApp.get()
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        activityMgr.killBackgroundProcesses(BaseApp.get().getPackageName());
+        System.exit(0);
+    }
+
 }
