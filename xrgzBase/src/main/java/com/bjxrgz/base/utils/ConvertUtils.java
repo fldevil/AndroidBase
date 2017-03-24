@@ -75,7 +75,7 @@ public class ConvertUtils {
                 // DownloadsProvider
                 Uri contentUri = ContentUris.withAppendedId(
                         Uri.parse("content://downloads/public_downloads"), Long.valueOf(docId));
-                data = MediaUtils.getProviderColumnTop(contentUri, project, null, null, null);
+                data = ProviderUtils.getProviderColumnTop(contentUri, project, null, null, null);
             } else if ("com.android.providers.media.documents".equals(uri.getAuthority())) {
                 // MediaProvider
                 Uri contentUri = null;
@@ -88,7 +88,7 @@ public class ConvertUtils {
                 }
                 String selection = "_id=?";
                 String[] selectionArgs = new String[]{split[1]};
-                data = MediaUtils.getProviderColumnTop(contentUri, project, selection, selectionArgs, null);
+                data = ProviderUtils.getProviderColumnTop(contentUri, project, selection, selectionArgs, null);
             }
         } else if (ContentResolver.SCHEME_FILE.equals(scheme)) { // File
             data = uri.getPath();
@@ -96,7 +96,7 @@ public class ConvertUtils {
             if ("com.google.android.apps.photos.content".equals(uri.getAuthority())) {
                 data = uri.getLastPathSegment();
             } else {
-                data = MediaUtils.getProviderColumnTop(uri, project, null, null, null);
+                data = ProviderUtils.getProviderColumnTop(uri, project, null, null, null);
             }
         }
         if (data != null) return new File(data);

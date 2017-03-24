@@ -20,7 +20,7 @@ public class MyUtils {
     public static final int REQUEST_CAMERA = 191;  // 相机
     public static final int REQUEST_PICTURE = 192;  // 图库
     public static final int REQUEST_CROP = 193;  // 裁剪
-    public static final int REQUEST_SCAN = 194;  // 裁剪
+    public static final int REQUEST_SCAN = 194;  // 扫描
 
 
     public static boolean noLogin() {
