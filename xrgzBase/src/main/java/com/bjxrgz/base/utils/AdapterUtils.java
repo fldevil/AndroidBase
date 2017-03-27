@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +111,7 @@ public class AdapterUtils {
             adapter.loadComplete(); // 关闭更多
         } else { // 有数据
             adapter.setNewData(list);
-            if (totalCount != -1 && list.size() >= totalCount) {
+            if (list.size() >= totalCount) {
                 adapter.loadComplete(); // 关闭更多
             }
         }
@@ -131,7 +132,7 @@ public class AdapterUtils {
             adapter.loadComplete();
         } else { // 有数据
             adapter.addData(list);
-            if (totalCount != -1 && adapter.getItemCount() >= totalCount) {
+            if (adapter.getItemCount() >= totalCount) {
                 adapter.loadComplete(); // 关闭更多
             }
         }
@@ -183,6 +184,11 @@ public class AdapterUtils {
     public static void removeFooter(BaseQuickAdapter adapter) {
         if (adapter == null) return;
         adapter.removeAllFooterView();
+    }
+
+    public static BaseViewHolder getHolder(RecyclerView rv, int position) {
+        if (rv == null) return null;
+        return (BaseViewHolder) rv.findViewHolderForLayoutPosition(position);
     }
 
 }

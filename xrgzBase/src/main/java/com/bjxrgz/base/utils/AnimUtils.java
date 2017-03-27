@@ -241,10 +241,11 @@ public class AnimUtils {
      * @param startRadius 圆形开始的半径
      * @param endRadius   结束时候的半径
      */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static Animator getCircular(View view, int centerX, int centerY,
                                        float startRadius, float endRadius) {
-        return ViewAnimationUtils.createCircularReveal(view, centerX, centerY, startRadius, endRadius);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return null;
+        return ViewAnimationUtils.createCircularReveal(view,
+                centerX, centerY, startRadius, endRadius);
     }
 
     /**
@@ -340,16 +341,16 @@ public class AnimUtils {
      * <p>
      * 用于切换的场景,就是布局
      */
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     public static Scene getScene(ViewGroup parent, int layoutID, Context context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return null;
         return Scene.getSceneForLayout(parent, layoutID, context);
     }
 
     /**
      * 获取自定义的Trans,也可以auto生成
      */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static Transition getTrans(long duration, boolean together, int mode) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return null;
         TransitionSet set = new TransitionSet();
         set.setDuration(duration);
         set.setInterpolator(new LinearInterpolator());

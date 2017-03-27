@@ -1,6 +1,5 @@
 package com.bjxrgz.base.utils;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -568,8 +567,8 @@ public class ImageUtils {
      * @param radius  模糊度(0...25)
      * @return 模糊后的图片
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     public static Bitmap renderScriptBlur(Context context, Bitmap src, float radius) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) return null;
         if (isEmptyBitmap(src)) return null;
         RenderScript rs = null;
         try {
@@ -965,8 +964,8 @@ public class ImageUtils {
     /**
      * 剪切view , 还有设置四大属性的方法，太多了 不封装了
      */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void clipView(View view, ViewOutlineProvider provider) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
         // 设置Outline , provider在外部自己实现
         view.setOutlineProvider(provider);
         // 剔除Outline以外的view ,可以起裁剪作用
