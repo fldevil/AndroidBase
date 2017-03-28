@@ -6,7 +6,6 @@ import com.bjxrgz.base.domain.Version;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -30,8 +29,8 @@ import retrofit2.http.Url;
 public interface APIUtils {
 
     /* BaseURL最好以/结尾 */
-//    String HOST = ""; // 测试
-    String HOST = ""; // 正式
+    String HOST = ""; // 测试
+    //    String HOST = ""; // 正式
     String BASE_URL = HOST + "api/v1/zh-CN/";
     String IMG_FORE_URL = ""; // 图片前缀
 
@@ -41,8 +40,7 @@ public interface APIUtils {
     Call<List<User>> demo(@Url String url, @Path("path") String path, // {path}
                           @Header("key") String key, @HeaderMap Map<String, String> headers,
                           @Query("limit") String limit, @QueryMap Map<String, String> options,
-                          @Part MultipartBody.Part file, @PartMap Map<String, RequestBody> params,
-                          @Part("fileName") String description, @Part("file") RequestBody imgs,
+                          @Part("name") String value, @PartMap Map<String, RequestBody> params,
                           @Body User user, @Body String requestBody);
 
     @Streaming

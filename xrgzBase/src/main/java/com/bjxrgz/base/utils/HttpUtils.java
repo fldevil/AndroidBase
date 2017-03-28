@@ -4,19 +4,20 @@ import android.content.Context;
 
 import com.bjxrgz.base.R;
 import com.bjxrgz.base.base.BaseApp;
-import com.bjxrgz.base.domain.HttpError;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import okhttp3.Headers;
-import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Converter;
@@ -94,50 +95,20 @@ public class HttpUtils {
         call.enqueue(new Callback<T>() {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
-                // request
-                Request request = response.raw().networkResponse().request();
-                String method = request.method();
-                HttpUrl url = request.url();
-                Headers headers = request.headers();
-                // response
                 int code = response.code();
                 T result = response.body();
-                ResponseBody error = response.errorBody();
-                String headerString = ""; // 头部信息
-                String errorString = ""; // 错误信息
-                try {
-                    if (headers != null) {
-                        headerString = headers.toString();
-                    }
-                    if (error != null) { // error.string()不能执行两次
-                        errorString = error.string();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                // 打印请求信息
-                if (code == 200) {
-                    LogUtils.d(code + " " + method + "\n" + url + "\n" + headerString);
-                } else {
-                    LogUtils.e(code + " " + method + "\n" + url + "\n" + headerString
-                            + "\nerror:" + errorString);
-                }
                 // 响应处理
+                if (callBack == null) return;
                 if (code == 200) { // 200成功
-                    if (result != null) {
-                        String json;
-                        if (result instanceof String) {
-                            json = result.toString();
-                        } else {
-                            json = GsonUtils.get().toJson(result);
-                        }
-                        LogUtils.json(json); // 打印返回信息
-                    }
-                    if (callBack != null) {
-                        callBack.onSuccess(result);
-                    }
-                } else { // 非200错误
-                    if (callBack != null) {
+                    callBack.onSuccess(result);
+                } else { // 响应非200
+                    String errorString = "";
+                    try {
+                        ResponseBody error = response.errorBody();
+                        errorString = error.string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
                         callBack.onFailure(code, errorString);
                     }
                 }
@@ -155,18 +126,12 @@ public class HttpUtils {
                     errorMessage = BaseApp.get().getString(R.string.http_error_request);
                     LogUtils.e(t.toString());
                 }
-                if (callBack != null) {
-                    HttpError httpError = new HttpError();
-                    httpError.setErrorCode(-1);
-                    httpError.setMessage(errorMessage);
-                    String errorString = GsonUtils.get().toJson(httpError);
-                    callBack.onFailure(417, errorString);
-                }
+                ToastUtils.get().show(errorMessage);
             }
         });
     }
 
-    /* 构建头信息 */
+    /* 构建头Map */
     public static HashMap<String, String> getHeaderMap(String token) {
         HashMap<String, String> options = new HashMap<>();
         options.put("API_KEY", "");
@@ -178,13 +143,7 @@ public class HttpUtils {
         return options;
     }
 
-    /* 构建头信息 */
-    private static Interceptor getHeader(String token) {
-        HashMap<String, String> options = getHeaderMap(token);
-        return getHeader(options);
-    }
-
-    /* 构建头信息 */
+    /* 构建头client */
     private static Interceptor getHeader(final Map<String, String> options) {
         return new Interceptor() {
             @Override
@@ -199,22 +158,36 @@ public class HttpUtils {
         };
     }
 
-    /* 数据解析构造器 */
-    private static GsonConverterFactory getGsonFactory() {
-        return GsonConverterFactory.create();
-    }
-
-    private static ScalarsConverterFactory getStringFactory() {
-        return ScalarsConverterFactory.create();
+    /* 构建头信息 */
+    private static Interceptor getHeader(String token) {
+        HashMap<String, String> options = getHeaderMap(token);
+        return getHeader(options);
     }
 
     /* 获取OKHttp的client */
     private static OkHttpClient getClient(Interceptor header) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.addInterceptor(getLogInterceptor());
         if (header != null) {
             builder.addInterceptor(header);
         }
         return builder.build();
+    }
+
+    /* 获取日志拦截器 */
+    private static Interceptor getLogInterceptor() {
+        HttpLoggingInterceptor.Level level = HttpLoggingInterceptor.Level.BODY;
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(
+                new HttpLoggingInterceptor.Logger() {
+                    @Override
+                    public void log(String message) {
+                        if (StringUtils.isEmpty(message)) return;
+                        LogUtils.d(message);
+                    }
+                });
+        // BODY 请求/响应行 + 头 + 体
+        loggingInterceptor.setLevel(level);
+        return loggingInterceptor;
     }
 
     /* 获取Retrofit实例 */
@@ -222,10 +195,19 @@ public class HttpUtils {
         Retrofit.Builder builder = new Retrofit.Builder();
         builder.baseUrl(APIUtils.BASE_URL); // host
         if (factory != null) {
-            builder.addConverterFactory(factory); //解析构造器
+            builder.addConverterFactory(factory); // 解析构造器
         }
         builder.client(getClient(header)); // client
         return builder.build();
+    }
+
+    /* 数据解析构造器 */
+    private static GsonConverterFactory getGsonFactory() {
+        return GsonConverterFactory.create();
+    }
+
+    private static ScalarsConverterFactory getStringFactory() {
+        return ScalarsConverterFactory.create();
     }
 
     /* 获取service 开始请求网络 */
@@ -249,6 +231,18 @@ public class HttpUtils {
     private static boolean isZH(Context context) {
         String language = getLocale(context).getLanguage();
         return language.endsWith("zh");
+    }
+
+    public static RequestBody string2PartBody(String body) {
+        return RequestBody.create(MediaType.parse("text/plain"), body);
+    }
+
+    public static String file2PartKey(File file) {
+        return "file\";filename=\"" + file.getName();
+    }
+
+    public static RequestBody img2PartBody(File file) {
+        return RequestBody.create(MediaType.parse("image/jpeg"), file);
     }
 
 }

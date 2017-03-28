@@ -11,7 +11,7 @@
     <string name="no_network_title">网络不能访问</string>
 
     <string name="http_error_connect">网络连接错误</string>
-    <string name="http_error_time">连接超时</string>
+    <string name="http_error_time">网络连接超时</string>
     <string name="http_error_request">网络请求异常</string>
     <string name="cannot_location_please_open_service">无法定位，请打开定位服务</string>
 
