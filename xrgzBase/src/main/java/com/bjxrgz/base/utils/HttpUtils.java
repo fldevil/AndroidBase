@@ -127,6 +127,8 @@ public class HttpUtils {
                     LogUtils.e(t.toString());
                 }
                 ToastUtils.get().show(errorMessage);
+                if (callBack == null) return;
+                callBack.onFailure(-1, errorMessage);
             }
         });
     }
@@ -181,8 +183,13 @@ public class HttpUtils {
                 new HttpLoggingInterceptor.Logger() {
                     @Override
                     public void log(String message) {
-                        if (StringUtils.isEmpty(message)) return;
-                        LogUtils.d(message);
+                        String log = message.trim();
+                        if (StringUtils.isEmpty(log)) return;
+                        if (log.startsWith("{") || log.startsWith("[")) {
+                            LogUtils.json(log);
+                        } else {
+                            LogUtils.d(log);
+                        }
                     }
                 });
         // BODY 请求/响应行 + 头 + 体
