@@ -27,6 +27,7 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.bjxrgz.base.utils.LogUtils;
+import com.bjxrgz.project.MyApp;
 
 import java.util.ArrayList;
 
@@ -70,12 +71,17 @@ public class MapUtils {
     }
 
     /* 2.开始定位 */
-    public void startLocation(AMapLocationListener locationListener) {
+    public void startLocation(final AMapLocationListener locationListener) {
         if (aMapLocationClient != null) {
-            //设置定位回调监听
-            aMapLocationClient.setLocationListener(locationListener);
-            //启动定位
-            aMapLocationClient.startLocation();
+            MyApp.get().getHandler().post(new Runnable() {
+                @Override
+                public void run() {
+                    //设置定位回调监听
+                    aMapLocationClient.setLocationListener(locationListener);
+                    //启动定位
+                    aMapLocationClient.startLocation();
+                }
+            });
         }
     }
 
@@ -125,41 +131,44 @@ public class MapUtils {
     public AMapLocationListener getAMapLocationListener(final LocationCallBack locationCallBack) {
         return new AMapLocationListener() {
             @Override
-            public void onLocationChanged(AMapLocation aMapLocation) {
-                int successCode = 0; // 以后可能会变
-                if (aMapLocation != null) {
-                    if (aMapLocation.getErrorCode() == successCode) {
-                        if (locationChangedListener != null) { // 显示系统小蓝点
-                            locationChangedListener.onLocationChanged(aMapLocation);
-                        }
-                        //定位成功回调信息，设置相关消息
-                        aMapLocation.getLatitude();//获取纬度
-                        aMapLocation.getLongitude();//获取经度
-                        aMapLocation.getAccuracy();//获取精度信息
-                        aMapLocation.getAddress();//地址，如果option中设置isNeedAddress为false，则没有此结果，网络定位结果中会有地址信息，GPS定位不返回地址信息。
-                        aMapLocation.getProvince();//省信息
-                        aMapLocation.getCity();//城市信息
-                        aMapLocation.getDistrict();//城区信息
-                        aMapLocation.getStreet();//街道信息
-                        aMapLocation.getStreetNum();//街道门牌号信息
-                        aMapLocation.getCityCode();//城市编码
-                        aMapLocation.getAdCode();//地区编码
-                        aMapLocation.getAoiName();//获取当前定位点的AOI信息
-                        LogUtils.d(aMapLocation.toString());
+            public void onLocationChanged(final AMapLocation aMapLocation) {
+                if (aMapLocation == null) return;
+                final int successCode = 0; // 以后可能会变
+                MyApp.get().getHandler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (aMapLocation.getErrorCode() == successCode) {
+                            if (locationChangedListener != null) { // 显示系统小蓝点
+                                locationChangedListener.onLocationChanged(aMapLocation);
+                            }
+                            //定位成功回调信息，设置相关消息
+                            aMapLocation.getLatitude();//获取纬度
+                            aMapLocation.getLongitude();//获取经度
+                            aMapLocation.getAccuracy();//获取精度信息
+                            aMapLocation.getAddress();//地址，如果option中设置isNeedAddress为false，则没有此结果，网络定位结果中会有地址信息，GPS定位不返回地址信息。
+                            aMapLocation.getProvince();//省信息
+                            aMapLocation.getCity();//城市信息
+                            aMapLocation.getDistrict();//城区信息
+                            aMapLocation.getStreet();//街道信息
+                            aMapLocation.getStreetNum();//街道门牌号信息
+                            aMapLocation.getCityCode();//城市编码
+                            aMapLocation.getAdCode();//地区编码
+                            aMapLocation.getAoiName();//获取当前定位点的AOI信息
+                            LogUtils.d(aMapLocation.toString());
 
-                        if (locationCallBack != null) {
-                            locationCallBack.onSuccess(aMapLocation);
-                        }
-                    } else {
-                        String errText = "定位失败," + aMapLocation.getErrorCode()
-                                + ": " + aMapLocation.getErrorInfo();
-                        LogUtils.e(errText);
-//                        WidgetUtils.toast(BaseApp.instance, R.string.map_location_error);
-                        if (locationCallBack != null) {
-                            locationCallBack.onFailed(aMapLocation);
+                            if (locationCallBack != null) {
+                                locationCallBack.onSuccess(aMapLocation);
+                            }
+                        } else {
+                            String errText = "定位失败," + aMapLocation.getErrorCode()
+                                    + ": " + aMapLocation.getErrorInfo();
+                            LogUtils.e(errText);
+                            if (locationCallBack != null) {
+                                locationCallBack.onFailed(aMapLocation);
+                            }
                         }
                     }
-                }
+                });
             }
         };
     }
@@ -257,26 +266,27 @@ public class MapUtils {
     public GeocodeSearch.OnGeocodeSearchListener getOnGeocodeSearchListener(final GeocodeSearchCallBack geocodeSearchCallBack) {
         return new GeocodeSearch.OnGeocodeSearchListener() {
             @Override
-            public void onRegeocodeSearched(RegeocodeResult result, int rCode) {
-                int successCode = 1000; // 以后可能会变
-                if (rCode == successCode) {
-                    if (result != null && result.getRegeocodeAddress() != null) {
-                        RegeocodeAddress regeocodeAddress = result.getRegeocodeAddress();
-                        String city = regeocodeAddress.getCity();
-                        String district = regeocodeAddress.getDistrict();
-                        String province = regeocodeAddress.getProvince();
-                        String adCode = regeocodeAddress.getAdCode();
-                        String addressName = regeocodeAddress.getFormatAddress();
+            public void onRegeocodeSearched(final RegeocodeResult result, final int rCode) {
+                final int successCode = 1000; // 以后可能会变
+                MyApp.get().getHandler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (rCode == successCode && geocodeSearchCallBack != null) {
+                            if (result != null && result.getRegeocodeAddress() != null) {
+                                RegeocodeAddress regeocodeAddress = result.getRegeocodeAddress();
+                                String city = regeocodeAddress.getCity();
+                                String district = regeocodeAddress.getDistrict();
+                                String province = regeocodeAddress.getProvince();
+                                String adCode = regeocodeAddress.getAdCode();
+                                String addressName = regeocodeAddress.getFormatAddress();
 
-                        if (geocodeSearchCallBack != null) {
-                            geocodeSearchCallBack.onSuccess(regeocodeAddress);
-                        }
-                    } else {
-                        if (geocodeSearchCallBack != null) {
-                            geocodeSearchCallBack.onFailed();
+                                geocodeSearchCallBack.onSuccess(regeocodeAddress);
+                            } else {
+                                geocodeSearchCallBack.onFailed();
+                            }
                         }
                     }
-                }
+                });
 
             }
 
@@ -339,11 +349,16 @@ public class MapUtils {
                     //result.getPois()可以获取到PoiItem列表，Poi详细信息可参考PoiItem类
                     //若当前城市查询不到所需Poi信息，可以通过result.getSearchSuggestionCitys()获取当前Poi搜索的建议城市
                     //如果搜索关键字明显为误输入，则可通过result.getSearchSuggestionKeywords()方法得到搜索关键词建议
-                    ArrayList<PoiItem> pois = poiResult.getPois();
+                    final ArrayList<PoiItem> pois = poiResult.getPois();
                     LogUtils.d(pois.toString());
-                    if (searchCallBack != null) {
-                        searchCallBack.onSuccess(pois);
-                    }
+                    MyApp.get().getHandler().post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (searchCallBack != null) {
+                                searchCallBack.onSuccess(pois);
+                            }
+                        }
+                    });
                 }
             }
 

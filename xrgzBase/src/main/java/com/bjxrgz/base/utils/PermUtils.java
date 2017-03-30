@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.os.Build;
 
+import com.bjxrgz.base.base.BaseApp;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import rx.Observable;
@@ -29,14 +30,19 @@ public class PermUtils {
         Observable<Boolean> request = rxPermissions.request(permissions);
         request.subscribe(new Action1<Boolean>() {
             @Override
-            public void call(Boolean aBoolean) {
-                if (aBoolean) { // 同意使用权限
-                    if (listener != null) {
-                        listener.onAgree();
+            public void call(final Boolean aBoolean) {
+                BaseApp.get().getHandler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (aBoolean) { // 同意使用权限
+                            if (listener != null) {
+                                listener.onAgree();
+                            }
+                        } else {
+                            LogUtils.d("拒绝使用权限");
+                        }
                     }
-                } else {
-                    LogUtils.d("拒绝使用权限");
-                }
+                });
             }
         }, new Action1<Throwable>() {
             @Override
