@@ -62,19 +62,45 @@ public class AppUtils {
     }
 
     /**
+     * 自定义资源路径(部分手机有差别)
+     */
+    public String getResDir() {
+        if (!StringUtils.isEmpty(resDir)) return resDir;
+        String dir;
+        if (isSDCardEnable()) {
+            dir = getSDCardPath() + packageName + File.separator;
+        } else {
+            dir = getRootPath() + packageName + File.separator;
+        }
+        resDir = dir;
+        FileUtils.createOrExistsDir(resDir); // 并创建
+        return resDir;
+    }
+
+    /**
+     * 自定义Log路径
+     */
+    public String getLogDir() {
+        if (!StringUtils.isEmpty(logDir)) return logDir;
+        logDir = getResDir() + "log" + File.separator;
+        FileUtils.createOrExistsDir(logDir); // 并创建
+        return logDir;
+    }
+
+    /**
      * 如果SD卡存在，则获取 SDCard/Android/data/你的应用的包名/files/
      * 如果不存在，则获取 /data/data/<application package>/files
      */
     public String getFilesDir(String dirName) {
         BaseApp baseApp = BaseApp.get();
-        File file;
+        File dir;
         if (isSDCardEnable()) {
-            file = baseApp.getExternalFilesDir(dirName);
-        }else {
-            file = baseApp.getFilesDir();
+            dir = baseApp.getExternalFilesDir(dirName);
+        } else {
+            dir = baseApp.getFilesDir();
         }
-        if (file != null){
-            filesDir = file.getAbsolutePath();
+        if (dir != null) {
+            filesDir = dir.getAbsolutePath();
         }
         return filesDir;
     }
@@ -86,50 +112,16 @@ public class AppUtils {
     public String getCacheDir() {
         if (!StringUtils.isEmpty(cacheDir)) return cacheDir;
         BaseApp baseApp = BaseApp.get();
-        File file;
+        File dir;
         if (isSDCardEnable()) {
-            file = baseApp.getExternalCacheDir();
-        }else {
-            file = baseApp.getCacheDir();
+            dir = baseApp.getExternalCacheDir();
+        } else {
+            dir = baseApp.getCacheDir();
         }
-        if (cacheDir != null){
-            cacheDir = file.getAbsolutePath();
+        if (dir != null) {
+            cacheDir = dir.getAbsolutePath();
         }
         return cacheDir;
-    }
-
-    /**
-     * 自定义资源路径(部分手机有差别)
-     */
-    public String getResDir() {
-        if (!StringUtils.isEmpty(resDir)) return resDir;
-        String resDir;
-        if (isSDCardEnable()) {
-            resDir = getSDCardPath() + packageName + File.separator;
-        } else {
-            resDir = getRootPath() + packageName + File.separator;
-        }
-        setResDir(resDir);
-        FileUtils.createOrExistsDir(resDir); // 并创建
-        return resDir;
-    }
-
-    public void setResDir(String resDir) {
-        this.resDir = resDir;
-    }
-
-    /**
-     * 自定义Log路径
-     */
-    public String getLogDir() {
-        if (!StringUtils.isEmpty(logDir)) return logDir;
-        setLogDir(resDir + "log" + File.separator);
-        FileUtils.createOrExistsDir(logDir); // 并创建
-        return logDir;
-    }
-
-    public void setLogDir(String logDir) {
-        this.logDir = logDir;
     }
 
     public Signature[] getSignature() {

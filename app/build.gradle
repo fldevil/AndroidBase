@@ -14,8 +14,8 @@ android {
     signingConfigs { // 签名信息
         bjxrgz_debug {
 //            storeFile file('/Users/mengfd/Documents/projects/kaola/launch/android/bjxrgz_android_debug.jks')
-            storeFile file('E:/android_key/bjxrgz_android_debug.jks')
-//            storeFile file('/Users/gg/Documents/bjxrgz/key/bjxrgz_android_debug.jks')
+//            storeFile file('E:/android_key/bjxrgz_android_debug.jks')
+            storeFile file('/Users/gg/Documents/bjxrgz/key/bjxrgz_android_debug.jks')
             storePassword 'Bjxrgz998'
             keyAlias 'Bjxrgz'
             keyPassword 'Bjxrgz998'
