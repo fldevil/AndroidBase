@@ -97,7 +97,7 @@ public class IntentUtils {
         intent.putExtra("scale", true);
         intent.putExtra("noFaceDetection", true);
         // 数据返回
-        intent.putExtra("return-data", true);
+        intent.putExtra("return-data", false); // 不从intent里面拿
         intent.putExtra(MediaStore.EXTRA_OUTPUT, save);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         return intent;
