@@ -1,12 +1,12 @@
-package com.bjxrgz.project.activity;
+package com.user.project.activity;
 
 import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.bjxrgz.base.base.BaseActivity;
-import com.bjxrgz.project.MyApp;
-import com.bjxrgz.project.R;
 import com.bjxrgz.base.utils.ScreenUtils;
+import com.user.project.MyApp;
+import com.user.project.R;
 
 import butterknife.BindView;
 

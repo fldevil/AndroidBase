@@ -1,4 +1,4 @@
-package com.bjxrgz.project.utils;
+package com.user.project.utils;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -27,7 +27,7 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.bjxrgz.base.utils.LogUtils;
-import com.bjxrgz.project.MyApp;
+import com.user.project.MyApp;
 
 import java.util.ArrayList;
 

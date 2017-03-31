@@ -1,4 +1,4 @@
-package com.bjxrgz.project.service;
+package com.user.project.service;
 
 import android.app.Service;
 import android.content.Context;
@@ -16,10 +16,10 @@ import com.bjxrgz.base.utils.DialogUtils;
 import com.bjxrgz.base.utils.FileUtils;
 import com.bjxrgz.base.utils.HttpUtils;
 import com.bjxrgz.base.utils.IntentUtils;
-import com.bjxrgz.project.MyApp;
-import com.bjxrgz.project.R;
-import com.bjxrgz.project.utils.MyUtils;
-import com.bjxrgz.project.utils.ResUtils;
+import com.user.project.MyApp;
+import com.user.project.R;
+import com.user.project.utils.MyUtils;
+import com.user.project.utils.ResUtils;
 
 import java.io.File;
 

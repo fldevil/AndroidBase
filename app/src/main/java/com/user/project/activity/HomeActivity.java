@@ -1,4 +1,4 @@
-package com.bjxrgz.project.activity;
+package com.user.project.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,8 +8,8 @@ import android.view.KeyEvent;
 import com.bjxrgz.base.base.BaseActivity;
 import com.bjxrgz.base.utils.ActivityUtils;
 import com.bjxrgz.base.utils.ToastUtils;
-import com.bjxrgz.project.R;
-import com.bjxrgz.project.utils.ViewUtils;
+import com.user.project.R;
+import com.user.project.utils.ViewUtils;
 
 import java.util.Date;
 

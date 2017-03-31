@@ -1,10 +1,10 @@
-package com.bjxrgz.project.utils;
+package com.user.project.utils;
 
 import android.app.Activity;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bjxrgz.project.R;
+import com.user.project.R;
 
 /**
  * Created by JiangZhiGuo on 2016-10-31.

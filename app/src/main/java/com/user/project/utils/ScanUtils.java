@@ -1,4 +1,4 @@
-package com.bjxrgz.project.utils;
+package com.user.project.utils;
 
 import android.app.Activity;
 import android.content.Context;

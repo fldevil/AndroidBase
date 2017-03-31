@@ -1,4 +1,4 @@
-package com.bjxrgz.project.utils;
+package com.user.project.utils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.bjxrgz.base.utils.LogUtils;
-import com.bjxrgz.project.R;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.ShareAction;
@@ -18,6 +17,7 @@ import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMVideo;
 import com.umeng.socialize.media.UMusic;
 import com.umeng.socialize.utils.Log;
+import com.user.project.R;
 
 import java.util.Map;
 

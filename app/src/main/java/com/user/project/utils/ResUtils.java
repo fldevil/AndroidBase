@@ -1,4 +1,4 @@
-package com.bjxrgz.project.utils;
+package com.user.project.utils;
 
 import com.bjxrgz.base.utils.AppUtils;
 import com.bjxrgz.base.utils.FileUtils;

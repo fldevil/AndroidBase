@@ -1,4 +1,4 @@
-package com.bjxrgz.project.utils;
+package com.user.project.utils;
 
 import com.bjxrgz.base.domain.HttpError;
 import com.bjxrgz.base.utils.ActivityUtils;
@@ -7,8 +7,8 @@ import com.bjxrgz.base.utils.GsonUtils;
 import com.bjxrgz.base.utils.SPUtils;
 import com.bjxrgz.base.utils.StringUtils;
 import com.bjxrgz.base.utils.ToastUtils;
-import com.bjxrgz.project.MyApp;
-import com.bjxrgz.project.service.UpdateService;
+import com.user.project.MyApp;
+import com.user.project.service.UpdateService;
 
 /**
  * Created by gg on 2017/2/28.

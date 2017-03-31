@@ -1,4 +1,4 @@
-package com.bjxrgz.project;
+package com.user.project;
 
 import com.bjxrgz.base.base.BaseApp;
 

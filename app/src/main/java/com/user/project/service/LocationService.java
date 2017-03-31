@@ -1,4 +1,4 @@
-package com.bjxrgz.project.service;
+package com.user.project.service;
 
 import android.app.Service;
 import android.content.Context;
@@ -9,7 +9,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
 import com.bjxrgz.base.utils.LocationUtils;
 import com.bjxrgz.base.utils.PermUtils;
-import com.bjxrgz.project.utils.MapUtils;
+import com.user.project.utils.MapUtils;
 
 public class LocationService extends Service {
 
