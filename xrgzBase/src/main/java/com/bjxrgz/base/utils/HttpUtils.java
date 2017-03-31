@@ -3,7 +3,6 @@ package com.bjxrgz.base.utils;
 import android.content.Context;
 
 import com.bjxrgz.base.R;
-import com.bjxrgz.base.base.BaseApp;
 
 import java.io.File;
 import java.io.IOException;
@@ -117,18 +116,18 @@ public class HttpUtils {
             @Override
             public void onFailure(Call<T> call, Throwable t) {
                 Class<? extends Throwable> aClass = t.getClass();
-                String errorMessage;
+                int errorMessage;
                 if (aClass.equals(java.net.ConnectException.class)) { // 网络环境
-                    errorMessage = BaseApp.get().getString(R.string.http_error_connect);
+                    errorMessage = R.string.http_error_connect;
                 } else if (aClass.equals(java.net.SocketTimeoutException.class)) { // 超时错误
-                    errorMessage = BaseApp.get().getString(R.string.http_error_time);
+                    errorMessage = R.string.http_error_time;
                 } else { // 其他网络错误
-                    errorMessage = BaseApp.get().getString(R.string.http_error_request);
+                    errorMessage = R.string.http_error_request;
                     LogUtils.e(t.toString());
                 }
                 ToastUtils.get().show(errorMessage);
                 if (callBack == null) return;
-                callBack.onFailure(-1, errorMessage);
+                callBack.onFailure(-1, "");
             }
         });
     }

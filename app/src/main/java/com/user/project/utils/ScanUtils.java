@@ -24,7 +24,7 @@ public class ScanUtils {
         void onFail();
     }
 
-    public static void init(Context context) {
+    public static void initApp(Context context) {
         ZXingLibrary.initDisplayOpinion(context);
     }
 

@@ -492,7 +492,6 @@ public class ConvertUtils {
      * @param type eg: TypedValue.COMPLEX_UNIT_DIP
      */
     public static int getpx(int type, float value) {
-
         DisplayMetrics metrics = BaseApp.get().getResources().getDisplayMetrics();
         return (int) TypedValue.applyDimension(type, value, metrics);
     }

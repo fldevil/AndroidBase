@@ -3,8 +3,6 @@ package com.bjxrgz.base.utils;
 import android.app.ActivityManager;
 import android.content.Context;
 
-import com.bjxrgz.base.base.BaseApp;
-
 import java.util.List;
 
 /**
@@ -18,8 +16,8 @@ public class ServiceUtils {
      *
      * @param serviceName 是包名+服务的类名（例如：net.loonggg.testbackstage.TestService）
      */
-    public static boolean isServiceWork(String serviceName) {
-        ActivityManager myAM = (ActivityManager) BaseApp.get()
+    public static boolean isServiceWork(Context context, String serviceName) {
+        ActivityManager myAM = (ActivityManager) context
                 .getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningServiceInfo> myList = myAM.getRunningServices(100);
         if (myList != null && myList.size() > 0) {

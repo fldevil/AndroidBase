@@ -10,6 +10,7 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
 import com.bjxrgz.base.utils.ActivityUtils;
+import com.bjxrgz.base.utils.AnalyUtils;
 import com.bjxrgz.base.utils.LogUtils;
 
 import java.util.concurrent.ExecutorService;
@@ -33,9 +34,10 @@ public class BaseApp extends MultiDexApplication {
         super.onCreate();
         instance = this;
         initListener();
-        ActivityUtils.initApp();
         ButterKnife.setDebug(true); // 注解
-        LogUtils.initApp(); // 打印
+        ActivityUtils.initApp(instance);
+        LogUtils.initApp(instance); // 打印
+        AnalyUtils.initApp(instance);
     }
 
     public static BaseApp get() {

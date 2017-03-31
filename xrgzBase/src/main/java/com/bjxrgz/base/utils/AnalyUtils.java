@@ -10,6 +10,12 @@ import com.umeng.analytics.MobclickAgent;
  */
 public class AnalyUtils {
 
+    /* c收集奔溃日志 */
+    public static void initApp(Context context) {
+        MobclickAgent.setScenarioType(context, MobclickAgent.EScenarioType.E_UM_NORMAL);
+        MobclickAgent.setCatchUncaughtExceptions(true);
+    }
+
     /**
      * 数据统计(崩溃日志) 在activity中的OnResume中调用
      */

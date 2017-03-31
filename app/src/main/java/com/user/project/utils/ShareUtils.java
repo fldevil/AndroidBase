@@ -31,7 +31,6 @@ import java.util.Map;
  * 5.删除java里的微信activity
  */
 public class ShareUtils {
-
     private static UMShareAPI umShareAPI;
 
     public static void initApp(Context context) {

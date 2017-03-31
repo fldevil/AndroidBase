@@ -1,12 +1,8 @@
 package com.bjxrgz.base.utils;
 
 import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bjxrgz.base.R;
 import com.bjxrgz.base.base.BaseApp;
 
 /**
@@ -26,22 +22,18 @@ public class ToastUtils {
                 }
             }
         }
-        if (toast == null) {
-            synchronized (ToastUtils.class) {
-                if (toast == null) {
-                    toast = getToast();
-                }
-            }
-        }
         return instance;
     }
 
     /* 自定义Toast */
-    private static Toast getToast() {
-        View inflate = LayoutInflater.from(BaseApp.get()).inflate(R.layout.toast, null);
-        Toast toast = new Toast(BaseApp.get());
-        toast.setView(inflate);
-        return toast;
+    private ToastUtils() {
+        if (toast != null) return;
+        toast = Toast.makeText(BaseApp.get(), "", Toast.LENGTH_SHORT);
+//        View inflate = LayoutInflater.from(BaseApp.get()).inflate(R.layout.toast, null);
+//        toast = new Toast(BaseApp.get());
+//        toast.setView(inflate);
+//        TextView tvMessage = (TextView) toast.getView().findViewById(com.android.internal.R.id.message);
+//        tvMessage.setText(message);
     }
 
     public void show(final CharSequence message) {
@@ -49,8 +41,10 @@ public class ToastUtils {
         BaseApp.get().getHandler().post(new Runnable() {
             @Override
             public void run() {
-                TextView tvToast = (TextView) toast.getView().findViewById(R.id.tvToast);
-                tvToast.setText(message);
+                if (toast == null) {
+                    new ToastUtils();
+                }
+                toast.setText(message);
                 toast.show();
             }
         });

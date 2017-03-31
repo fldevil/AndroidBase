@@ -1,9 +1,9 @@
 package com.bjxrgz.base.utils;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.bjxrgz.base.R;
-import com.bjxrgz.base.base.BaseApp;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
 
@@ -16,8 +16,8 @@ import java.io.File;
  */
 public class LogUtils {
 
-    public static void initApp() {
-        String logTag = BaseApp.get().getString(R.string.app_name);
+    public static void initApp(Context context) {
+        String logTag = context.getString(R.string.app_name);
         Logger.Settings settings = Logger.init(logTag); // 打印tag
         settings.setMethodCount(3);// 3以上才能显示调用方法
         settings.hideThreadInfo(); // 隐藏线程显示

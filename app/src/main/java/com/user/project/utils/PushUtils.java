@@ -5,35 +5,28 @@ import android.text.TextUtils;
 
 import com.bjxrgz.base.utils.AppUtils;
 import com.bjxrgz.base.utils.LogUtils;
-import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.IUmengCallback;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.MsgConstant;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengNotificationClickHandler;
 import com.umeng.message.entity.UMessage;
+import com.user.project.MyApp;
 
 /**
  * Created by JiangZhiGuo on 2016/8/5.
  * describe 友盟管理工具类 (不用的话，删掉PushSDK module 并去掉manifest下的配置)
  */
 public class PushUtils {
-
     private static String DEVICE_TOKEN = ""; // 友盟标识
-    private static PushAgent mPushAgent;
 
-    public static void initAPP(Context context) {
+    public static void initAPP() {
         // 获取mPushAgent
-        mPushAgent = PushAgent.getInstance(context);
+        PushAgent mPushAgent = PushAgent.getInstance(MyApp.get());
         // 统计应用启动数据
         mPushAgent.onAppStart();
         // 打印日志
         mPushAgent.setDebugMode(true);
-        // 检查配置文件,会弹错误信息的toast
-//        mPushAgent.setPushCheck(isLog);
-        // 收集奔溃日志
-        MobclickAgent.setScenarioType(context, MobclickAgent.EScenarioType.E_UM_NORMAL);
-        MobclickAgent.setCatchUncaughtExceptions(true);
         // 应用在前台时否显示通知
         mPushAgent.setNotificaitonOnForeground(true);
         // 通知栏按数量显示
@@ -61,6 +54,7 @@ public class PushUtils {
      * 开关,在startActivity中调用
      */
     public static void setEnable(boolean open) {
+        PushAgent mPushAgent = PushAgent.getInstance(MyApp.get());
         if (open) {
             mPushAgent.enable(new IUmengCallback() {
                 @Override
@@ -92,6 +86,7 @@ public class PushUtils {
      */
     public static String getDeviceToken() {
         if (TextUtils.isEmpty(DEVICE_TOKEN)) {
+            PushAgent mPushAgent = PushAgent.getInstance(MyApp.get());
             DEVICE_TOKEN = mPushAgent.getRegistrationId();
         }
         LogUtils.d("deviceToken", DEVICE_TOKEN);
@@ -102,6 +97,7 @@ public class PushUtils {
      * 设置声音
      */
     public static void setAudio(boolean open) {
+        PushAgent mPushAgent = PushAgent.getInstance(MyApp.get());
         if (open) { // 正常
             mPushAgent.setNotificationPlaySound(MsgConstant.NOTIFICATION_PLAY_SDK_ENABLE);
         } else { // 静音
@@ -113,6 +109,7 @@ public class PushUtils {
      * 设置震动
      */
     public static void setVibrate(boolean open) {
+        PushAgent mPushAgent = PushAgent.getInstance(MyApp.get());
         if (open) { // 震动
             mPushAgent.setNotificationPlayVibrate(MsgConstant.NOTIFICATION_PLAY_SDK_ENABLE);
         } else { // 不震动
@@ -148,6 +145,7 @@ public class PushUtils {
                 }
             }
         };
+        PushAgent mPushAgent = PushAgent.getInstance(MyApp.get());
         mPushAgent.setNotificationClickHandler(notificationClickHandler);
     }
 

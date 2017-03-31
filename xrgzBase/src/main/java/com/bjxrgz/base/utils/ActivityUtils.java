@@ -17,8 +17,6 @@ import android.transition.Fade;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.bjxrgz.base.base.BaseApp;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,8 +31,8 @@ public class ActivityUtils {
     private static final int animOut = android.R.anim.fade_out; // 4.4下的退场效果
     private static List<Activity> activities = new LinkedList<>(); // 所有已启动的Activity
 
-    public static void initApp() {
-        BaseApp.get().registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
+    public static void initApp(Application application) {
+        application.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
                 activities.add(activity);
@@ -120,8 +118,8 @@ public class ActivityUtils {
      * @param packageName 包名
      * @param className   activity全路径类名
      */
-    public static boolean isActivityExist(String packageName, String className) {
-        PackageManager packageManager = BaseApp.get().getPackageManager();
+    public static boolean isActivityExist(Context context, String packageName, String className) {
+        PackageManager packageManager = context.getPackageManager();
         Intent intent = new Intent();
         intent.setClassName(packageName, className);
         ResolveInfo resolveInfo = packageManager.resolveActivity(intent, 0);

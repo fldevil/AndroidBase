@@ -17,7 +17,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.bjxrgz.base.base.BaseApp;
 import com.bjxrgz.base.utils.AppUtils;
 import com.bjxrgz.base.utils.FileUtils;
 
@@ -171,8 +170,8 @@ public class MyWebView extends WebView {
     }
 
     /* 带cookie的加载url */
-    public void loadCookie(String url) {
-        CookieSyncManager.createInstance(BaseApp.get());
+    public void loadCookie(Context context, String url) {
+        CookieSyncManager.createInstance(context);
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
         cookieManager.setCookie(url, cookie);  // cookies是要设置的cookie字符串

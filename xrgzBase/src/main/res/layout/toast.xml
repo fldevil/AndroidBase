@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:background="@drawable/toast_frame"
@@ -17,5 +18,6 @@
         android:paddingRight="3dp"
         android:shadowColor="@android:color/white"
         android:shadowDx="1.0"
-        android:shadowDy="1.0"/>
+        android:shadowDy="1.0"
+        tools:text="1111"/>
 </LinearLayout>
