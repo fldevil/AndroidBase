@@ -8,6 +8,7 @@ import com.bjxrgz.base.utils.SPUtils;
 import com.bjxrgz.base.utils.StringUtils;
 import com.bjxrgz.base.utils.ToastUtils;
 import com.user.project.MyApp;
+import com.user.project.R;
 import com.user.project.service.UpdateService;
 
 /**
@@ -29,24 +30,23 @@ public class MyUtils {
     }
 
     public static void httpFailure(int httpCode, String errorMessage) {
-        String toast = "网络响应异常";
         switch (httpCode) {
             case 401: // 用户验证失败
-                toast = "用户验证失败";
+                ToastUtils.get().show(R.string.http_response_error_401);
 //                LoginActivity.goActivity(MyApp.get());
                 break;
             case 403: // API AliKey 不正确 或者没给
-                toast = "Key错误";
+                ToastUtils.get().show(R.string.http_response_error_403);
                 break;
             case 404: // 404
-                toast = "资源未找到";
+                ToastUtils.get().show(R.string.http_response_error_404);
                 break;
             case 409: // 用户版本过低, 应该禁止用户登录，并提示用户升级
-                toast = "用户版本过低";
+                ToastUtils.get().show(R.string.http_response_error_409);
                 UpdateService.goService(MyApp.get());
                 break;
             case 410: // 用户被禁用,请求数据的时候得到该 ErrorCode, 应该退出应用
-                toast = "用户被禁用";
+                ToastUtils.get().show(R.string.http_response_error_410);
                 ActivityUtils.closeActivities();
                 break;
             case 417: // 逻辑错误，必须返回错误信息
@@ -54,7 +54,8 @@ public class MyUtils {
                 int errorCode = -1;
                 if (httpError != null) {
                     errorCode = httpError.getErrorCode();
-                    toast = httpError.getMessage();
+                    String toast = httpError.getMessage();
+                    ToastUtils.get().show(toast);
                 }
                 switch (errorCode) {
                     case 1001: // 1001: 用户被锁定
@@ -63,10 +64,12 @@ public class MyUtils {
                 }
                 break;
             case 500: // 500
-                toast = "服务器异常";
+                ToastUtils.get().show(R.string.http_response_error_500);
+                break;
+            default: // 其他错误
+                ToastUtils.get().show(R.string.http_response_error);
                 break;
         }
-        ToastUtils.get().show(toast);
     }
 
 }
