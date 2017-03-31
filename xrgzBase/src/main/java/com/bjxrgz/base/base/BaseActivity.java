@@ -29,7 +29,7 @@ import butterknife.Unbinder;
  */
 public abstract class BaseActivity<T> extends AppCompatActivity {
 
-    public AppCompatActivity mActivity;
+    public BaseActivity mActivity;
     public FragmentManager mFragmentManager;
     public String tag = "BaseActivity";
     public ProgressDialog loading;
