@@ -2,10 +2,10 @@ apply plugin: 'com.android.application'
 
 android {
     buildToolsVersion "25.0.2"
-    compileSdkVersion 25 // 编译版本(与底下两个无关)
+    compileSdkVersion 25 // 最高运行版本
     defaultConfig {
-        targetSdkVersion 25 // 最高支持
-        minSdkVersion 14 // 最低兼容
+        targetSdkVersion 25 // 最高效果版本
+        minSdkVersion 14 // 最低运行版本
         multiDexEnabled true // 允许分包
         applicationId "com.user.project" // 要和manifest一致
         versionCode 1

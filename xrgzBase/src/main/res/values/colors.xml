@@ -2,15 +2,15 @@
 <resources>
 
     <!-- 主题颜色 -->
-    <color name="color_primary">#830012</color>
-    <color name="color_primary_dark">#e6ffffff</color>
-    <color name="color_accent">#9c061b</color>
+    <color name="color_primary">#046dcf</color>
+    <color name="color_primary_dark">#0460b6</color>
+    <color name="color_accent">#087be6</color>
     <color name="color_control_highlight">@color/color_primary</color>
     <color name="button_color">@color/color_primary</color>
     <color name="text_color">#333333</color>
     <color name="window_color">#F5F5F5</color>
 
-    <!--dialog中按钮字体颜色 -->
+    <!--iosDialog中按钮字体颜色 -->
     <color name="dialog_ios_text_color">@color/color_primary</color>
 
     <color name="trans">#00ffffff</color>

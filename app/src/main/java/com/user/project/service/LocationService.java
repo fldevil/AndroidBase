@@ -9,6 +9,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
 import com.bjxrgz.base.utils.LocationUtils;
 import com.bjxrgz.base.utils.PermUtils;
+import com.bjxrgz.base.utils.ToastUtils;
 import com.user.project.utils.MapUtils;
 
 public class LocationService extends Service {
@@ -26,7 +27,6 @@ public class LocationService extends Service {
     @Override
     public void onCreate() {
         MapUtils.get().initLocation(this);
-
         AMapLocationListener locationListener = MapUtils.get()
                 .getAMapLocationListener(new MapUtils.LocationCallBack() {
                     @Override
@@ -51,6 +51,7 @@ public class LocationService extends Service {
                     @Override
                     public void onFailed(AMapLocation aMapLocation) {
                         int errorCode = aMapLocation.getErrorCode();
+                        ToastUtils.get().show("定位失败" + errorCode);
                     }
                 });
         MapUtils.get().startLocation(locationListener);
