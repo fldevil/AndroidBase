@@ -65,19 +65,18 @@ public class AppUtils {
      * 如果SD卡存在，则获取 SDCard/Android/data/你的应用的包名/files/
      * 如果不存在，则获取 /data/data/<application package>/files
      */
-    public String getFilesDir() {
-        if (!StringUtils.isEmpty(filesDir)) return filesDir;
+    public String getFilesDir(String dirName) {
         BaseApp baseApp = BaseApp.get();
+        File file;
         if (isSDCardEnable()) {
-            File filesDir = baseApp.getExternalFilesDir("");
-            if (filesDir != null) return filesDir.getAbsolutePath();
+            file = baseApp.getExternalFilesDir(dirName);
+        }else {
+            file = baseApp.getFilesDir();
         }
-        setFilesDir(baseApp.getFilesDir().getAbsolutePath());
+        if (file != null){
+            filesDir = file.getAbsolutePath();
+        }
         return filesDir;
-    }
-
-    public void setFilesDir(String fileDir) {
-        filesDir = fileDir;
     }
 
     /**
@@ -87,16 +86,16 @@ public class AppUtils {
     public String getCacheDir() {
         if (!StringUtils.isEmpty(cacheDir)) return cacheDir;
         BaseApp baseApp = BaseApp.get();
+        File file;
         if (isSDCardEnable()) {
-            File cacheDir = baseApp.getExternalCacheDir();
-            if (cacheDir != null) return cacheDir.getAbsolutePath();
+            file = baseApp.getExternalCacheDir();
+        }else {
+            file = baseApp.getCacheDir();
         }
-        setCacheDir(baseApp.getCacheDir().getAbsolutePath());
+        if (cacheDir != null){
+            cacheDir = file.getAbsolutePath();
+        }
         return cacheDir;
-    }
-
-    public void setCacheDir(String cacheDir) {
-        this.cacheDir = cacheDir;
     }
 
     /**
@@ -231,7 +230,7 @@ public class AppUtils {
      */
     public void clearSys() {
         BaseApp baseApp = BaseApp.get();
-        String filesDir = getFilesDir();
+        String filesDir = getFilesDir("");
         String cacheDir = getCacheDir();
         File externalFilesDir = new File(filesDir);
         File externalCacheDir = new File(cacheDir);
