@@ -13,6 +13,7 @@ import static com.bjxrgz.base.utils.ConstantUtils.REGEX_IP;
 import static com.bjxrgz.base.utils.ConstantUtils.REGEX_MOBILE;
 import static com.bjxrgz.base.utils.ConstantUtils.REGEX_NUMBER;
 import static com.bjxrgz.base.utils.ConstantUtils.REGEX_PASSWORD;
+import static com.bjxrgz.base.utils.ConstantUtils.REGEX_POST_CODE;
 import static com.bjxrgz.base.utils.ConstantUtils.REGEX_TEL;
 import static com.bjxrgz.base.utils.ConstantUtils.REGEX_URL;
 
@@ -24,12 +25,15 @@ import static com.bjxrgz.base.utils.ConstantUtils.REGEX_URL;
 public class StringUtils {
 
     /**
-     * 可作为随机文件名等
+     * 获取uuid
      */
     public static String getUUID() {
         return UUID.randomUUID().toString().replace("-", "");
     }
 
+    /**
+     * 获取一定长度的uuid
+     */
     public static String getUUID(int length) {
         String random = getUUID();
         return random.substring(random.length() - length, random.length());
@@ -78,6 +82,13 @@ public class StringUtils {
      */
     public static boolean isEmpty(String str) {
         return str == null || str.trim().isEmpty();
+    }
+
+    /**
+     * 判断是否为邮政编码
+     */
+    public static boolean isPostCode(String postCode){
+        return isMatch(REGEX_POST_CODE, postCode);
     }
 
     /**

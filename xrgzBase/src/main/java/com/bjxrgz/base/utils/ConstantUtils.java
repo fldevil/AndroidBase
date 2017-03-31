@@ -72,6 +72,8 @@ public class ConstantUtils {
      */
      /* 正则：数字 */
     public static final String REGEX_NUMBER = "[0-9]*";
+    /* 正则：邮政编码 */
+    public static final String REGEX_POST_CODE = "[1-9]\\d{5}";
     /* 正则：密码  6-16位，数字和字母组合 */
     public static final String REGEX_PASSWORD = "^(?=.*?[a-zA-Z])(?=.*?[0-9])[a-zA-Z0-9]{6,16}$";
     /* 正则：手机号（精确） */
