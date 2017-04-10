@@ -31,6 +31,9 @@ public class MyUtils {
 
     public static void httpFailure(int httpCode, String errorMessage) {
         switch (httpCode) {
+            case -1: //请求异常
+                ToastUtils.get().show(errorMessage);
+                break;
             case 401: // 用户验证失败
                 ToastUtils.get().show(R.string.http_response_error_401);
 //                LoginActivity.goActivity(MyApp.get());
@@ -43,6 +46,7 @@ public class MyUtils {
                 break;
             case 409: // 用户版本过低, 应该禁止用户登录，并提示用户升级
                 ToastUtils.get().show(R.string.http_response_error_409);
+                SPUtils.clearUser();
                 UpdateService.goService(MyApp.get());
                 break;
             case 410: // 用户被禁用,请求数据的时候得到该 ErrorCode, 应该退出应用
@@ -53,9 +57,8 @@ public class MyUtils {
                 HttpError httpError = GsonUtils.get().fromJson(errorMessage, HttpError.class);
                 int errorCode = -1;
                 if (httpError != null) {
+                    ToastUtils.get().show(httpError.getMessage());
                     errorCode = httpError.getErrorCode();
-                    String toast = httpError.getMessage();
-                    ToastUtils.get().show(toast);
                 }
                 switch (errorCode) {
                     case 1001: // 1001: 用户被锁定

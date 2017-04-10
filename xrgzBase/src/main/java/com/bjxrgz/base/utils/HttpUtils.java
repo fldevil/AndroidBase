@@ -3,6 +3,7 @@ package com.bjxrgz.base.utils;
 import android.content.Context;
 
 import com.bjxrgz.base.R;
+import com.bjxrgz.base.base.BaseApp;
 
 import java.io.File;
 import java.io.IOException;
@@ -125,9 +126,8 @@ public class HttpUtils {
                     errorMessage = R.string.http_error_request;
                     LogUtils.e(t.toString());
                 }
-                ToastUtils.get().show(errorMessage);
                 if (callBack == null) return;
-                callBack.onFailure(-1, "");
+                callBack.onFailure(-1, BaseApp.get().getString(errorMessage));
             }
         });
     }
