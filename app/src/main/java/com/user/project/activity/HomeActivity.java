@@ -5,10 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 
-import com.bjxrgz.base.base.BaseActivity;
-import com.bjxrgz.base.utils.ActivityUtils;
-import com.bjxrgz.base.utils.ToastUtils;
+import com.bjxrgz.base.utils.AppUtil;
+import com.user.project.base.BaseActivity;
+import com.bjxrgz.base.utils.ActivityUtil;
+import com.bjxrgz.base.utils.ToastUtil;
 import com.user.project.R;
+import com.user.project.domain.Version;
+import com.user.project.http.BaseObserver;
+import com.user.project.http.HttpManager;
 import com.user.project.utils.ViewUtils;
 
 import java.util.Date;
@@ -21,7 +25,7 @@ public class HomeActivity extends BaseActivity<HomeActivity> {
 
     public static void goActivity(Activity from) {
         Intent intent = new Intent(from, HomeActivity.class);
-        ActivityUtils.startActivity(from, intent);
+        ActivityUtil.startActivity(from, intent);
     }
 
     @Override
@@ -36,7 +40,17 @@ public class HomeActivity extends BaseActivity<HomeActivity> {
 
     @Override
     protected void initData() {
+        HttpManager.getInstance().checkUpdate(0, new BaseObserver.CallBack<Version>() {
+            @Override
+            public void onSuccess(Version result) {
 
+            }
+
+            @Override
+            public void onError(int httpCode, String errorMessage) {
+
+            }
+        });
     }
 
     private Long lastExitTime = 0L; //最后一次退出时间
@@ -48,7 +62,7 @@ public class HomeActivity extends BaseActivity<HomeActivity> {
             Long nowTime = new Date().getTime();
 
             if (nowTime - lastExitTime > 2000) { // 第一次按
-                ToastUtils.get().show(R.string.press_again_exit);
+                ToastUtil.showShortToast(R.string.press_again_exit);
             } else { // 返回键连按两次
                 System.exit(0); // 真正退出程序
             }

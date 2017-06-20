@@ -1,1 +1,1 @@
-include ':app', ':PushSDK', ':xrgzBase'
+include ':app', ':xrgzBase', ':PushSDK'

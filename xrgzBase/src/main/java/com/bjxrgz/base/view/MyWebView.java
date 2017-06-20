@@ -17,8 +17,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.bjxrgz.base.utils.AppUtils;
-import com.bjxrgz.base.utils.FileUtils;
+import com.bjxrgz.base.utils.AppUtil;
+import com.bjxrgz.base.utils.FileUtil;
 
 import java.util.Map;
 
@@ -85,9 +85,9 @@ public class MyWebView extends WebView {
         settings.setDatabaseEnabled(supportCache); // 开启database 缓存
         if (supportCache) { // 优先使用缓存
             settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-            String resDir = AppUtils.get().getFilesDir("");
+            String resDir = AppUtil.getFilesDir(context,"");
             cacheDir = resDir + "web_cache";
-            FileUtils.createOrExistsFile(cacheDir);
+            FileUtil.createOrExistsFile(cacheDir);
             settings.setAppCachePath(cacheDir);
         } else { // 不用缓存
             settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
@@ -187,7 +187,7 @@ public class MyWebView extends WebView {
         clearCache(true);
         clearHistory();
         clearFormData();
-        FileUtils.deleteDir(cacheDir);
+        FileUtil.deleteDir(cacheDir);
     }
 
     /* 外部调用  返回键监听 */

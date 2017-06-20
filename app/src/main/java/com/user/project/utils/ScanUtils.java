@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.bjxrgz.base.utils.ToastUtils;
+import com.bjxrgz.base.utils.ToastUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.user.project.R;
@@ -36,7 +36,7 @@ public class ScanUtils {
     }
 
     /* 扫描结果（string） */
-    public static void scanResult(Intent data, OnScanResultListener<String> listener) {
+    public static void scanResult(Context context, Intent data, OnScanResultListener<String> listener) {
         if (null != data && data.getExtras() != null) {
             Bundle bundle = data.getExtras();
             if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
@@ -45,7 +45,7 @@ public class ScanUtils {
                     listener.onSuccess(result);
                 }
             } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                ToastUtils.get().show(R.string.code_2_scan_error);
+                ToastUtil.showShortToast(R.string.code_2_scan_error);
                 if (listener != null) {
                     listener.onFail();
                 }
@@ -54,7 +54,7 @@ public class ScanUtils {
     }
 
     /* 扫描结果（class）*/
-    public static <T> void scanResult(Class<T> t, Intent data, OnScanResultListener<T> listener) {
+    public static <T> void scanResult(Context context, Class<T> t, Intent data, OnScanResultListener<T> listener) {
         if (null != data && data.getExtras() != null) {
             Bundle bundle = data.getExtras();
             if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
@@ -64,12 +64,12 @@ public class ScanUtils {
                         T t1 = new Gson().fromJson(result, t);
                         listener.onSuccess(t1);
                     } catch (JsonSyntaxException e) {
-                        ToastUtils.get().show(R.string.please_scan_real_code_2);
+                        ToastUtil.showShortToast(R.string.please_scan_real_code_2);
                         listener.onFail();
                     }
                 }
             } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                ToastUtils.get().show(R.string.code_2_scan_error);
+                ToastUtil.showShortToast(R.string.code_2_scan_error);
                 if (listener != null) {
                     listener.onFail();
                 }

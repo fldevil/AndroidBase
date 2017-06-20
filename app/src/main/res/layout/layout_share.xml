@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#66000000">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_pop_bg_white"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvWeixin"
+                    style="@style/FontBlackNormal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:drawablePadding="10dp"
+                    android:drawableTop="@mipmap/btn_share_by_wechact"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="20dp"
+                    android:text="微信好友" />
+
+                <TextView
+                    android:id="@+id/tvWeixinCircle"
+                    style="@style/FontBlackNormal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:drawablePadding="10dp"
+                    android:drawableTop="@mipmap/btn_share_by_friend_circle"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="20dp"
+                    android:text="微信朋友圈" />
+
+                <TextView
+                    android:id="@+id/tvQQ"
+                    style="@style/FontBlackNormal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:drawablePadding="10dp"
+                    android:drawableTop="@mipmap/btn_share_by_qq"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="20dp"
+                    android:text="QQ" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvQZone"
+                    style="@style/FontBlackNormal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:drawablePadding="10dp"
+                    android:drawableTop="@mipmap/btn_share_by_qzone"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="20dp"
+                    android:paddingTop="10dp"
+                    android:text="QQ空间" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvCancel"
+            style="@style/FontPrimaryNormal"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shape_pop_bg_white"
+            android:gravity="center"
+            android:text="@string/cancel" />
+    </LinearLayout>
+</RelativeLayout>

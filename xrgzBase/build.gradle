@@ -1,14 +1,14 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion project.ANDROID_BUILD_SDK_VERSION as int
+    buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0.0"
+        minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION as int
+        targetSdkVersion project.ANDROID_BUILD_TARGET_SDK_VERSION as int
+        versionCode project.VERSION_CODE as int
+        versionName project.VERSION_NAME
     }
     buildTypes {
         release {
@@ -18,37 +18,31 @@ android {
     }
 }
 
-apply plugin: 'org.greenrobot.greendao' // greenDao
-
-greendao { // 数据库配置
-    schemaVersion 1
-    daoPackage 'com.bjxrgz.base.db'
-    targetGenDir 'src/main/java'
-}
-
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar']) // 编译本地 jar 包
-    compile 'com.android.support:multidex:1.0.1' // 分包(大项目必加)
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'com.android.support:cardview-v7:25.3.1'
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:support-v4:25.3.1'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:multidex:1.0.1'
+    compile "com.android.support:design:${SUPPORT_LIBRARY}"
+    compile "com.android.support:recyclerview-v7:${SUPPORT_LIBRARY}"
+    compile "com.android.support:cardview-v7:${SUPPORT_LIBRARY}"
+    compile "com.android.support:appcompat-v7:${SUPPORT_LIBRARY}"
+    compile "com.android.support:support-v4:${SUPPORT_LIBRARY}"
 
-    compile 'com.orhanobut:logger:1.3'
-    compile 'com.google.code.gson:gson:2.7'
-    compile 'com.jakewharton:butterknife:8.4.0'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.umeng.analytics:analytics:latest.integration'
-    compile 'io.reactivex:rxjava:1.1.6'
-    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'io.reactivex.rxjava2:rxjava:2.1.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.0.1'
     compile 'com.squareup.retrofit2:converter-scalars:2.1.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
-    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.8.2@aar'
-    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:v2.0.0'
     compile 'org.greenrobot:greendao:3.2.0'
     compile 'org.greenrobot:greendao-generator:3.2.0'
+    compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'com.orhanobut:logger:1.15'
+    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:v2.0.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'com.umeng.analytics:analytics:latest.integration'
+    compile 'com.jakewharton:disklrucache:2.0.2'
 }

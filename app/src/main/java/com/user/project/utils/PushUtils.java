@@ -3,8 +3,9 @@ package com.user.project.utils;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.bjxrgz.base.utils.AppUtils;
-import com.bjxrgz.base.utils.LogUtils;
+import com.bjxrgz.base.BaseApp;
+import com.bjxrgz.base.utils.AppUtil;
+import com.bjxrgz.base.utils.LogUtil;
 import com.umeng.message.IUmengCallback;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.MsgConstant;
@@ -22,7 +23,7 @@ public class PushUtils {
 
     public static void initAPP() {
         // 获取mPushAgent
-        PushAgent mPushAgent = PushAgent.getInstance(MyApp.get());
+        PushAgent mPushAgent = PushAgent.getInstance(BaseApp.getInstance());
         // 统计应用启动数据
         mPushAgent.onAppStart();
         // 打印日志
@@ -40,12 +41,12 @@ public class PushUtils {
             @Override
             public void onSuccess(String deviceToken) {
                 DEVICE_TOKEN = deviceToken;
-                LogUtils.d("registerPush", deviceToken);
+                LogUtil.d("registerPush", deviceToken);
             }
 
             @Override
             public void onFailure(String s, String s1) {
-                LogUtils.e(s + "\n" + s1);
+                LogUtil.e(s + "\n" + s1);
             }
         });
     }
@@ -54,7 +55,7 @@ public class PushUtils {
      * 开关,在startActivity中调用
      */
     public static void setEnable(boolean open) {
-        PushAgent mPushAgent = PushAgent.getInstance(MyApp.get());
+        PushAgent mPushAgent = PushAgent.getInstance(BaseApp.getInstance());
         if (open) {
             mPushAgent.enable(new IUmengCallback() {
                 @Override
@@ -64,7 +65,7 @@ public class PushUtils {
 
                 @Override
                 public void onFailure(String s, String s1) {
-                    LogUtils.e(s + "\n" + s1);
+                    LogUtil.e(s + "\n" + s1);
                 }
             });
         } else {
@@ -75,7 +76,7 @@ public class PushUtils {
 
                 @Override
                 public void onFailure(String s, String s1) {
-                    LogUtils.e(s + "\n" + s1);
+                    LogUtil.e(s + "\n" + s1);
                 }
             });
         }
@@ -86,10 +87,10 @@ public class PushUtils {
      */
     public static String getDeviceToken() {
         if (TextUtils.isEmpty(DEVICE_TOKEN)) {
-            PushAgent mPushAgent = PushAgent.getInstance(MyApp.get());
+            PushAgent mPushAgent = PushAgent.getInstance(BaseApp.getInstance());
             DEVICE_TOKEN = mPushAgent.getRegistrationId();
         }
-        LogUtils.d("deviceToken", DEVICE_TOKEN);
+        LogUtil.d("deviceToken", DEVICE_TOKEN);
         return DEVICE_TOKEN;
     }
 
@@ -97,7 +98,7 @@ public class PushUtils {
      * 设置声音
      */
     public static void setAudio(boolean open) {
-        PushAgent mPushAgent = PushAgent.getInstance(MyApp.get());
+        PushAgent mPushAgent = PushAgent.getInstance(BaseApp.getInstance());
         if (open) { // 正常
             mPushAgent.setNotificationPlaySound(MsgConstant.NOTIFICATION_PLAY_SDK_ENABLE);
         } else { // 静音
@@ -109,7 +110,7 @@ public class PushUtils {
      * 设置震动
      */
     public static void setVibrate(boolean open) {
-        PushAgent mPushAgent = PushAgent.getInstance(MyApp.get());
+        PushAgent mPushAgent = PushAgent.getInstance(BaseApp.getInstance());
         if (open) { // 震动
             mPushAgent.setNotificationPlayVibrate(MsgConstant.NOTIFICATION_PLAY_SDK_ENABLE);
         } else { // 不震动
@@ -136,7 +137,7 @@ public class PushUtils {
             @Override
             public void launchApp(Context context, UMessage uMessage) {
                 // 一般这里会先进行判断  是正常打开app，还是跳转到指定的页面
-                if (!AppUtils.isAppOnForeground()) {
+                if (!AppUtil.isAppOnForeground()) {
                     // 如果数据在uMessage.extra里，那么友盟会自动把这些数据封装带启动的intent里
                     // 如果数据不在extra里，那么需要额外的处理
                     super.launchApp(context, uMessage);
@@ -145,7 +146,7 @@ public class PushUtils {
                 }
             }
         };
-        PushAgent mPushAgent = PushAgent.getInstance(MyApp.get());
+        PushAgent mPushAgent = PushAgent.getInstance(BaseApp.getInstance());
         mPushAgent.setNotificationClickHandler(notificationClickHandler);
     }
 

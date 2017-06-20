@@ -1,21 +1,27 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao' // greenDao
+
+greendao { // 数据库配置
+    schemaVersion 1
+    daoPackage 'com.user.project.db'
+    targetGenDir 'src/main/java'
+}
 
 android {
-    buildToolsVersion "25.0.2"
-    compileSdkVersion 25 // 最高运行版本
+    compileSdkVersion project.ANDROID_BUILD_SDK_VERSION as int
+    buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
+
     defaultConfig {
-        targetSdkVersion 25 // 最高效果版本
-        minSdkVersion 14 // 最低运行版本
+        minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION as int
+        targetSdkVersion project.ANDROID_BUILD_TARGET_SDK_VERSION as int
         multiDexEnabled true // 允许分包
         applicationId "com.user.project" // 要和manifest一致
-        versionCode 1
-        versionName "1.0.0"
+        versionCode project.VERSION_CODE as int
+        versionName project.VERSION_NAME
     }
     signingConfigs { // 签名信息
         bjxrgz_debug {
-//            storeFile file('/Users/mengfd/Documents/projects/kaola/launch/android/bjxrgz_android_debug.jks')
-//            storeFile file('E:/android_key/bjxrgz_android_debug.jks')
-            storeFile file('/Users/gg/Documents/bjxrgz/key/bjxrgz_android_debug.jks')
+            storeFile file('E:/android_key/bjxrgz_android_debug.jks')
             storePassword 'Bjxrgz998'
             keyAlias 'Bjxrgz'
             keyPassword 'Bjxrgz998'
@@ -76,8 +82,8 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':xrgzBase')
     compile project(':PushSDK')
-
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile 'com.jakewharton:butterknife:8.4.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.1'
-    compile 'cn.yipianfengye.android:zxing-library:2.1' // scan
+    compile 'cn.yipianfengye.android:zxing-library:2.1'
 }

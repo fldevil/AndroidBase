@@ -3,10 +3,10 @@ package com.user.project.activity;
 import android.os.Bundle;
 import android.widget.ImageView;
 
-import com.bjxrgz.base.base.BaseActivity;
-import com.bjxrgz.base.utils.ScreenUtils;
-import com.user.project.MyApp;
+import com.bjxrgz.base.BaseApp;
+import com.bjxrgz.base.utils.ScreenUtil;
 import com.user.project.R;
+import com.user.project.base.BaseActivity;
 
 import butterknife.BindView;
 
@@ -21,7 +21,7 @@ public class WelcomeActivity extends BaseActivity<WelcomeActivity> {
 
     @Override
     protected int initLayout(Bundle savedInstanceState) {
-        ScreenUtils.hideStatusBar(mActivity);
+        ScreenUtil.hideStatusBar(mActivity);
         return R.layout.activity_welcome;
     }
 
@@ -37,14 +37,14 @@ public class WelcomeActivity extends BaseActivity<WelcomeActivity> {
 
     /* 跳转主页 */
     private void goHome() {
-        MyApp.get().getHandler().postDelayed(new Runnable() {
+        BaseApp.getInstance().getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 HomeActivity.goActivity(mActivity);
             }
         }, 1000);
         // 立刻关闭当前页面会出现空白缝隙
-        MyApp.get().getHandler().postDelayed(new Runnable() {
+        BaseApp.getInstance().getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 mActivity.finish();

@@ -26,7 +26,8 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
-import com.bjxrgz.base.utils.LogUtils;
+import com.bjxrgz.base.BaseApp;
+import com.bjxrgz.base.utils.LogUtil;
 import com.user.project.MyApp;
 
 import java.util.ArrayList;
@@ -73,7 +74,7 @@ public class MapUtils {
     /* 2.开始定位 */
     public void startLocation(final AMapLocationListener locationListener) {
         if (aMapLocationClient != null) {
-            MyApp.get().getHandler().post(new Runnable() {
+            BaseApp.getInstance().getHandler().post(new Runnable() {
                 @Override
                 public void run() {
                     //设置定位回调监听
@@ -134,7 +135,7 @@ public class MapUtils {
             public void onLocationChanged(final AMapLocation aMapLocation) {
                 if (aMapLocation == null) return;
                 final int successCode = 0; // 以后可能会变
-                MyApp.get().getHandler().post(new Runnable() {
+                BaseApp.getInstance().getHandler().post(new Runnable() {
                     @Override
                     public void run() {
                         if (aMapLocation.getErrorCode() == successCode) {
@@ -154,7 +155,7 @@ public class MapUtils {
                             aMapLocation.getCityCode();//城市编码
                             aMapLocation.getAdCode();//地区编码
                             aMapLocation.getAoiName();//获取当前定位点的AOI信息
-                            LogUtils.d(aMapLocation.toString());
+                            LogUtil.d(aMapLocation.toString());
 
                             if (locationCallBack != null) {
                                 locationCallBack.onSuccess(aMapLocation);
@@ -162,7 +163,7 @@ public class MapUtils {
                         } else {
                             String errText = "定位失败," + aMapLocation.getErrorCode()
                                     + ": " + aMapLocation.getErrorInfo();
-                            LogUtils.e(errText);
+                            LogUtil.e(errText);
                             if (locationCallBack != null) {
                                 locationCallBack.onFailed(aMapLocation);
                             }
@@ -268,7 +269,7 @@ public class MapUtils {
             @Override
             public void onRegeocodeSearched(final RegeocodeResult result, final int rCode) {
                 final int successCode = 1000; // 以后可能会变
-                MyApp.get().getHandler().post(new Runnable() {
+                BaseApp.getInstance().getHandler().post(new Runnable() {
                     @Override
                     public void run() {
                         if (rCode == successCode && geocodeSearchCallBack != null) {
@@ -350,8 +351,8 @@ public class MapUtils {
                     //若当前城市查询不到所需Poi信息，可以通过result.getSearchSuggestionCitys()获取当前Poi搜索的建议城市
                     //如果搜索关键字明显为误输入，则可通过result.getSearchSuggestionKeywords()方法得到搜索关键词建议
                     final ArrayList<PoiItem> pois = poiResult.getPois();
-                    LogUtils.d(pois.toString());
-                    MyApp.get().getHandler().post(new Runnable() {
+                    LogUtil.d(pois.toString());
+                    BaseApp.getInstance().getHandler().post(new Runnable() {
                         @Override
                         public void run() {
                             if (searchCallBack != null) {
