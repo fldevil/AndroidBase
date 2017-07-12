@@ -15,9 +15,9 @@ android {
         minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION as int
         targetSdkVersion project.ANDROID_BUILD_TARGET_SDK_VERSION as int
         multiDexEnabled true // 允许分包
-        applicationId "com.user.project" // 要和manifest一致
-        versionCode project.VERSION_CODE as int
-        versionName project.VERSION_NAME
+        applicationId 'com.user.project' // 要和manifest一致
+        versionCode 1
+        versionName '1.0.0'
     }
     signingConfigs { // 签名信息
         bjxrgz_debug {
@@ -82,8 +82,8 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':xrgzBase')
     compile project(':PushSDK')
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
-    compile 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
+    compile 'com.jakewharton:butterknife:8.7.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.1'
     compile 'cn.yipianfengye.android:zxing-library:2.1'
 }

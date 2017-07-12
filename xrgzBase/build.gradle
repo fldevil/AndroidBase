@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION as int
         targetSdkVersion project.ANDROID_BUILD_TARGET_SDK_VERSION as int
-        versionCode project.VERSION_CODE as int
-        versionName project.VERSION_NAME
+        versionCode 1
+        versionName '1.0.0'
     }
     buildTypes {
         release {
