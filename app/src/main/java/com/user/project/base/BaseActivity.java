@@ -1,44 +1,37 @@
 package com.user.project.base;
 
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
 
-import com.bjxrgz.base.R;
 import com.bjxrgz.base.utils.ActivityUtil;
 import com.bjxrgz.base.utils.AnalyUtil;
 import com.bjxrgz.base.utils.DialogUtil;
 import com.bjxrgz.base.utils.NetUtil;
 
-import java.lang.reflect.ParameterizedType;
-
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * Created by JiangZhiGuo on 2016-12-2.
- * describe Activity的基类
+ * activity 基类
  */
-public abstract class BaseActivity<T> extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     protected Context mContext;
     protected BaseActivity mActivity;
     protected FragmentManager mFragmentManager;
     protected Intent mIntent;
-    private String tag = "BaseActivity";
-    public ProgressDialog loading;
-    public ProgressDialog progress;
+    protected Dialog mLoading;
+
     private Unbinder unbinder;
 
     /* 初始layout(setContent之前调用) */
-    protected abstract int initLayout(Bundle savedInstanceState);
+    protected abstract int initLayout();
 
     /* 实例化View */
     protected abstract void initView();
@@ -48,17 +41,14 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        tag = getCls();
+        super.onCreate(savedInstanceState);
+        ActivityUtil.initSuperCreate(this);
         mActivity = this;
         mContext = getApplicationContext();
-        ActivityUtil.initSuperCreate(mActivity);
-        super.onCreate(savedInstanceState);
         mFragmentManager = getSupportFragmentManager();
-        loading = DialogUtil.createLoading(this); // Fragment也调用父Activity的Loading
-        progress = DialogUtil.createProgress(mActivity, 0,
-                getString(R.string.push_ing), true, 100, 0, null);
+        mLoading = DialogUtil.createLoading(this);
         mIntent = getIntent();
-        setContentView(initLayout(savedInstanceState)); // 这之后 页面才会加载出来
+        setContentView(initLayout()); // 这之后 页面才会加载出来
     }
 
     /* setContentView()或addContentView()后调用,view只是加载出来，没有实例化.
@@ -106,33 +96,4 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
         }
         return super.onTouchEvent(event);
     }
-
-    /* 手机返回键 */
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            onBackPressed();
-        }
-        return true;
-    }
-
-    /* 菜单事件 */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home: // 返回键
-                onBackPressed();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    /* 获取当前类的 */
-    @SuppressWarnings("unchecked")
-    private String getCls() {
-        Class<T> cls = (Class<T>) (((ParameterizedType) (this.getClass()
-                .getGenericSuperclass())).getActualTypeArguments()[0]);
-        return cls.getSimpleName();
-    }
-
 }

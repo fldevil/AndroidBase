@@ -1,58 +1,56 @@
 package com.user.project.base;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bjxrgz.base.utils.FragmentUtil;
+import com.bjxrgz.base.utils.DialogUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * Created by JiangZhiGuo on 2016-12-2.
- * describe Fragment的基类
+ * fragment 基类
  */
-public abstract class BaseFragment<T> extends Fragment {
+public abstract class BaseFragment extends Fragment {
 
     protected Context mContext;
     protected BaseActivity mActivity;
     protected BaseFragment mFragment;
     protected FragmentManager mFragmentManager;
+    protected Dialog mLoading;
     protected Bundle mBundle;
-    public String tag = "BaseFragment";
+
     private Unbinder unbinder;
 
     /* 初始layout */
     protected abstract int initLayout();
 
     /* 实例化View */
-    protected abstract void initView(View view, @Nullable Bundle savedInstanceState);
+    protected abstract void initView(View view);
 
     /* 初始Data */
-    protected abstract void initData(Bundle savedInstanceState);
+    protected abstract void initData();
 
     @Override
     public void onAttach(Context context) {
-        tag = getCls();
-        mFragment = this;
         super.onAttach(context);
-        if (context instanceof FragmentActivity) {
+        mFragment = this;
+        mLoading = DialogUtil.createLoading(context);
+        if (context instanceof BaseActivity) {
             mContext = context.getApplicationContext();
             mActivity = (BaseActivity) context;
             mFragmentManager = mActivity.getSupportFragmentManager();
         }
-        FragmentUtil.initAttach(this);
     }
 
     /* Activity中的onAttachFragment执行完后会执行 */
@@ -60,7 +58,6 @@ public abstract class BaseFragment<T> extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBundle = getArguments(); // 取出Bundle
-        FragmentUtil.initCreate(this);
     }
 
     /* 在这里返回绑定并View,从stack返回的时候也是先执行这个方法 */
@@ -75,14 +72,14 @@ public abstract class BaseFragment<T> extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         unbinder = ButterKnife.bind(this, view);
-        initView(view, savedInstanceState);
+        initView(view);
     }
 
     /* activity的onCreate执行完成后才会调用 */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initData(savedInstanceState);
+        initData();
     }
 
     @Override
@@ -115,15 +112,4 @@ public abstract class BaseFragment<T> extends Fragment {
         }
         return fragment;
     }
-
-    /**
-     * logTag获取
-     */
-    @SuppressWarnings("unchecked")
-    protected String getCls() {
-        Class<T> cls = (Class<T>) (((ParameterizedType) (this.getClass()
-                .getGenericSuperclass())).getActualTypeArguments()[0]);
-        return cls.getSimpleName();
-    }
-
 }

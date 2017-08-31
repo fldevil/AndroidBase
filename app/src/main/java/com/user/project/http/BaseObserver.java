@@ -1,8 +1,7 @@
 package com.user.project.http;
 
-import android.app.ProgressDialog;
-
 import com.bjxrgz.base.utils.LogUtil;
+
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -17,7 +16,6 @@ public class BaseObserver<T> implements Observer<T> {
 
     private Disposable disposable;
     private CallBack<T> callBack;
-    private ProgressDialog loading;
 
     public interface CallBack<T> {
         void onSuccess(T result);
@@ -29,17 +27,9 @@ public class BaseObserver<T> implements Observer<T> {
         this.callBack = callBack;
     }
 
-    public BaseObserver(ProgressDialog loading,CallBack<T> callBack) {
-        this.loading = loading;
-        this.callBack = callBack;
-    }
-
     @Override
     public void onSubscribe(@NonNull Disposable d) {
         this.disposable = d;
-        if (loading != null){
-            loading.show();
-        }
     }
 
     @Override
@@ -52,10 +42,7 @@ public class BaseObserver<T> implements Observer<T> {
         if (disposable.isDisposed()) {
             disposable.dispose();
         }
-        if (loading != null) {
-            loading.dismiss();
-        }
-        if (e instanceof HttpException){
+        if (e instanceof HttpException) {
 
         }
         callBack.onError(0, "");
@@ -65,9 +52,6 @@ public class BaseObserver<T> implements Observer<T> {
     public void onComplete() {
         if (disposable.isDisposed()) {
             disposable.dispose();
-        }
-        if (loading != null) {
-            loading.dismiss();
         }
         LogUtil.d("onComplete");
     }

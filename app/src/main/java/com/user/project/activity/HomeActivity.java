@@ -2,14 +2,12 @@ package com.user.project.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.KeyEvent;
 
-import com.bjxrgz.base.utils.AppUtil;
-import com.user.project.base.BaseActivity;
 import com.bjxrgz.base.utils.ActivityUtil;
 import com.bjxrgz.base.utils.ToastUtil;
 import com.user.project.R;
+import com.user.project.base.BaseActivity;
 import com.user.project.domain.Version;
 import com.user.project.http.BaseObserver;
 import com.user.project.http.HttpManager;
@@ -21,7 +19,7 @@ import java.util.Date;
  * Created by JiangZhiGuo on 2016/06/01
  * describe 主界面
  */
-public class HomeActivity extends BaseActivity<HomeActivity> {
+public class HomeActivity extends BaseActivity {
 
     public static void goActivity(Activity from) {
         Intent intent = new Intent(from, HomeActivity.class);
@@ -29,7 +27,7 @@ public class HomeActivity extends BaseActivity<HomeActivity> {
     }
 
     @Override
-    protected int initLayout(Bundle savedInstanceState) {
+    protected int initLayout() {
         return R.layout.activity_home;
     }
 
@@ -67,8 +65,9 @@ public class HomeActivity extends BaseActivity<HomeActivity> {
                 System.exit(0); // 真正退出程序
             }
             lastExitTime = nowTime;
+            return true;
         }
-        return true;
+        return false;
     }
 
 }

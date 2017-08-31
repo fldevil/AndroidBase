@@ -1,6 +1,5 @@
 package com.user.project.activity;
 
-import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.bjxrgz.base.BaseApp;
@@ -14,13 +13,13 @@ import butterknife.BindView;
  * Created by JiangZhiGuo on 2016/06/01
  * describe 启动界面
  */
-public class WelcomeActivity extends BaseActivity<WelcomeActivity> {
+public class WelcomeActivity extends BaseActivity {
 
     @BindView(R.id.ivWelcome)
     ImageView ivWelcome;
 
     @Override
-    protected int initLayout(Bundle savedInstanceState) {
+    protected int initLayout() {
         ScreenUtil.hideStatusBar(mActivity);
         return R.layout.activity_welcome;
     }

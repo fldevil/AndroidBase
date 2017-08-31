@@ -15,7 +15,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.bjxrgz.base.R;
-import com.bjxrgz.base.view.MyLoading;
+import com.bjxrgz.base.view.LoadingDialog;
 
 import java.util.Calendar;
 
@@ -29,11 +29,11 @@ public class DialogUtil {
     /**
      * 等待对话框 (一般用于baseActivity)
      */
-    public static ProgressDialog createLoading(Context context) {
-        ProgressDialog loading = new MyLoading(context);
-        loading.setCanceledOnTouchOutside(false);
-        loading.setCancelable(true);
-        return loading;
+    public static Dialog createLoading(Context context) {
+        Dialog dialog = new LoadingDialog(context);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(true);
+        return dialog;
     }
 
     /**
