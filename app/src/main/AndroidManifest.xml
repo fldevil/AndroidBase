@@ -66,7 +66,7 @@
         <!-- 高德地图 end -->
 
         <!-- 启动页 -->
-        <activity android:name="com.user.project.activity.WelcomeActivity">
+        <activity android:name=".activity.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -74,7 +74,7 @@
             </intent-filter>
         </activity>
         <!-- 主页面 -->
-        <activity android:name="com.user.project.activity.HomeActivity" />
+        <activity android:name=".activity.HomeActivity" />
 
     </application>
 </manifest>

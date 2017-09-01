@@ -38,7 +38,7 @@ public class HomeActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        HttpManager.getInstance().checkUpdate(0, new BaseObserver.CallBack<Version>() {
+        HttpManager.getInstance().checkUpdate(22, new BaseObserver.CallBack<Version>() {
             @Override
             public void onSuccess(Version result) {
 
