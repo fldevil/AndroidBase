@@ -20,24 +20,33 @@ android {
         versionName '1.0.0'
     }
     signingConfigs { // 签名信息
-        bjxrgz_debug {
-            storeFile file('E:/android_key/bjxrgz_android_debug.jks')
-            storePassword 'Bjxrgz998'
-            keyAlias 'Bjxrgz'
-            keyPassword 'Bjxrgz998'
+        bjxrgzDebug {
+            storeFile file(project.STORE_FILE)
+            storePassword project.STORE_PASSWORD
+            keyAlias project.KEY_ALIAS
+            keyPassword project.KEY_PASSWORD
         }
     }
     buildTypes { // 打包选项
         debug { // 测试
-            signingConfig signingConfigs.bjxrgz_debug // 设置签名信息
+            signingConfig signingConfigs.bjxrgzDebug // 设置签名信息
             minifyEnabled false // 混淆开关
             // 指定混淆规则文件
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         release { // 正式
-            signingConfig signingConfigs.bjxrgz_debug // 可以只用一个签名信息
+            signingConfig signingConfigs.bjxrgzDebug // 可以只用一个签名信息
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        applicationVariants.all { variant ->
+            variant.outputs.each { output ->
+                def outputFile = output.outputFile
+                if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                    def fileName = "bjxrgz_${defaultConfig.versionName}.apk"
+                    output.outputFile = new File(outputFile.parent, fileName)
+                }
+            }
         }
     }
     productFlavors { // 发布渠道
