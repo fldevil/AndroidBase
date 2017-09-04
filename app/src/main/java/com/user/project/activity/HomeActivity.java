@@ -8,12 +8,14 @@ import com.bjxrgz.base.utils.ActivityUtil;
 import com.bjxrgz.base.utils.ToastUtil;
 import com.user.project.R;
 import com.user.project.base.BaseActivity;
-import com.user.project.domain.Version;
+import com.user.project.func.UpdateApp;
 import com.user.project.http.BaseObserver;
 import com.user.project.http.HttpManager;
 import com.user.project.utils.ViewUtils;
 
 import java.util.Date;
+
+import okhttp3.ResponseBody;
 
 /**
  * Created by JiangZhiGuo on 2016/06/01
@@ -38,17 +40,7 @@ public class HomeActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        HttpManager.getInstance().checkUpdate(22, new BaseObserver.CallBack<Version>() {
-            @Override
-            public void onSuccess(Version result) {
-
-            }
-
-            @Override
-            public void onError(int httpCode, String errorMessage) {
-
-            }
-        });
+        new UpdateApp(mActivity,true);
     }
 
     private Long lastExitTime = 0L; //最后一次退出时间

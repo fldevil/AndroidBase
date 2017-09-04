@@ -33,13 +33,13 @@ public class RetrofitFactory {
 
     private static RetrofitFactory instance;
 
-    private RetrofitFactory(){
+    private RetrofitFactory() {
     }
 
-    public static RetrofitFactory getInstance(){
-        if (instance == null){
-            synchronized (RetrofitFactory.class){
-                if (instance == null){
+    public static RetrofitFactory getInstance() {
+        if (instance == null) {
+            synchronized (RetrofitFactory.class) {
+                if (instance == null) {
                     instance = new RetrofitFactory();
                 }
             }
@@ -50,7 +50,7 @@ public class RetrofitFactory {
     /**
      * header拦截器
      */
-    private Interceptor getHeader() {
+    private Interceptor getHeaderInterceptor() {
         return new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -87,23 +87,27 @@ public class RetrofitFactory {
         return loggingInterceptor;
     }
 
-    /* 获取OKHttp的client */
+    /**
+     * 获取OkHttp
+     */
     private OkHttpClient getClient() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.addInterceptor(getHeaderInterceptor());
         builder.addInterceptor(getLogInterceptor());
-        builder.addInterceptor(getHeader());
         return builder.build();
     }
 
-    /* 获取Retrofit实例 */
-    private Retrofit getRetrofit(Factory factory,String baseUrl) {
+    /**
+     * 获取Retrofit
+     */
+    private Retrofit getRetrofit(Factory factory, String baseUrl) {
         Retrofit.Builder builder = new Retrofit.Builder();
         builder.baseUrl(baseUrl); // host
-        if (factory.ordinal() == Factory.empty.ordinal()){
+        if (factory.ordinal() == Factory.empty.ordinal()) {
 
-        }else if (factory.ordinal() == Factory.gson.ordinal()){
+        } else if (factory.ordinal() == Factory.gson.ordinal()) {
             builder.addConverterFactory(getGsonFactory());
-        }else if (factory.ordinal() == Factory.string.ordinal()){
+        } else if (factory.ordinal() == Factory.string.ordinal()) {
             builder.addConverterFactory(getStringFactory());
         }
         builder.addCallAdapterFactory(RxJava2CallAdapterFactory.create());
@@ -121,8 +125,8 @@ public class RetrofitFactory {
     }
 
     /* 获取service 开始请求网络 */
-    public <T> T getService(Factory factory,String baseUrl,Class<T> tClass) {
-        Retrofit retrofit = getRetrofit(factory,baseUrl);
+    public <T> T getService(Factory factory, String baseUrl, Class<T> tClass) {
+        Retrofit retrofit = getRetrofit(factory, baseUrl);
         return retrofit.create(tClass);
     }
 

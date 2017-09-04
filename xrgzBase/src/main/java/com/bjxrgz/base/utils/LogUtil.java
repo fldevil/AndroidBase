@@ -5,8 +5,6 @@ import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.Settings;
 
 /**
- * Created by Jiang on 2016/10/08
- * <p/>
  * 日志管理工具类
  */
 public class LogUtil {
@@ -52,7 +50,7 @@ public class LogUtil {
         Logger.e(throwable, message, args);
     }
 
-    public static void e(Throwable throwable, String tag, String message, Object... args) {
+    public static void e(String tag, Throwable throwable, String message, Object... args) {
         Logger.t(tag).e(throwable, message, args);
     }
 

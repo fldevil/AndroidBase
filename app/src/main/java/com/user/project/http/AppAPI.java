@@ -49,5 +49,5 @@ public interface AppAPI {
     Observable<ResponseBody> downloadLargeFile(@Url String url);
 
     @GET("checkUpdate/{version}")
-    Observable<Version> checkUpdate(@Path("version") int version);
+    Observable<ResponseBody> checkUpdate(@Path("version") int version);
 }
