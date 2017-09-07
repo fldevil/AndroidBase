@@ -32,12 +32,6 @@
         <item name="android:activityCloseExitAnimation">@anim/slide_right_out</item>
     </style>
 
-    <!-- AppBarLayout(android:theme里加,可调整字体颜色)-->
-    <style name="appBarStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
-
-    <!-- ToolBarLayout(上面加了,这里可以不加) -->
-    <style name="toolBarStyle" parent="ThemeOverlay.AppCompat.Light"/>
-
     <!-- 自定义对话框样式 -->
     <style name="DialogCustom" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item><!--边框-->
