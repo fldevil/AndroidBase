@@ -116,7 +116,7 @@ public class ShareUtils {
 
                 Call<User> call = HttpUtils.call(HttpUtils.Head.common, HttpUtils.Factory.gson)
                         .signin3Party(map);
-                HttpUtils.enqueue(call, new HttpUtils.CallBack<User>() {
+                HttpUtils.enqueue(call, new HttpUtils.Callback<User>() {
                     @Override
                     public void onSuccess(User result) {
                         SPUtils.setUser(result);

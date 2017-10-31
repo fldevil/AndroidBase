@@ -27,30 +27,6 @@ android {
             keyPassword project.KEY_PASSWORD
         }
     }
-    buildTypes { // 打包选项
-        debug { // 测试
-            signingConfig signingConfigs.bjxrgzDebug // 设置签名信息
-            minifyEnabled false // 混淆开关
-            // 指定混淆规则文件
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        release { // 正式
-            signingConfig signingConfigs.bjxrgzDebug // 可以只用一个签名信息
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        applicationVariants.all { variant ->
-            variant.outputs.each { output ->
-                def outputFile = output.outputFile
-                if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                    def fileName = "bjxrgz_${defaultConfig.versionName}.apk"
-                    output.outputFile = new File(outputFile.parent, fileName)
-                }
-            }
-        }
-    }
-    productFlavors { // 发布渠道
-    }
     sourceSets { // 源码设置
         main {
             jniLibs.srcDirs = ['libs'] // 指定lib库目录
@@ -85,14 +61,34 @@ android {
         cruncherEnabled = false
         useNewCruncher = false
     }
+    buildTypes { // 打包选项
+        debug { // 测试
+            signingConfig signingConfigs.bjxrgzDebug // 设置签名信息
+            minifyEnabled false // 混淆开关
+            // 指定混淆规则文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release { // 正式
+            signingConfig signingConfigs.bjxrgzDebug // 可以只用一个签名信息
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors { // 发布渠道
+    }
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "${variant.name}-${variant.versionName}.apk"
+        }
+    }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':xrgzBase')
     compile project(':PushSDK')
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
-    compile 'com.jakewharton:butterknife:8.7.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    compile 'com.jakewharton:butterknife:8.8.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'cn.yipianfengye.android:zxing-library:2.1'
 }

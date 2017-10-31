@@ -15,7 +15,7 @@ import com.bjxrgz.base.utils.IntentUtil;
 import com.bjxrgz.base.utils.LogUtil;
 import com.bjxrgz.base.utils.ToastUtil;
 import com.user.project.domain.Version;
-import com.user.project.http.BaseObserver;
+import com.user.project.http.Callback;
 import com.user.project.http.HttpManager;
 import com.user.project.utils.MyUtils;
 
@@ -43,7 +43,7 @@ public class UpdateApp {
 
     private void checkUpdate() {
         final int versionCode = AppUtil.getVersionCode();
-        HttpManager.getInstance().checkUpdate(versionCode, new BaseObserver.CallBack<ResponseBody>() {
+        HttpManager.getInstance().checkUpdate(versionCode, new Callback.CommonCallback<ResponseBody>() {
             @Override
             public void onSuccess(ResponseBody result) {
                 if (result.contentLength() != 0) {
@@ -104,7 +104,7 @@ public class UpdateApp {
     private void downloadApk() {
         ToastUtil.showShortToast("开始下载最新版本");
 
-        HttpManager.getInstance().downloadLargeFile(version.getUpdateUrl(), new BaseObserver.CallBack<ResponseBody>() {
+        HttpManager.getInstance().downloadLargeFile(version.getUpdateUrl(), new Callback.CommonCallback<ResponseBody>() {
             @Override
             public void onSuccess(final ResponseBody result) {
                 if (result == null || result.byteStream() != null) {

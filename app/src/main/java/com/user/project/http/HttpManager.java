@@ -13,7 +13,7 @@ public class HttpManager {
     private static AppAPI appAPI;
 
     private HttpManager() {
-        appAPI = RetrofitFactory.getInstance().getService(RetrofitFactory.Factory.gson, AppAPI.BASE_URL, AppAPI.class);
+        appAPI = RetrofitManager.createGsonService(AppAPI.BASE_URL, AppAPI.class);
     }
 
     public static HttpManager getInstance() {
@@ -30,7 +30,7 @@ public class HttpManager {
     /**
      * 检查是否有新版本
      */
-    public void checkUpdate(int version, BaseObserver.CallBack<ResponseBody> callBack) {
+    public void checkUpdate(int version, Callback.CommonCallback<ResponseBody> callBack) {
         appAPI.checkUpdate(version)
                 .compose(RxSchedulers.<ResponseBody>compose())
                 .subscribe(new BaseObserver<>(callBack));
@@ -39,7 +39,7 @@ public class HttpManager {
     /**
      * 下载文件
      */
-    public void downloadLargeFile(String url, BaseObserver.CallBack<ResponseBody> callBack) {
+    public void downloadLargeFile(String url, Callback.CommonCallback<ResponseBody> callBack) {
         appAPI.downloadLargeFile(url)
                 .compose(RxSchedulers.<ResponseBody>compose())
                 .subscribe(new BaseObserver<>(callBack));

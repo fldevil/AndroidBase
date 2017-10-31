@@ -15,15 +15,9 @@ import retrofit2.HttpException;
 public class BaseObserver<T> implements Observer<T> {
 
     private Disposable disposable;
-    private CallBack<T> callBack;
+    private Callback.CommonCallback<T> callBack;
 
-    public interface CallBack<T> {
-        void onSuccess(T result);
-
-        void onError(int httpCode, String errorMessage);
-    }
-
-    public BaseObserver(CallBack<T> callBack) {
+    public BaseObserver(Callback.CommonCallback<T> callBack) {
         this.callBack = callBack;
     }
 
