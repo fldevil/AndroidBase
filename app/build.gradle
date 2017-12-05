@@ -19,6 +19,7 @@ android {
         versionCode 1
         versionName '1.0.0'
     }
+
     signingConfigs { // 签名信息
         bjxrgzDebug {
             storeFile file(project.STORE_FILE)
@@ -27,6 +28,7 @@ android {
             keyPassword project.KEY_PASSWORD
         }
     }
+
     sourceSets { // 源码设置
         main {
             jniLibs.srcDirs = ['libs'] // 指定lib库目录
@@ -35,13 +37,18 @@ android {
         debug.setRoot('build-types/debug') // 指定debug模式的路径
         release.setRoot('build-types/release') // 指定release模式的路径
     }
+
     compileOptions { // 编码/JDK等
         encoding "UTF-8"
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
+
     lintOptions { // 编译的lint检查
         disable 'MissingTranslation' // 防止在发布的时候出现因MissingTranslation导致Build Failed!
         abortOnError false // 移除lint检查的error
     }
+
     packagingOptions { // 解决jar包冲突
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/DEPENDENCIES.txt'
@@ -54,13 +61,16 @@ android {
         exclude 'META-INF/notice.txt'
         exclude 'META-INF/NOTICE.txt'
     }
+
     dexOptions { // bug value-2
         javaMaxHeapSize "4g"
     }
+
     aaptOptions { // 过滤PNG图片检验
         cruncherEnabled = false
         useNewCruncher = false
     }
+
     buildTypes { // 打包选项
         debug { // 测试
             signingConfig signingConfigs.bjxrgzDebug // 设置签名信息
@@ -74,8 +84,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
     productFlavors { // 发布渠道
     }
+
     android.applicationVariants.all { variant ->
         variant.outputs.all {
             outputFileName = "${variant.name}-${variant.versionName}.apk"

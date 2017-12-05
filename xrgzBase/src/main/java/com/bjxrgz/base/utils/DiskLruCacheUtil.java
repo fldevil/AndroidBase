@@ -1,5 +1,7 @@
 package com.bjxrgz.base.utils;
 
+import android.content.Context;
+
 import com.jakewharton.disklrucache.DiskLruCache;
 
 import java.io.BufferedWriter;
@@ -10,7 +12,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 /**
- * Created by Fan on 2017/5/23.
+ * @author Fan
  * 硬盘缓存帮助类
  */
 
@@ -20,9 +22,11 @@ public class DiskLruCacheUtil {
     private static final int MAX_COUNT = 5 * 1024 * 1024;
     private static final int DEFAULT_APP_VERSION = 1;
 
+    private Context mContext;
     private DiskLruCache mDiskLruCache;
 
-    public DiskLruCacheUtil(File dir) throws IOException {
+    public DiskLruCacheUtil(Context context,File dir) throws IOException {
+        mContext = context;
         mDiskLruCache = generateCache(dir, MAX_COUNT);
     }
 
@@ -32,7 +36,7 @@ public class DiskLruCacheUtil {
                     dir + " is not a directory or does not exists. ");
         }
 
-        int appVersion = AppUtil.getVersionCode();
+        int appVersion = AppUtil.getVersionCode(mContext);
 
         return DiskLruCache.open(dir, appVersion, DEFAULT_APP_VERSION, maxCount);
     }

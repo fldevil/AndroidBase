@@ -14,16 +14,16 @@ import java.io.File;
 import java.util.List;
 
 /**
- * Created by JiangZhiGuo on 2016/10/12.
- * describe  App相关工具类
+ * @author Fan
+ * App相关工具类
  */
 public class AppUtil {
 
     /**
      * 获取app的名称
      */
-    public static String getAppName() {
-        PackageManager pm = ManagerUtil.getPackageManager();
+    public static String getAppName(Context context) {
+        PackageManager pm = ManagerUtil.getPackageManager(context);
         try {
             PackageInfo pi = pm.getPackageInfo(BaseApp.getInstance().getPackageName(), 0);
             ApplicationInfo ai = pi.applicationInfo;
@@ -37,8 +37,8 @@ public class AppUtil {
     /**
      * 获取app的图标
      */
-    public static Drawable getAppIcon() {
-        PackageManager pm = ManagerUtil.getPackageManager();
+    public static Drawable getAppIcon(Context context) {
+        PackageManager pm = ManagerUtil.getPackageManager(context);
         try {
             PackageInfo pi = pm.getPackageInfo(BaseApp.getInstance().getPackageName(), 0);
             ApplicationInfo ai = pi.applicationInfo;
@@ -52,8 +52,8 @@ public class AppUtil {
     /**
      * 获取应用包名
      */
-    public static String getPackageName() {
-        PackageManager pm = ManagerUtil.getPackageManager();
+    public static String getPackageName(Context context) {
+        PackageManager pm = ManagerUtil.getPackageManager(context);
         try {
             PackageInfo pi = pm.getPackageInfo(BaseApp.getInstance().getPackageName(), 0);
             return pi.packageName;
@@ -66,8 +66,8 @@ public class AppUtil {
     /**
      * 获取应用安装路径
      */
-    public static String getSourceDir() {
-        PackageManager pm = ManagerUtil.getPackageManager();
+    public static String getSourceDir(Context context) {
+        PackageManager pm = ManagerUtil.getPackageManager(context);
         try {
             PackageInfo pi = pm.getPackageInfo(BaseApp.getInstance().getPackageName(), 0);
             ApplicationInfo ai = pi.applicationInfo;
@@ -81,8 +81,8 @@ public class AppUtil {
     /**
      * 获取应用版本名称
      */
-    public static String getVersionName() {
-        PackageManager pm = ManagerUtil.getPackageManager();
+    public static String getVersionName(Context context) {
+        PackageManager pm = ManagerUtil.getPackageManager(context);
         try {
             PackageInfo pi = pm.getPackageInfo(BaseApp.getInstance().getPackageName(), 0);
             return pi.versionName;
@@ -95,8 +95,8 @@ public class AppUtil {
     /**
      * 获取应用版本号
      */
-    public static int getVersionCode() {
-        PackageManager pm = ManagerUtil.getPackageManager();
+    public static int getVersionCode(Context context) {
+        PackageManager pm = ManagerUtil.getPackageManager(context);
         try {
             PackageInfo pi = pm.getPackageInfo(BaseApp.getInstance().getPackageName(), 0);
             return pi.versionCode;
@@ -109,12 +109,12 @@ public class AppUtil {
     /**
      * 自定义资源路径(部分手机有差别)
      */
-    public static String getResDir() {
+    public static String getResDir(Context context) {
         String dir;
         if (isSDCardEnable()) {
-            dir = getSDCardPath() + getPackageName() + File.separator;
+            dir = getSDCardPath() + getPackageName(context) + File.separator;
         } else {
-            dir = getRootPath() + getPackageName() + File.separator;
+            dir = getRootPath() + getPackageName(context) + File.separator;
         }
         FileUtil.createOrExistsDir(dir); // 并创建
         return dir;
@@ -123,8 +123,8 @@ public class AppUtil {
     /**
      * 自定义Log路径
      */
-    public static String getLogDir() {
-        String dir = getResDir() + "log" + File.separator;
+    public static String getLogDir(Context context) {
+        String dir = getResDir(context) + "log" + File.separator;
         FileUtil.createOrExistsDir(dir); // 并创建
         return dir;
     }
@@ -214,15 +214,15 @@ public class AppUtil {
      * 判断App在前台运行
      * <uses-permission android:name="android.permission.GET_TASKS" />
      */
-    public static boolean isAppOnForeground() {
-        ActivityManager activityManager = ManagerUtil.getActivityManager();
+    public static boolean isAppOnForeground(Context context) {
+        ActivityManager activityManager = ManagerUtil.getActivityManager(context);
         List<ActivityManager.RunningAppProcessInfo> appProcesses =
                 activityManager.getRunningAppProcesses();
         if (appProcesses != null && appProcesses.size() > 0) {
             for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
                 if (appProcess.importance ==
                         ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
-                        && appProcess.processName.equals(getPackageName()))
+                        && appProcess.processName.equals(getPackageName(context)))
                     return true;
             }
         }
@@ -232,10 +232,10 @@ public class AppUtil {
     /**
      * 退出应用程序
      */
-    public static void AppExit() {
+    public static void AppExit(Context context) {
         ActivityUtil.closeActivities();
-        ActivityManager activityManager = ManagerUtil.getActivityManager();
-        activityManager.killBackgroundProcesses(getPackageName());
+        ActivityManager activityManager = ManagerUtil.getActivityManager(context);
+        activityManager.killBackgroundProcesses(getPackageName(context));
         System.exit(0);
     }
 }

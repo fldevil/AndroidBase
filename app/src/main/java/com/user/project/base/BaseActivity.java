@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
 
-import com.bjxrgz.base.utils.ActivityUtil;
 import com.bjxrgz.base.utils.AnalyUtil;
 import com.bjxrgz.base.utils.DialogUtil;
 import com.bjxrgz.base.utils.NetUtil;
@@ -18,6 +17,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
+ * @author Fan
  * activity 基类
  */
 public abstract class BaseActivity extends AppCompatActivity {
@@ -63,7 +63,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        NetUtil.isAvailable();
+        NetUtil.isAvailable(mContext);
     }
 
     @Override

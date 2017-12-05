@@ -10,7 +10,7 @@ import com.user.project.R;
  * Created by JiangZhiGuo on 2016-10-31.
  * describe 符合项目样式的View管理类
  */
-public class ViewUtils {
+public class ViewUtil {
 
     public static void initTop(Activity activity, String title) {
         TextView tvCenter = (TextView) activity.findViewById(R.id.tvCenter);

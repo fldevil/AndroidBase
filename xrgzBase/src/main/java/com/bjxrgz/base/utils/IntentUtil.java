@@ -41,9 +41,9 @@ public class IntentUtil {
     /**
      * 相册 ,可以自定义保存路径
      */
-    public static Intent getPictureIntent() {
+    public static Intent getPictureIntent(Context context) {
         Intent intent = new Intent();
-        PackageManager packageManager = ManagerUtil.getPackageManager();
+        PackageManager packageManager = ManagerUtil.getPackageManager(context);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -106,27 +106,30 @@ public class IntentUtil {
     }
 
     /**
-     * 获取安装App(支持6.0)的意图
+     * 获取安装App 支持7.0
      */
     public static Intent getInstallIntent(File file) {
         if (file == null) return null;
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        String type;
-        if (Build.VERSION.SDK_INT < 23) {
-            type = "application/vnd.android.package-archive";
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        String type = "application/vnd.android.package-archive";
+
+        Uri uri;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            uri = ConvertUtil.File2URI7(file);
         } else {
-            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(FileUtil.getFileExtension(file));
+            uri = ConvertUtil.File2URI(file);
         }
-        return intent.setDataAndType(Uri.fromFile(file), type);
+        return intent.setDataAndType(uri, type);
     }
 
     /**
      * 获取打开当前App的意图
      */
     public static Intent getAppIntent(Context context) {
-        return ManagerUtil.getPackageManager().getLaunchIntentForPackage(AppUtil.getPackageName());
+        return ManagerUtil.getPackageManager(context).getLaunchIntentForPackage(AppUtil.getPackageName(context));
     }
 
     /**
@@ -259,11 +262,11 @@ public class IntentUtil {
     /**
      * 打开app系统设置
      */
-    public static Intent getSettingsIntent() {
+    public static Intent getSettingsIntent(Context context) {
         Intent intent = new Intent();
         intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
-        String packageName = AppUtil.getPackageName();
+        String packageName = AppUtil.getPackageName(context);
         intent.setData(Uri.parse("package:" + packageName));
         return intent;
     }

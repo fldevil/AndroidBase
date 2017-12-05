@@ -110,15 +110,15 @@ public class LocationUtil {
     /**
      * 判断Gps是否可用
      */
-    public static boolean isGpsEnabled() {
-        return ManagerUtil.getLocationManager().isProviderEnabled(LocationManager.GPS_PROVIDER);
+    public static boolean isGpsEnabled(Context context) {
+        return ManagerUtil.getLocationManager(context).isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
     /**
      * 判断定位是否可用
      */
-    public static boolean isLocationEnabled() {
-        LocationManager lm = ManagerUtil.getLocationManager();
+    public static boolean isLocationEnabled(Context context) {
+        LocationManager lm = ManagerUtil.getLocationManager(context);
         return lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
                 || lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
@@ -141,11 +141,11 @@ public class LocationUtil {
     public boolean register(Activity activity, long minTime, long minDistance, OnLocationChangeListener listener) {
         if (listener == null) return false;
         mListener = listener;
-        if (!isLocationEnabled()) {
+        if (!isLocationEnabled(activity)) {
             ToastUtil.showShortToast(R.string.cannot_location_please_open_service);
             return false;
         }
-        LocationManager mLocationManager = ManagerUtil.getLocationManager();
+        LocationManager mLocationManager = ManagerUtil.getLocationManager(activity);
         String provider = mLocationManager.getBestProvider(getCriteria(), true);
         // 权限检查
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -173,9 +173,9 @@ public class LocationUtil {
     /**
      * 注销
      */
-    public static void unregister() {
+    public static void unregister(Context context) {
         if (myLocationListener != null) {
-            ManagerUtil.getLocationManager().removeUpdates(myLocationListener);
+            ManagerUtil.getLocationManager(context).removeUpdates(myLocationListener);
             myLocationListener = null;
         }
     }

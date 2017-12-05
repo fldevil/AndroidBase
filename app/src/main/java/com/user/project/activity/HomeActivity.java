@@ -8,7 +8,7 @@ import com.bjxrgz.base.utils.ActivityUtil;
 import com.bjxrgz.base.utils.ToastUtil;
 import com.user.project.R;
 import com.user.project.base.BaseActivity;
-import com.user.project.utils.ViewUtils;
+import com.user.project.utils.ViewUtil;
 
 import java.util.Date;
 
@@ -30,7 +30,7 @@ public class HomeActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        ViewUtils.initTop(mActivity, "主页面");
+        ViewUtil.initTop(mActivity, "主页面");
     }
 
     @Override

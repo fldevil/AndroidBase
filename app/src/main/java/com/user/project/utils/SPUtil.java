@@ -17,7 +17,7 @@ import java.util.Map;
  * Preferences 帮助类
  */
 
-public class SPUtils {
+public class SPUtil {
 
     private static final String SHARE_USER = "user";
 

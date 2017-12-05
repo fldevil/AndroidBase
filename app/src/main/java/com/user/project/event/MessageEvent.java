@@ -1,4 +1,4 @@
-package com.bjxrgz.base.event;
+package com.user.project.event;
 
 /**
  * Created by Fan on 2017/5/17.

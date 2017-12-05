@@ -17,7 +17,7 @@ import com.uuzuche.lib_zxing.activity.ZXingLibrary;
  * Created by JiangZhiGuo on 2017-1-15.
  * describe 二维码扫描
  */
-public class ScanUtils {
+public class ScanUtil {
 
     public interface OnScanResultListener<T> {
         void onSuccess(T t);
@@ -32,7 +32,7 @@ public class ScanUtils {
     /* 开始扫描 */
     public static void scanStart(Activity from) {
         Intent intent = new Intent(from, CaptureActivity.class);
-        from.startActivityForResult(intent, MyUtils.REQUEST_SCAN);
+        from.startActivityForResult(intent, MyUtil.REQUEST_SCAN);
     }
 
     /* 扫描结果（string） */

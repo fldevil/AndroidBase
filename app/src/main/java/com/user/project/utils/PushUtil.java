@@ -18,7 +18,7 @@ import com.user.project.MyApp;
  * Created by JiangZhiGuo on 2016/8/5.
  * describe 友盟管理工具类 (不用的话，删掉PushSDK module 并去掉manifest下的配置)
  */
-public class PushUtils {
+public class PushUtil {
     private static String DEVICE_TOKEN = ""; // 友盟标识
 
     public static void initAPP() {
@@ -137,7 +137,7 @@ public class PushUtils {
             @Override
             public void launchApp(Context context, UMessage uMessage) {
                 // 一般这里会先进行判断  是正常打开app，还是跳转到指定的页面
-                if (!AppUtil.isAppOnForeground()) {
+                if (!AppUtil.isAppOnForeground(context)) {
                     // 如果数据在uMessage.extra里，那么友盟会自动把这些数据封装带启动的intent里
                     // 如果数据不在extra里，那么需要额外的处理
                     super.launchApp(context, uMessage);

@@ -35,7 +35,7 @@ import java.util.Map;
  * 4.并去掉manifest下的配置)
  * 5.删除java里的微信activity
  */
-public class ShareUtils {
+public class ShareUtil {
 
     private static UMShareAPI umShareAPI;
 
@@ -112,14 +112,14 @@ public class ShareUtils {
                 String avator = data.get("iconurl");
 
                 /*Map<String, Object> map = User.getLog3PartyRequest(uid, type, token,
-                        name, avator, PushUtils.getDeviceToken());
+                        name, avator, PushUtil.getDeviceToken());
 
                 Call<User> call = HttpUtils.call(HttpUtils.Head.common, HttpUtils.Factory.gson)
                         .signin3Party(map);
                 HttpUtils.enqueue(call, new HttpUtils.Callback<User>() {
                     @Override
                     public void onSuccess(User result) {
-                        SPUtils.setUser(result);
+                        SPUtil.setUser(result);
                         result.setToast(R.string.login_success);
 
                         // 环信登录
@@ -131,7 +131,7 @@ public class ShareUtils {
 
                     @Override
                     public void onFailure(int httpCode, String errorMessage) {
-                        MyUtils.httpFailure(httpCode, errorMessage);
+                        MyUtil.httpFailure(httpCode, errorMessage);
                     }
                 });*/
             }

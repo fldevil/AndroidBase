@@ -2,6 +2,7 @@ package com.bjxrgz.base.utils;
 
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -11,28 +12,27 @@ import android.telephony.TelephonyManager;
 import com.bjxrgz.base.BaseApp;
 
 /**
- * Created by jiang on 2016/10/12
- * <p/>
- * describe  设备相关工具类
+ * @author Fan
+ * 设备相关工具类
  */
 public class DeviceUtil {
 
     /**
      * 判断当前设备是否是手机
      */
-    public static boolean isPhone() {
-        TelephonyManager telephonyManager = ManagerUtil.getTelephonyManager();
+    public static boolean isPhone(Context context) {
+        TelephonyManager telephonyManager = ManagerUtil.getTelephonyManager(context);
         return telephonyManager.getPhoneType() != TelephonyManager.PHONE_TYPE_NONE;
     }
 
     /**
      * 获取设备唯一标识
      */
-    @SuppressLint("HardwareIds")
-    public static String getDeviceId() {
+    @SuppressLint({"HardwareIds", "MissingPermission"})
+    public static String getDeviceId(Context context) {
         String deviceId;
-        TelephonyManager telephonyManager = ManagerUtil.getTelephonyManager();
-        if (isPhone()) {
+        TelephonyManager telephonyManager = ManagerUtil.getTelephonyManager(context);
+        if (isPhone(context)) {
             deviceId = telephonyManager.getDeviceId();
         } else {
             ContentResolver contentResolver = BaseApp.getInstance().getContentResolver();
@@ -45,9 +45,9 @@ public class DeviceUtil {
      * 获取设备mac地址
      */
     @SuppressLint("HardwareIds")
-    public static String getMacAddress() {
+    public static String getMacAddress(Context context) {
         String macAddress = "";
-        WifiManager wifi = ManagerUtil.getWifiManager();
+        WifiManager wifi = ManagerUtil.getWifiManager(context);
         WifiInfo info = wifi.getConnectionInfo();
         if (info != null) {
             macAddress = info.getMacAddress();
@@ -58,10 +58,10 @@ public class DeviceUtil {
     /**
      * 获取设备手机号
      */
-    @SuppressLint("HardwareIds")
-    public static String getPhoneNumber() {
+    @SuppressLint({"HardwareIds", "MissingPermission"})
+    public static String getPhoneNumber(Context context) {
         String phoneNumber;
-        TelephonyManager telephonyManager = ManagerUtil.getTelephonyManager();
+        TelephonyManager telephonyManager = ManagerUtil.getTelephonyManager(context);
         phoneNumber = telephonyManager.getLine1Number();
         return phoneNumber;
     }
@@ -97,10 +97,10 @@ public class DeviceUtil {
     /**
      * 获取sim卡序列号
      */
-    @SuppressLint("HardwareIds")
-    public static String getSimSerial() {
+    @SuppressLint({"HardwareIds", "MissingPermission"})
+    public static String getSimSerial(Context context) {
         String simSerial;
-        TelephonyManager telephonyManager = ManagerUtil.getTelephonyManager();
+        TelephonyManager telephonyManager = ManagerUtil.getTelephonyManager(context);
         simSerial = telephonyManager.getSimSerialNumber();
         return simSerial;
     }

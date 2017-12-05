@@ -17,7 +17,7 @@ import com.bjxrgz.base.utils.ToastUtil;
 import com.user.project.domain.Version;
 import com.user.project.http.Callback;
 import com.user.project.http.HttpManager;
-import com.user.project.utils.MyUtils;
+import com.user.project.utils.MyUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class UpdateApp {
     }
 
     private void checkUpdate() {
-        final int versionCode = AppUtil.getVersionCode();
+        final int versionCode = AppUtil.getVersionCode(activity);
         HttpManager.getInstance().checkUpdate(versionCode, new Callback.CommonCallback<ResponseBody>() {
             @Override
             public void onSuccess(ResponseBody result) {
@@ -79,7 +79,7 @@ public class UpdateApp {
 
             @Override
             public void onError(int httpCode, String errorMessage) {
-                MyUtils.httpFailure(httpCode, errorMessage);
+                MyUtil.httpFailure(httpCode, errorMessage);
             }
         });
     }
@@ -114,7 +114,7 @@ public class UpdateApp {
                     @Override
                     public void run() {
                         String fileName = version.getVersionName() + ".apk";
-                        File apkFile = new File(AppUtil.getResDir(), fileName);
+                        File apkFile = new File(AppUtil.getResDir(activity), fileName);
                         FileUtil.createFileByDeleteOldFile(apkFile);
 
                         FileUtil.writeFileFromIS(apkFile, result.byteStream(), false);
@@ -127,7 +127,7 @@ public class UpdateApp {
 
             @Override
             public void onError(int httpCode, String errorMessage) {
-                MyUtils.httpFailure(httpCode, errorMessage);
+                MyUtil.httpFailure(httpCode, errorMessage);
             }
         });
     }

@@ -29,9 +29,9 @@ public class NetUtil {
     /**
      * 网络是否可用
      */
-    public static boolean isAvailable() {
-        NetworkInfo networkInfo = getNetworkInfo();
-        boolean available = (networkInfo != null && getNetworkInfo().isAvailable());
+    public static boolean isAvailable(Context context) {
+        NetworkInfo networkInfo = getNetworkInfo(context);
+        boolean available = (networkInfo != null && getNetworkInfo(context).isAvailable());
         if (!available) {
             String show = BaseApp.getInstance().getString(R.string.no_network_title);
             ToastUtil.showShortToast(show);
@@ -44,8 +44,8 @@ public class NetUtil {
     /**
      * 判断wifi是否连接状态
      */
-    public static boolean isWifi() {
-        ConnectivityManager cm = ManagerUtil.getConnectivityManager();
+    public static boolean isWifi(Context context) {
+        ConnectivityManager cm = ManagerUtil.getConnectivityManager(context);
         return cm != null && cm.getActiveNetworkInfo() != null
                 && cm.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_WIFI;
     }
@@ -81,9 +81,9 @@ public class NetUtil {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (mListener == null) return;
-            int type = getNetworkType();
-            String name = getNetworkName();
-            NetworkInfo.State state = getNetworkState();
+            int type = getNetworkType(context);
+            String name = getNetworkName(context);
+            NetworkInfo.State state = getNetworkState(context);
             String operator = getNetworkOperator(context);
             mListener.onStateChange(type, name, state, operator);
         }
@@ -92,15 +92,15 @@ public class NetUtil {
     /**
      * 获取代表联网状态的NetWorkInfo对象
      */
-    private static NetworkInfo getNetworkInfo() {
-        return ManagerUtil.getConnectivityManager().getActiveNetworkInfo();
+    private static NetworkInfo getNetworkInfo(Context context) {
+        return ManagerUtil.getConnectivityManager(context).getActiveNetworkInfo();
     }
 
     /**
      * 获取当前网络类型
      */
-    public static int getNetworkType() {
-        NetworkInfo networkInfo = getNetworkInfo();
+    public static int getNetworkType(Context context) {
+        NetworkInfo networkInfo = getNetworkInfo(context);
         if (networkInfo == null) {
             return -1;
         }
@@ -110,8 +110,8 @@ public class NetUtil {
     /**
      * 获取当前网络类型名称
      */
-    public static String getNetworkName() {
-        int networkType = getNetworkType();
+    public static String getNetworkName(Context context) {
+        int networkType = getNetworkType(context);
         String name;
         if (networkType == ConnectivityManager.TYPE_MOBILE) {
             name = "移动";
@@ -130,8 +130,8 @@ public class NetUtil {
      *
      * @return {@link NetworkInfo.State State}
      */
-    public static NetworkInfo.State getNetworkState() {
-        NetworkInfo networkInfo = getNetworkInfo();
+    public static NetworkInfo.State getNetworkState(Context context) {
+        NetworkInfo networkInfo = getNetworkInfo(context);
         if (networkInfo == null) {
             return NetworkInfo.State.UNKNOWN;
         }
@@ -144,7 +144,7 @@ public class NetUtil {
      * @return 如中国联通、中国移动、中国电信
      */
     public static String getNetworkOperator(Context context) {
-        TelephonyManager tm = ManagerUtil.getTelephonyManager();
+        TelephonyManager tm = ManagerUtil.getTelephonyManager(context);
         return tm != null ? tm.getNetworkOperatorName() : null;
     }
 

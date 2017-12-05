@@ -28,7 +28,6 @@ import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.bjxrgz.base.BaseApp;
 import com.bjxrgz.base.utils.LogUtil;
-import com.user.project.MyApp;
 
 import java.util.ArrayList;
 
@@ -36,15 +35,15 @@ import java.util.ArrayList;
  * Created by JiangZhiGuo on 2016/08/05.
  * describe 高德地图管理 (不用的话，删掉lib下的几个jar 并去掉manifest下的配置)
  */
-public class MapUtils {
+public class MapUtil {
 
-    private static MapUtils mapUtils;
+    private static MapUtil mapUtils;
 
-    public static MapUtils get() {
+    public static MapUtil get() {
         if (mapUtils == null) {
-            synchronized (MapUtils.class) {
+            synchronized (MapUtil.class) {
                 if (mapUtils == null) {
-                    mapUtils = new MapUtils();
+                    mapUtils = new MapUtil();
                 }
             }
         }

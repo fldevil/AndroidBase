@@ -2,18 +2,20 @@ package com.user.project.activity;
 
 import android.widget.ImageView;
 
-import com.bjxrgz.base.BaseApp;
 import com.bjxrgz.base.utils.ScreenUtil;
 import com.user.project.R;
 import com.user.project.base.BaseActivity;
 
+import java.util.concurrent.TimeUnit;
+
 import butterknife.BindView;
+import io.reactivex.Observable;
 
 /**
- * Created by JiangZhiGuo on 2016/06/01
- * describe 启动界面
+ * @author Fan
+ * 启动界面
  */
-public class WelcomeActivity extends BaseActivity {
+public class SplashActivity extends BaseActivity {
 
     @BindView(R.id.ivWelcome)
     ImageView ivWelcome;
@@ -21,7 +23,7 @@ public class WelcomeActivity extends BaseActivity {
     @Override
     protected int initLayout() {
         ScreenUtil.hideStatusBar(mActivity);
-        return R.layout.activity_welcome;
+        return R.layout.activity_splash;
     }
 
     @Override
@@ -36,19 +38,10 @@ public class WelcomeActivity extends BaseActivity {
 
     /* 跳转主页 */
     private void goHome() {
-        BaseApp.getInstance().getHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                HomeActivity.goActivity(mActivity);
-            }
-        }, 1000);
+        Observable.timer(1, TimeUnit.SECONDS).subscribe(aLong -> HomeActivity.goActivity(mActivity));
+
         // 立刻关闭当前页面会出现空白缝隙
-        BaseApp.getInstance().getHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mActivity.finish();
-            }
-        }, 3000);
+        Observable.timer(3,TimeUnit.SECONDS).subscribe(aLong -> mActivity.finish());
     }
 
 }

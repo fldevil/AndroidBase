@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -48,6 +49,15 @@ public class ConvertUtil {
     public static Uri File2URI(File file) {
         if (file == null) return null;
         return Uri.fromFile(file);
+    }
+
+    /**
+     * 7.0以上使用
+     */
+    public static Uri File2URI7(File file) {
+        if (file == null) return null;
+        // 兼容7.0以上版本的uri的访问
+        return FileProvider.getUriForFile(BaseApp.getInstance(),"com.bjxrgz.kljiyou.fileprovider",file);
     }
 
     /**
