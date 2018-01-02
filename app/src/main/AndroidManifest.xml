@@ -57,6 +57,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <!-- 友盟推送、分享三方登录 qq和微信 end -->
 
+
         <!-- 高德地图 start -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
@@ -64,6 +65,7 @@
 
         <service android:name="com.amap.api.location.APSService" />
         <!-- 高德地图 end -->
+
 
         <!-- 启动页 -->
         <activity android:name=".activity.SplashActivity">
@@ -75,6 +77,6 @@
         </activity>
         <!-- 主页面 -->
         <activity android:name=".activity.HomeActivity" />
-
     </application>
+
 </manifest>

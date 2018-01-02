@@ -2,6 +2,7 @@ package com.user.project.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.KeyEvent;
 
 import com.bjxrgz.base.utils.ActivityUtil;
@@ -11,6 +12,9 @@ import com.user.project.base.BaseActivity;
 import com.user.project.utils.ViewUtil;
 
 import java.util.Date;
+
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by JiangZhiGuo on 2016/06/01
@@ -38,6 +42,11 @@ public class HomeActivity extends BaseActivity {
 
     }
 
+    @OnClick(R.id.btnKotlin)
+    public void onViewClicked() {
+
+    }
+
     private Long lastExitTime = 0L; //最后一次退出时间
 
     /* 手机返回键 */
@@ -56,5 +65,4 @@ public class HomeActivity extends BaseActivity {
         }
         return false;
     }
-
 }
