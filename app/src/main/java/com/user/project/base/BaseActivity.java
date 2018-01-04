@@ -7,11 +7,15 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bjxrgz.base.utils.AnalyUtil;
 import com.bjxrgz.base.utils.DialogUtil;
 import com.bjxrgz.base.utils.NetUtil;
+import com.user.project.R;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -94,5 +98,23 @@ public abstract class BaseActivity extends AppCompatActivity {
             return mInputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
         }
         return super.onTouchEvent(event);
+    }
+
+    protected void initLeft() {
+        ImageView ivLeft = findViewById(R.id.ivLeft);
+        ivLeft.setImageResource(R.mipmap.back_arrow);
+        ivLeft.setVisibility(View.VISIBLE);
+        ivLeft.setOnClickListener(view -> finish());
+    }
+
+    protected void initCenter(String title) {
+        TextView tvCenter = findViewById(R.id.tvCenter);
+        tvCenter.setVisibility(View.VISIBLE);
+        tvCenter.setText(title);
+    }
+
+    protected void initLeftCenter(String title) {
+        initLeft();
+        initCenter(title);
     }
 }

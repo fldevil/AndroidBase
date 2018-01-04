@@ -2,18 +2,15 @@ package com.user.project.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.KeyEvent;
 
 import com.bjxrgz.base.utils.ActivityUtil;
 import com.bjxrgz.base.utils.ToastUtil;
 import com.user.project.R;
 import com.user.project.base.BaseActivity;
-import com.user.project.utils.ViewUtil;
 
 import java.util.Date;
 
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -34,7 +31,7 @@ public class HomeActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        ViewUtil.initTop(mActivity, "主页面");
+        initCenter("主页面");
     }
 
     @Override
