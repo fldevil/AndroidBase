@@ -9,7 +9,7 @@ greendao { // 数据库配置
 
 android {
     compileSdkVersion project.ANDROID_BUILD_SDK_VERSION as int
-    buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION as int
@@ -96,11 +96,11 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':xrgzBase')
-    compile project(':PushSDK')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':xrgzBase')
+    implementation project(':PushSDK')
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    compile 'com.jakewharton:butterknife:8.8.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'cn.yipianfengye.android:zxing-library:2.1'
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'cn.yipianfengye.android:zxing-library:2.2'
 }
