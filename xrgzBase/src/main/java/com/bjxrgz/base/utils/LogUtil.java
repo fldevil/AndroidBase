@@ -1,11 +1,13 @@
 package com.bjxrgz.base.utils;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.orhanobut.logger.LogLevel;
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
-import com.orhanobut.logger.Settings;
+import com.orhanobut.logger.PrettyFormatStrategy;
 
 import java.io.File;
 
@@ -17,14 +19,16 @@ public class LogUtil {
     /**
      * 初始化日志框架
      */
-    public static void initApp(String tag, boolean debug) {
-        Settings settings = Logger.init(tag);
-        settings.hideThreadInfo();
-        if (debug) {
-            settings.logLevel(LogLevel.FULL);
-        } else {
-            settings.logLevel(LogLevel.NONE);
-        }
+    public static void initApp(String tag, final boolean debug) {
+        FormatStrategy prettyFormatStrategy = PrettyFormatStrategy.newBuilder()
+                .tag(tag)
+                .build();
+        Logger.addLogAdapter(new AndroidLogAdapter(prettyFormatStrategy) {
+            @Override
+            public boolean isLoggable(int priority, @Nullable String tag) {
+                return debug;
+            }
+        });
     }
 
     public static void i(String message, Object... args) {

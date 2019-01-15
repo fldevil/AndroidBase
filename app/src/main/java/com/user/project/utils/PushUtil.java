@@ -12,7 +12,6 @@ import com.umeng.message.MsgConstant;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengNotificationClickHandler;
 import com.umeng.message.entity.UMessage;
-import com.user.project.MyApp;
 
 /**
  * Created by JiangZhiGuo on 2016/8/5.

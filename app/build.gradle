@@ -33,9 +33,6 @@ android {
         main {
             jniLibs.srcDirs = ['libs'] // 指定lib库目录
         }
-        instrumentTest.setRoot('tests') // 指定测试所在的路径
-        debug.setRoot('build-types/debug') // 指定debug模式的路径
-        release.setRoot('build-types/release') // 指定release模式的路径
     }
 
     compileOptions { // 编码/JDK等
